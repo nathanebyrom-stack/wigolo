@@ -175,35 +175,26 @@ button{font-family:inherit;cursor:pointer;}
   align-items:center;
   gap:12px;
   font-family:var(--font-display);
-}
-.brand-mark{
-  width:46px;height:46px;
-  border-radius:12px;
-  background:linear-gradient(155deg, var(--graphite-900), var(--graphite-700));
-  color:var(--white);
-  display:flex;align-items:center;justify-content:center;
-  font-weight:800;
-  font-size:1.05rem;
-  letter-spacing:.02em;
-  position:relative;
+  min-width:0;
+  flex:1 1 auto;
   overflow:hidden;
+}
+.logo-mark{
+  height:34px;
+  width:auto;
   flex:none;
 }
-.brand-mark::after{
-  content:"";
-  position:absolute;inset:auto -30% -60% auto;
-  width:70%;height:70%;
-  background:var(--blue-600);
-  border-radius:40%;
-  opacity:.9;
-}
-.brand-mark span{position:relative;z-index:1;}
+.site-footer .logo-mark{height:30px;}
 .brand-word{
   display:flex;
   flex-direction:column;
   line-height:1.05;
+  min-width:0;
 }
-.brand-word b{font-weight:800;font-size:1.15rem;color:var(--graphite-900);}
+.brand-word b{
+  font-weight:800;font-size:1.15rem;color:var(--graphite-900);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
 .brand-word em{
   font-style:normal;
   font-size:.66rem;
@@ -211,6 +202,7 @@ button{font-family:inherit;cursor:pointer;}
   letter-spacing:.22em;
   text-transform:uppercase;
   color:var(--blue-600);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 
 .nav-primary{
@@ -239,7 +231,7 @@ button{font-family:inherit;cursor:pointer;}
 .nav-primary a:hover::after,
 .nav-primary a.active::after{width:100%;}
 
-.header-cta{display:flex;align-items:center;gap:18px;}
+.header-cta{display:flex;align-items:center;gap:18px;flex:none;}
 .nav-toggle{
   display:none;
   width:44px;height:44px;
@@ -270,6 +262,25 @@ button{font-family:inherit;cursor:pointer;}
   .nav-primary a{width:100%;padding:14px 0;border-bottom:1px solid var(--off-white);}
   .header-cta .btn-primary{padding:11px 18px;font-size:.85rem;}
   .nav-toggle{display:flex;}
+  .header-inner{gap:12px;}
+}
+
+.btn-label-short{display:none;}
+
+@media (max-width:480px){
+  .logo-mark{height:26px;}
+  .brand-word b{font-size:.95rem;}
+  .brand-word em{display:none;}
+  .header-cta{gap:10px;}
+  .header-cta .btn-primary{padding:10px 14px;font-size:.82rem;}
+  .header-cta .btn-primary .btn-label{display:none;}
+  .header-cta .btn-primary .btn-label-short{display:inline;}
+}
+
+@media (max-width:360px){
+  /* The mark alone already reads as "AOE" — drop the text lockup rather
+     than truncate it into something illegible. */
+  .brand-word{display:none;}
 }
 
 /* ---------- hero ---------- */
