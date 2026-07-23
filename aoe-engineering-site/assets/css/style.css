@@ -350,18 +350,22 @@ button{font-family:inherit;cursor:pointer;}
 /* Ambient rig motion — self-contained CSS/SVG animation, no video file,
    independent of scroll position. */
 .rig-float{animation:rigFloat 3.4s ease-in-out infinite;}
-@keyframes rigFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+@keyframes rigFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
 
-.rig-swing{animation:rigSwing 5s ease-in-out infinite;}
-@keyframes rigSwing{0%,100%{transform:rotate(-4deg);}50%{transform:rotate(5deg);}}
+.rig-swing{animation:rigSwing 4s ease-in-out infinite;}
+@keyframes rigSwing{0%,100%{transform:rotate(-11deg);}50%{transform:rotate(13deg);}}
+
+.rig-radar{animation:rigSpin 16s linear infinite;}
+.rig-sweep{animation:rigSpin 4s linear infinite;}
+@keyframes rigSpin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
 
 .rig-chip{animation:rigChipPulse 3.2s ease-in-out infinite;}
-@keyframes rigChipPulse{0%,100%{opacity:.75;}50%{opacity:1;}}
+@keyframes rigChipPulse{0%,100%{opacity:.6;filter:drop-shadow(0 0 0 rgba(46,123,255,0));}50%{opacity:1;filter:drop-shadow(0 0 6px rgba(46,123,255,.7));}}
 .rig-chip-dot{animation:rigDotPulse 1.6s ease-in-out infinite;transform-box:fill-box;transform-origin:center;}
-@keyframes rigDotPulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(1.4);}}
+@keyframes rigDotPulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.35;transform:scale(1.6);}}
 
 @media (prefers-reduced-motion: reduce){
-  .rig-float,.rig-swing,.rig-chip,.rig-chip-dot{animation:none;}
+  .rig-float,.rig-swing,.rig-radar,.rig-sweep,.rig-chip,.rig-chip-dot{animation:none;}
 }
 
 /* HUD control cluster overlaid on the hero illustration */
