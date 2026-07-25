@@ -74,12 +74,39 @@
   var ringMat = new THREE.MeshStandardMaterial({ color: 0xb5491c, roughness: 0.16, metalness: 0.85, emissive: 0x3a1608, emissiveIntensity: 0.4 });
   var grayMat = new THREE.MeshStandardMaterial({ color: 0x46443e, roughness: 0.48, metalness: 0.42 });
   var silverMat = new THREE.MeshStandardMaterial({ color: 0x8f8b82, roughness: 0.26, metalness: 0.8 });
+  var boltMat = new THREE.MeshStandardMaterial({ color: 0x1c1a17, roughness: 0.4, metalness: 0.6 });
 
   function mesh(geo, mat, castShadow, receiveShadow) {
     var m = new THREE.Mesh(geo, mat);
     m.castShadow = !!castShadow;
     m.receiveShadow = !!receiveShadow;
     return m;
+  }
+
+  // thin copper collar ring + a circle of small bolt heads, for mechanical greebling
+  function addBoltCollar(parent, y, ringRadius, boltCount, boltRadius) {
+    var collar = mesh(new THREE.TorusGeometry(ringRadius, ringRadius * 0.11, 10, 32), ringMat, true, true);
+    collar.rotation.x = Math.PI / 2;
+    collar.position.y = y;
+    parent.add(collar);
+
+    for (var i = 0; i < boltCount; i++) {
+      var a = (i / boltCount) * Math.PI * 2;
+      var bolt = mesh(new THREE.CylinderGeometry(boltRadius, boltRadius, boltRadius * 1.1, 8), boltMat, true, true);
+      bolt.position.set(Math.cos(a) * ringRadius, y, Math.sin(a) * ringRadius);
+      bolt.rotation.x = Math.PI / 2;
+      parent.add(bolt);
+    }
+    return collar;
+  }
+
+  // a coupling-ring collar sized to clamp around a square beam (not the ball joint itself) —
+  // sits just past the sphere, on the tube, so it reads as a joint collar rather than a
+  // slice through the ball as the parent pivot swings.
+  function addBeamCollar(parent, y, beamHalfWidth, boltCount, boltRadius) {
+    var tubeR = beamHalfWidth * 0.4;
+    var ringRadius = beamHalfWidth * 1.42 + tubeR * 1.05;
+    return addBoltCollar(parent, y, ringRadius, boltCount, boltRadius);
   }
 
   // ---------- Base (static) ----------
@@ -115,6 +142,7 @@
 
   var shoulderSphere = mesh(new THREE.SphereGeometry(0.56, 32, 24), orangeMat, true, true);
   shoulderPivot.add(shoulderSphere);
+  addBeamCollar(shoulderPivot, 0.58, ARM_W / 2, 12, 0.04);
 
   var upperArm = mesh(new THREE.BoxGeometry(ARM_W, L1, ARM_W), bodyMat, true, true);
   upperArm.position.y = L1 / 2;
@@ -126,6 +154,7 @@
 
   var elbowSphere = mesh(new THREE.SphereGeometry(0.42, 32, 24), grayMat, true, true);
   elbowPivot.add(elbowSphere);
+  addBeamCollar(elbowPivot, 0.44, FORE_W / 2, 10, 0.032);
 
   var forearm = mesh(new THREE.BoxGeometry(FORE_W, L2, FORE_W), bodyMat, true, true);
   forearm.position.y = L2 / 2;
@@ -148,13 +177,18 @@
   mount.position.y = L3 + 0.09;
   wristPivot.add(mount);
 
-  var FIN_LEN = 0.46;
+  var FIN_LEN = 0.3, TIP_LEN = 0.18;
   function makeFinger(sign) {
     var p = new THREE.Group();
     p.position.set(sign * 0.12, L3 + 0.18, 0);
+    var knuckle = mesh(new THREE.SphereGeometry(0.06, 12, 10), grayMat, true, true);
+    p.add(knuckle);
     var f = mesh(new THREE.BoxGeometry(0.09, FIN_LEN, 0.16), silverMat, true, true);
     f.position.y = FIN_LEN / 2;
     p.add(f);
+    var tip = mesh(new THREE.BoxGeometry(0.075, TIP_LEN, 0.13), ringMat, true, true);
+    tip.position.y = FIN_LEN + TIP_LEN / 2;
+    p.add(tip);
     wristPivot.add(p);
     return p;
   }
@@ -194,10 +228,17 @@
 
   var locks = { shoulder: false, elbow: false, wrist: false };
   var angles = { shoulder: deg(22), elbow: deg(-32), wrist: 0 };
+  var held = { shoulder: 0, elbow: 0, wrist: 0 };
   var targetBaseYaw = 0;
   var clawOpen = false;
   var clawAngle = deg(3);
   var speedMult = 1;
+
+  var PRESETS = {
+    reach: { shoulder: deg(8), elbow: deg(-52), wrist: deg(0), claw: true },
+    lift: { shoulder: deg(56), elbow: deg(-16), wrist: deg(0), claw: false },
+    place: { shoulder: deg(30), elbow: deg(-36), wrist: deg(12), claw: true }
+  };
 
   var clock = new THREE.Clock();
   var simTime = 0;
@@ -212,16 +253,16 @@
     // base: manual swivel, eased toward slider target
     column.rotation.y += (targetBaseYaw - column.rotation.y) * Math.min(0.12 * lerpMult, 0.9);
 
-    // shoulder / elbow / wrist: auto-cycle unless locked (locked = target holds current value)
-    var shoulderTarget = locks.shoulder ? angles.shoulder : wave(t, 6.0, deg(-16), deg(60), 0.3);
+    // shoulder / elbow / wrist: auto-cycle unless locked (locked = hold at `held` target)
+    var shoulderTarget = locks.shoulder ? held.shoulder : wave(t, 6.0, deg(-16), deg(60), 0.3);
     angles.shoulder += (shoulderTarget - angles.shoulder) * Math.min(0.05 * lerpMult, 0.9);
     shoulderPivot.rotation.z = angles.shoulder;
 
-    var elbowTarget = locks.elbow ? angles.elbow : wave(t, 5.0, deg(-58), deg(-6), 1.1);
+    var elbowTarget = locks.elbow ? held.elbow : wave(t, 5.0, deg(-58), deg(-6), 1.1);
     angles.elbow += (elbowTarget - angles.elbow) * Math.min(0.05 * lerpMult, 0.9);
     elbowPivot.rotation.z = angles.elbow;
 
-    var wristTarget = locks.wrist ? angles.wrist : wave(t, 3.0, deg(-22), deg(22), 1.9);
+    var wristTarget = locks.wrist ? held.wrist : wave(t, 3.0, deg(-22), deg(22), 1.9);
     angles.wrist += (wristTarget - angles.wrist) * Math.min(0.06 * lerpMult, 0.9);
     wristPivot.rotation.z = angles.wrist;
 
@@ -231,6 +272,7 @@
     fingerL.rotation.z = clawAngle;
     fingerR.rotation.z = -clawAngle;
 
+    updateTelemetry();
     renderer.render(scene, camera);
   }
   animate();
@@ -252,15 +294,50 @@
     targetBaseYaw = deg(d);
   });
 
+  var lockBtns = { shoulder: null, elbow: null, wrist: null };
   ['shoulder', 'elbow', 'wrist'].forEach(function (joint) {
     var btn = document.getElementById('lock-' + joint);
     var baseLabel = btn.textContent;
+    lockBtns[joint] = { el: btn, label: baseLabel };
     btn.addEventListener('click', function () {
       locks[joint] = !locks[joint];
+      if (locks[joint]) held[joint] = angles[joint];
       btn.classList.toggle('locked', locks[joint]);
       btn.textContent = (locks[joint] ? '\u{1F512} ' : '') + baseLabel;
+      setActivePreset(null);
     });
   });
+
+  var presetBtns = Array.prototype.slice.call(document.querySelectorAll('.preset-card'));
+  function setActivePreset(name) {
+    presetBtns.forEach(function (b) { b.classList.toggle('active', b.dataset.preset === name); });
+  }
+  presetBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var p = PRESETS[btn.dataset.preset];
+      if (!p) return;
+      ['shoulder', 'elbow', 'wrist'].forEach(function (joint) {
+        locks[joint] = true;
+        held[joint] = p[joint];
+        var lb = lockBtns[joint];
+        lb.el.classList.add('locked');
+        lb.el.textContent = '\u{1F512} ' + lb.label;
+      });
+      clawOpen = p.claw;
+      clawBtn.classList.toggle('open', clawOpen);
+      clawBtn.textContent = clawOpen ? 'Close claw' : 'Open claw';
+      setActivePreset(btn.dataset.preset);
+    });
+  });
+
+  var telBase = document.getElementById('tel-base');
+  var telReach = document.getElementById('tel-reach');
+  function updateTelemetry() {
+    if (!telBase) return;
+    var deg2 = Math.round(column.rotation.y * 180 / Math.PI);
+    telBase.textContent = (deg2 >= 0 ? '+' : '') + deg2 + '°';
+    telReach.textContent = lengthVal.textContent;
+  }
 
   var clawBtn = document.getElementById('ctl-claw');
   clawBtn.addEventListener('click', function () {

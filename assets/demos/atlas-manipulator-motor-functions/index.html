@@ -95,6 +95,37 @@
     font-size:clamp(9px,1.05vmin,12px); letter-spacing:.18em; text-transform:uppercase; color:#a7a196;
   }
   .footer b{ color:var(--orange-hot); }
+
+  .telemetry{
+    position:absolute; left:5vmin; bottom:5.4vmin; z-index:5; pointer-events:none;
+    display:flex; gap:2.2vmin;
+    font-size:clamp(10px,1.15vmin,13px); letter-spacing:.08em; color:var(--sub);
+  }
+  .telemetry b{ color:var(--orange-hot); font-weight:700; }
+
+  .presets{
+    position:absolute; right:5vmin; top:5vmin; z-index:5; width:min(58vmin,240px);
+    display:flex; flex-direction:column; gap:.9vmin;
+  }
+  .preset-card{
+    font-family:inherit; text-align:left; cursor:pointer; transition:all .15s ease;
+    display:flex; align-items:center; gap:1vmin;
+    background:rgba(20,18,15,.72); border:1px solid var(--panel-border); border-radius:4px;
+    padding:1.1vmin 1.4vmin; backdrop-filter:blur(6px);
+  }
+  .preset-card .num{
+    font-size:clamp(11px,1.3vmin,15px); font-weight:700; color:var(--orange-hot);
+  }
+  .preset-card .lbl{
+    font-size:clamp(10px,1.15vmin,14px); letter-spacing:.16em; text-transform:uppercase;
+    color:var(--panel-sub); font-weight:700;
+  }
+  .preset-card:hover{ border-color:var(--orange-hot); }
+  .preset-card.active{
+    background:var(--panel-ink); border-color:var(--panel-ink);
+  }
+  .preset-card.active .num{ color:var(--orange-body); }
+  .preset-card.active .lbl{ color:var(--ink); }
 </style>
 </head>
 <body>
@@ -103,6 +134,12 @@
       <div class="brand">Atlas Manipulator</div>
       <div class="rule"></div>
       <div class="sub">Basic motor functions — manual control</div>
+    </div>
+
+    <div class="presets">
+      <button class="preset-card" data-preset="reach"><span class="num">01</span><span class="lbl">Reach</span></button>
+      <button class="preset-card" data-preset="lift"><span class="num">02</span><span class="lbl">Lift</span></button>
+      <button class="preset-card" data-preset="place"><span class="num">03</span><span class="lbl">Place</span></button>
     </div>
 
     <div class="panel" id="panel">
@@ -143,6 +180,10 @@
       </div>
     </div>
 
+    <div class="telemetry">
+      <span>BASE <b id="tel-base">0°</b></span>
+      <span>REACH <b id="tel-reach">100%</b></span>
+    </div>
     <div class="footer">Unlocked segments cycling <b>&bull;</b> loop</div>
   </div>
 <script src="three.min.js"></script>
