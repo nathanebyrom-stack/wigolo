@@ -2,8 +2,8 @@
   var wrap = document.getElementById('wrap');
 
   var scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x0c0a08);
-  scene.fog = new THREE.Fog(0x0c0a08, 7, 20);
+  scene.background = new THREE.Color(0xf6f5f2);
+  scene.fog = new THREE.Fog(0xf6f5f2, 10, 24);
 
   var camera = new THREE.PerspectiveCamera(44, wrap.clientWidth / wrap.clientHeight, 0.1, 100);
   camera.position.set(4.6, 3.9, 10.2);
@@ -14,17 +14,17 @@
   renderer.setSize(wrap.clientWidth, wrap.clientHeight);
   renderer.outputEncoding = THREE.sRGBEncoding;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 0.72;
+  renderer.toneMappingExposure = 1.02;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   wrap.appendChild(renderer.domElement);
 
   // ---------- Lights ----------
-  var hemi = new THREE.HemisphereLight(0x3a2f22, 0x020201, 0.28);
+  var hemi = new THREE.HemisphereLight(0xffffff, 0x9a968c, 0.7);
   scene.add(hemi);
 
-  var key = new THREE.DirectionalLight(0xfdeacc, 0.85);
-  key.position.set(3.6, 6.2, 4.2);
+  var key = new THREE.DirectionalLight(0xffffff, 1.15);
+  key.position.set(3.6, 6.4, 4.4);
   key.castShadow = true;
   key.shadow.mapSize.set(2048, 2048);
   key.shadow.camera.left = -6; key.shadow.camera.right = 6;
@@ -33,24 +33,24 @@
   key.shadow.bias = -0.0015;
   scene.add(key);
 
-  var rim = new THREE.DirectionalLight(0xff8a3d, 0.3);
+  var rim = new THREE.DirectionalLight(0xff8a3d, 0.14);
   rim.position.set(-4, 2.4, -3.2);
   scene.add(rim);
 
-  var fill = new THREE.AmbientLight(0x140f0a, 0.15);
+  var fill = new THREE.AmbientLight(0xffffff, 0.32);
   scene.add(fill);
 
   // ---------- Ground ----------
-  var groundMat = new THREE.MeshStandardMaterial({ color: 0x0d0a07, roughness: 0.95, metalness: 0.04 });
+  var groundMat = new THREE.MeshStandardMaterial({ color: 0xe2dfd8, roughness: 0.95, metalness: 0.02 });
   var ground = new THREE.Mesh(new THREE.CircleGeometry(10, 64), groundMat);
   ground.rotation.x = -Math.PI / 2;
   ground.receiveShadow = true;
   scene.add(ground);
 
   // ---------- Materials ----------
-  var bodyMat = new THREE.MeshStandardMaterial({ color: 0x18140f, roughness: 0.55, metalness: 0.4 });
-  var orangeMat = new THREE.MeshStandardMaterial({ color: 0x8a3012, roughness: 0.34, metalness: 0.55, emissive: 0x2a0f05, emissiveIntensity: 0.35 });
-  var ringMat = new THREE.MeshStandardMaterial({ color: 0xb5491c, roughness: 0.16, metalness: 0.85, emissive: 0x3a1608, emissiveIntensity: 0.55 });
+  var bodyMat = new THREE.MeshStandardMaterial({ color: 0x110f0d, roughness: 0.55, metalness: 0.32 });
+  var orangeMat = new THREE.MeshStandardMaterial({ color: 0x8a3012, roughness: 0.34, metalness: 0.55, emissive: 0x2a0f05, emissiveIntensity: 0.28 });
+  var ringMat = new THREE.MeshStandardMaterial({ color: 0xb5491c, roughness: 0.16, metalness: 0.85, emissive: 0x3a1608, emissiveIntensity: 0.4 });
   var grayMat = new THREE.MeshStandardMaterial({ color: 0x46443e, roughness: 0.48, metalness: 0.42 });
   var silverMat = new THREE.MeshStandardMaterial({ color: 0x8f8b82, roughness: 0.26, metalness: 0.8 });
 
@@ -80,9 +80,10 @@
   base.add(baseCap);
 
   // ---------- Kinematic chain ----------
-  var L1 = 2.15; // upper arm length
-  var L2 = 1.85; // forearm length
+  var L1 = 2.15; // upper arm length (base)
+  var L2 = 1.85; // forearm length (base)
   var L3 = 0.5;  // wrist stub length
+  var ARM_W = 0.44, FORE_W = 0.34;
 
   var column = new THREE.Group();
   column.position.y = BASE_H;
@@ -94,7 +95,7 @@
   var shoulderSphere = mesh(new THREE.SphereGeometry(0.56, 32, 24), orangeMat, true, true);
   shoulderPivot.add(shoulderSphere);
 
-  var upperArm = mesh(new THREE.BoxGeometry(0.44, L1, 0.44), bodyMat, true, true);
+  var upperArm = mesh(new THREE.BoxGeometry(ARM_W, L1, ARM_W), bodyMat, true, true);
   upperArm.position.y = L1 / 2;
   shoulderPivot.add(upperArm);
 
@@ -105,7 +106,7 @@
   var elbowSphere = mesh(new THREE.SphereGeometry(0.42, 32, 24), grayMat, true, true);
   elbowPivot.add(elbowSphere);
 
-  var forearm = mesh(new THREE.BoxGeometry(0.34, L2, 0.34), bodyMat, true, true);
+  var forearm = mesh(new THREE.BoxGeometry(FORE_W, L2, FORE_W), bodyMat, true, true);
   forearm.position.y = L2 / 2;
   elbowPivot.add(forearm);
 
@@ -139,6 +140,21 @@
   var fingerL = makeFinger(-1);
   var fingerR = makeFinger(1);
 
+  // ---------- Segment length control ----------
+  function setSegmentLength(scale) {
+    var l1c = L1 * scale, l2c = L2 * scale;
+
+    upperArm.geometry.dispose();
+    upperArm.geometry = new THREE.BoxGeometry(ARM_W, l1c, ARM_W);
+    upperArm.position.y = l1c / 2;
+    elbowPivot.position.y = l1c;
+
+    forearm.geometry.dispose();
+    forearm.geometry = new THREE.BoxGeometry(FORE_W, l2c, FORE_W);
+    forearm.position.y = l2c / 2;
+    wristPivot.position.y = l2c;
+  }
+
   // ---------- Resize ----------
   function onResize() {
     var w = wrap.clientWidth, h = wrap.clientHeight;
@@ -148,45 +164,82 @@
   }
   window.addEventListener('resize', onResize);
 
-  // ---------- Animation cycle (autonomous, matches reference demo) ----------
+  // ---------- Interactive state ----------
   function deg(d) { return d * Math.PI / 180; }
   function wave(t, period, min, max, phase) {
     var mid = (min + max) / 2, amp = (max - min) / 2;
     return mid + amp * Math.sin((t / period) * Math.PI * 2 + (phase || 0));
   }
 
-  var clock = new THREE.Clock();
+  var locks = { shoulder: false, elbow: false, wrist: false };
+  var angles = { shoulder: deg(22), elbow: deg(-32), wrist: 0 };
+  var targetBaseYaw = 0;
+  var clawOpen = false;
+  var clawAngle = deg(3);
 
-  var tags = {
-    base: document.getElementById('tag-base'),
-    shoulder: document.getElementById('tag-shoulder'),
-    elbow: document.getElementById('tag-elbow'),
-    wrist: document.getElementById('tag-wrist'),
-    gripper: document.getElementById('tag-gripper')
-  };
-  var tagOrder = ['base', 'shoulder', 'elbow', 'wrist', 'gripper'];
-  var activeIdx = 0;
-  setInterval(function () {
-    tagOrder.forEach(function (k) { tags[k].classList.remove('active'); });
-    tags[tagOrder[activeIdx % tagOrder.length]].classList.add('active');
-    activeIdx++;
-  }, 1500);
-  tags[tagOrder[0]].classList.add('active');
+  var clock = new THREE.Clock();
 
   function animate() {
     requestAnimationFrame(animate);
     var t = clock.getElapsedTime();
 
-    column.rotation.y = wave(t, 9.0, deg(-11), deg(11), 0);
-    shoulderPivot.rotation.z = wave(t, 6.0, deg(-16), deg(60), 0.3);
-    elbowPivot.rotation.z = wave(t, 5.0, deg(-58), deg(-6), 1.1);
-    wristPivot.rotation.z = wave(t, 3.0, deg(-22), deg(22), 1.9);
+    // base: manual swivel, eased toward slider target
+    column.rotation.y += (targetBaseYaw - column.rotation.y) * 0.12;
 
-    var grip = wave(t, 2.4, deg(3), deg(20), 2.6);
-    fingerL.rotation.z = grip;
-    fingerR.rotation.z = -grip;
+    // shoulder / elbow / wrist: auto-cycle unless locked (locked = target holds current value)
+    var shoulderTarget = locks.shoulder ? angles.shoulder : wave(t, 6.0, deg(-16), deg(60), 0.3);
+    angles.shoulder += (shoulderTarget - angles.shoulder) * 0.05;
+    shoulderPivot.rotation.z = angles.shoulder;
+
+    var elbowTarget = locks.elbow ? angles.elbow : wave(t, 5.0, deg(-58), deg(-6), 1.1);
+    angles.elbow += (elbowTarget - angles.elbow) * 0.05;
+    elbowPivot.rotation.z = angles.elbow;
+
+    var wristTarget = locks.wrist ? angles.wrist : wave(t, 3.0, deg(-22), deg(22), 1.9);
+    angles.wrist += (wristTarget - angles.wrist) * 0.06;
+    wristPivot.rotation.z = angles.wrist;
+
+    // claw: manual toggle, slow ease both ways
+    var clawTarget = clawOpen ? deg(22) : deg(3);
+    clawAngle += (clawTarget - clawAngle) * 0.012;
+    fingerL.rotation.z = clawAngle;
+    fingerR.rotation.z = -clawAngle;
 
     renderer.render(scene, camera);
   }
   animate();
+
+  // ---------- Controls wiring ----------
+  var lengthInput = document.getElementById('ctl-length');
+  var lengthVal = document.getElementById('val-length');
+  lengthInput.addEventListener('input', function () {
+    var pct = parseInt(lengthInput.value, 10);
+    lengthVal.textContent = pct + '%';
+    setSegmentLength(pct / 100);
+  });
+
+  var swivelInput = document.getElementById('ctl-swivel');
+  var swivelVal = document.getElementById('val-swivel');
+  swivelInput.addEventListener('input', function () {
+    var d = parseInt(swivelInput.value, 10);
+    swivelVal.textContent = d + '°';
+    targetBaseYaw = deg(d);
+  });
+
+  ['shoulder', 'elbow', 'wrist'].forEach(function (joint) {
+    var btn = document.getElementById('lock-' + joint);
+    var baseLabel = btn.textContent;
+    btn.addEventListener('click', function () {
+      locks[joint] = !locks[joint];
+      btn.classList.toggle('locked', locks[joint]);
+      btn.textContent = (locks[joint] ? '\u{1F512} ' : '') + baseLabel;
+    });
+  });
+
+  var clawBtn = document.getElementById('ctl-claw');
+  clawBtn.addEventListener('click', function () {
+    clawOpen = !clawOpen;
+    clawBtn.classList.toggle('open', clawOpen);
+    clawBtn.textContent = clawOpen ? 'Close claw' : 'Open claw';
+  });
 })();
