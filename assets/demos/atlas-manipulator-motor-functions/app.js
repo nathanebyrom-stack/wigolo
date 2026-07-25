@@ -2,8 +2,8 @@
   var wrap = document.getElementById('wrap');
 
   var scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xf6f5f2);
-  scene.fog = new THREE.Fog(0xf6f5f2, 10, 24);
+  scene.background = new THREE.Color(0x0b0a08);
+  scene.fog = new THREE.Fog(0x0b0a08, 8, 22);
 
   var camera = new THREE.PerspectiveCamera(44, wrap.clientWidth / wrap.clientHeight, 0.1, 100);
   camera.position.set(4.6, 3.9, 10.2);
@@ -14,16 +14,16 @@
   renderer.setSize(wrap.clientWidth, wrap.clientHeight);
   renderer.outputEncoding = THREE.sRGBEncoding;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.02;
+  renderer.toneMappingExposure = 0.85;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   wrap.appendChild(renderer.domElement);
 
   // ---------- Lights ----------
-  var hemi = new THREE.HemisphereLight(0xffffff, 0x9a968c, 0.7);
+  var hemi = new THREE.HemisphereLight(0x3a2f22, 0x040302, 0.35);
   scene.add(hemi);
 
-  var key = new THREE.DirectionalLight(0xffffff, 1.15);
+  var key = new THREE.DirectionalLight(0xfdeacc, 0.95);
   key.position.set(3.6, 6.4, 4.4);
   key.castShadow = true;
   key.shadow.mapSize.set(2048, 2048);
@@ -33,22 +33,43 @@
   key.shadow.bias = -0.0015;
   scene.add(key);
 
-  var rim = new THREE.DirectionalLight(0xff8a3d, 0.14);
+  var rim = new THREE.DirectionalLight(0xff8a3d, 0.28);
   rim.position.set(-4, 2.4, -3.2);
   scene.add(rim);
 
-  var fill = new THREE.AmbientLight(0xffffff, 0.32);
+  var fill = new THREE.AmbientLight(0x140f0a, 0.18);
   scene.add(fill);
 
   // ---------- Ground ----------
-  var groundMat = new THREE.MeshStandardMaterial({ color: 0xe2dfd8, roughness: 0.95, metalness: 0.02 });
+  var groundMat = new THREE.MeshStandardMaterial({ color: 0x100d09, roughness: 0.95, metalness: 0.04 });
   var ground = new THREE.Mesh(new THREE.CircleGeometry(10, 64), groundMat);
   ground.rotation.x = -Math.PI / 2;
   ground.receiveShadow = true;
   scene.add(ground);
 
+  var polarGrid = new THREE.PolarGridHelper(6.4, 16, 6, 64, 0x3a352c, 0x252017);
+  polarGrid.position.y = 0.005;
+  scene.add(polarGrid);
+
+  function makeDashedRing(radius, color, opacity) {
+    var pts = [];
+    for (var i = 0; i <= 128; i++) {
+      var a = (i / 128) * Math.PI * 2;
+      pts.push(new THREE.Vector3(Math.cos(a) * radius, 0, Math.sin(a) * radius));
+    }
+    var geo = new THREE.BufferGeometry().setFromPoints(pts);
+    var mat = new THREE.LineDashedMaterial({ color: color, dashSize: 0.18, gapSize: 0.14, transparent: true, opacity: opacity });
+    var line = new THREE.LineLoop(geo, mat);
+    line.computeLineDistances();
+    line.position.y = 0.01;
+    scene.add(line);
+    return line;
+  }
+  makeDashedRing(3.2, 0xe3711f, 0.55);
+  makeDashedRing(5.4, 0x8a6a4a, 0.28);
+
   // ---------- Materials ----------
-  var bodyMat = new THREE.MeshStandardMaterial({ color: 0x110f0d, roughness: 0.55, metalness: 0.32 });
+  var bodyMat = new THREE.MeshStandardMaterial({ color: 0x18140f, roughness: 0.5, metalness: 0.42 });
   var orangeMat = new THREE.MeshStandardMaterial({ color: 0x8a3012, roughness: 0.34, metalness: 0.55, emissive: 0x2a0f05, emissiveIntensity: 0.28 });
   var ringMat = new THREE.MeshStandardMaterial({ color: 0xb5491c, roughness: 0.16, metalness: 0.85, emissive: 0x3a1608, emissiveIntensity: 0.4 });
   var grayMat = new THREE.MeshStandardMaterial({ color: 0x46443e, roughness: 0.48, metalness: 0.42 });

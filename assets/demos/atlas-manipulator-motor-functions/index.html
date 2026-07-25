@@ -5,11 +5,11 @@
 <title>Atlas Manipulator — Basic Motor Functions</title>
 <style>
   :root{
-    --orange-hot:#e3711f; --orange-body:#9c3814; --ink:#211e19; --sub:#6b665c;
-    --panel-bg:rgba(255,255,255,.86); --panel-border:#dcd7cd;
+    --orange-hot:#e3711f; --orange-body:#9c3814; --ink:#efe9df; --sub:#9a9284;
+    --panel-bg:rgba(20,18,15,.82); --panel-border:#3a352c;
   }
   *{box-sizing:border-box;}
-  html,body{height:100%;margin:0;background:#f6f5f2;overflow:hidden;}
+  html,body{height:100%;margin:0;background:#0b0a08;overflow:hidden;}
   body{font-family:'Courier New', ui-monospace, monospace; color:var(--ink);}
   #wrap{position:relative; width:100vw; height:100vh;}
   canvas{display:block;}
@@ -26,27 +26,32 @@
   }
 
   .panel{
-    position:absolute; right:5vmin; bottom:5vmin; z-index:5; width:min(74vmin,320px);
+    position:absolute; right:5vmin; bottom:5vmin; z-index:5; width:min(80vmin,340px);
     background:var(--panel-bg); border:1px solid var(--panel-border); border-radius:6px;
-    padding:1.6vmin 1.8vmin; backdrop-filter:blur(6px);
-    box-shadow:0 .6vmin 2vmin rgba(30,25,15,.08);
+    padding:1.7vmin 1.9vmin; backdrop-filter:blur(8px);
+    box-shadow:0 1vmin 3vmin rgba(0,0,0,.5);
   }
   .panel-header{
     display:flex; justify-content:space-between; align-items:center;
-    margin-bottom:1.4vmin;
+    margin-bottom:.6vmin;
   }
   .panel-header .title{
-    font-size:clamp(10px,1.2vmin,13px); letter-spacing:.16em; text-transform:uppercase;
+    font-size:clamp(10px,1.25vmin,14px); letter-spacing:.16em; text-transform:uppercase;
     color:var(--ink); font-weight:700;
   }
   .min-btn{
     width:2.4vmin; height:2.4vmin; min-width:20px; min-height:20px;
     font-family:inherit; font-size:14px; line-height:1; color:var(--ink);
-    background:#fff; border:1px solid #cfc9bb; border-radius:3px; cursor:pointer;
+    background:#211e19; border:1px solid #453f34; border-radius:3px; cursor:pointer;
     display:flex; align-items:center; justify-content:center; padding:0;
   }
   .min-btn:hover{ border-color:var(--orange-hot); }
+  .panel-instr{
+    font-size:clamp(9px,1.02vmin,12px); letter-spacing:.02em; line-height:1.55;
+    color:var(--sub); margin-bottom:1.6vmin; text-transform:none;
+  }
   .panel.collapsed .panel-header{ margin-bottom:0; }
+  .panel.collapsed .panel-instr,
   .panel.collapsed .row{ display:none; }
   .panel .row{ margin-bottom:1.5vmin; }
   .panel .row:last-child{ margin-bottom:0; }
@@ -60,34 +65,39 @@
 
   input[type="range"]{
     -webkit-appearance:none; appearance:none; width:100%; height:3px;
-    background:#d7d2c6; border-radius:2px; outline:none;
+    background:#3a352c; border-radius:2px; outline:none;
   }
   input[type="range"]::-webkit-slider-thumb{
     -webkit-appearance:none; appearance:none; width:15px; height:15px; border-radius:50%;
-    background:var(--orange-hot); border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,.35); cursor:pointer;
+    background:var(--orange-hot); border:2px solid #14120f; box-shadow:0 1px 4px rgba(0,0,0,.6); cursor:pointer;
   }
   input[type="range"]::-moz-range-thumb{
     width:15px; height:15px; border-radius:50%; background:var(--orange-hot);
-    border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,.35); cursor:pointer;
+    border:2px solid #14120f; box-shadow:0 1px 4px rgba(0,0,0,.6); cursor:pointer;
   }
 
   .btnrow{ display:flex; gap:.8vmin; flex-wrap:wrap; }
   .btn{
     flex:1; min-width:5.5rem; font-family:inherit; font-size:clamp(9px,1.05vmin,12px);
     letter-spacing:.1em; text-transform:uppercase; color:var(--ink);
-    background:#fff; border:1px solid #cfc9bb; border-radius:3px; padding:.9vmin .6vmin;
+    background:#1c1914; border:1px solid #453f34; border-radius:3px; padding:.9vmin .6vmin;
     cursor:pointer; transition:all .15s ease;
   }
   .btn:hover{ border-color:var(--orange-hot); }
-  .btn.locked{ background:var(--orange-hot); border-color:var(--orange-hot); color:#fff; }
+  .btn.locked{ background:var(--orange-hot); border-color:var(--orange-hot); color:#14120f; }
   .btn.wide{ flex-basis:100%; }
-  .btn.wide.open{ background:var(--orange-hot); border-color:var(--orange-hot); color:#fff; }
+  .btn.wide.open{ background:var(--orange-hot); border-color:var(--orange-hot); color:#14120f; }
 
   .footer{
     position:absolute; left:5vmin; bottom:3vmin; text-align:left; z-index:5; pointer-events:none;
-    font-size:clamp(9px,1.05vmin,12px); letter-spacing:.18em; text-transform:uppercase; color:#a7a196;
+    font-size:clamp(9px,1.05vmin,12px); letter-spacing:.18em; text-transform:uppercase; color:#847c6c;
   }
   .footer b{ color:var(--orange-hot); }
+
+  .vignette{
+    position:absolute; inset:0; pointer-events:none; z-index:4;
+    background:radial-gradient(ellipse 85% 85% at 50% 45%, transparent 55%, rgba(0,0,0,.55) 100%);
+  }
 </style>
 </head>
 <body>
@@ -103,6 +113,7 @@
         <span class="title">Controls</span>
         <button class="min-btn" id="panel-min" aria-label="Minimise controls" title="Minimise">&#8722;</button>
       </div>
+      <div class="panel-instr">Resize segments &middot; swivel the base &middot; lock a joint mid-cycle &middot; claw eases open slowly.</div>
       <div class="row">
         <div class="label"><b>Segment length</b><span class="val" id="val-length">100%</span></div>
         <input type="range" id="ctl-length" min="65" max="140" step="1" value="100">
@@ -127,6 +138,7 @@
       </div>
     </div>
 
+    <div class="vignette"></div>
     <div class="footer">Unlocked segments cycling <b>&bull;</b> loop</div>
   </div>
 <script src="three.min.js"></script>
