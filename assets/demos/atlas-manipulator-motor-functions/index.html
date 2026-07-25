@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Atlas Manipulator — Basic Motor Functions</title>
+<style>
+  :root{
+    --orange-hot:#f6b878; --orange-body:#9c3814; --bg:#0c0a08;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;margin:0;background:#0c0a08;overflow:hidden;}
+  body{font-family:'Courier New', ui-monospace, monospace; color:#cfcac0;}
+  #wrap{position:relative; width:100vw; height:100vh;}
+  canvas{display:block;}
+
+  .hud{ position:absolute; left:5vmin; top:6vmin; z-index:5; max-width:46vmin; pointer-events:none; }
+  .hud .brand{
+    font-size:clamp(20px,3.6vmin,40px); letter-spacing:.14em; font-weight:700;
+    color:#e7e2d8; text-transform:uppercase; margin:0 0 .5vmin 0;
+  }
+  .hud .rule{ width:9vmin; height:3px; background:linear-gradient(90deg,var(--orange-hot),var(--orange-body) 70%,transparent); margin:.6vmin 0 1vmin 0; }
+  .hud .sub{
+    font-size:clamp(10px,1.3vmin,14px); letter-spacing:.2em;
+    color:#a89f92; text-transform:uppercase; line-height:1.7;
+  }
+  .hud .tags{ display:flex; flex-wrap:wrap; gap:.8vmin 1.4vmin; margin-top:1.6vmin; }
+  .hud .tag{
+    font-size:clamp(9px,1.05vmin,12px); letter-spacing:.12em; text-transform:uppercase;
+    color:#c98a4c; border:1px solid #4a3a2a; padding:.5vmin 1vmin; border-radius:2px;
+    background:rgba(154,70,20,.08); transition:all .3s ease;
+  }
+  .hud .tag.active{ color:#fff2df; border-color:var(--orange-hot); background:rgba(214,120,45,.22); }
+
+  .footer{
+    position:absolute; right:4vmin; bottom:3vmin; text-align:right; z-index:5; pointer-events:none;
+    font-size:clamp(9px,1.05vmin,12px); letter-spacing:.18em; text-transform:uppercase; color:#6f6a60;
+  }
+  .footer b{ color:#c98a4c; }
+
+  .vignette{
+    position:absolute; inset:0; pointer-events:none; z-index:4;
+    background:radial-gradient(ellipse 85% 85% at 50% 45%, transparent 50%, rgba(0,0,0,.6) 100%);
+  }
+</style>
+</head>
+<body>
+  <div id="wrap">
+    <div class="hud">
+      <div class="brand">Atlas Manipulator</div>
+      <div class="rule"></div>
+      <div class="sub">Basic motor functions — five-axis demo cycle</div>
+      <div class="tags">
+        <span class="tag" id="tag-base">Base</span>
+        <span class="tag" id="tag-shoulder">Shoulder</span>
+        <span class="tag" id="tag-elbow">Elbow</span>
+        <span class="tag" id="tag-wrist">Wrist</span>
+        <span class="tag" id="tag-gripper">Gripper</span>
+      </div>
+    </div>
+    <div class="vignette"></div>
+    <div class="footer">Joint motors cycling <b>&bull;</b> loop</div>
+  </div>
+<script src="three.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
