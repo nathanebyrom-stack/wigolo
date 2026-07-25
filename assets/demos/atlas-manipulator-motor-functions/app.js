@@ -2,8 +2,8 @@
   var wrap = document.getElementById('wrap');
 
   var scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x0b0a08);
-  scene.fog = new THREE.Fog(0x0b0a08, 8, 22);
+  scene.background = new THREE.Color(0xf6f5f2);
+  scene.fog = new THREE.Fog(0xf6f5f2, 10, 24);
 
   var camera = new THREE.PerspectiveCamera(44, wrap.clientWidth / wrap.clientHeight, 0.1, 100);
   camera.position.set(4.6, 3.9, 10.2);
@@ -14,16 +14,16 @@
   renderer.setSize(wrap.clientWidth, wrap.clientHeight);
   renderer.outputEncoding = THREE.sRGBEncoding;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 0.85;
+  renderer.toneMappingExposure = 1.02;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   wrap.appendChild(renderer.domElement);
 
   // ---------- Lights ----------
-  var hemi = new THREE.HemisphereLight(0x3a2f22, 0x040302, 0.35);
+  var hemi = new THREE.HemisphereLight(0xffffff, 0x9a968c, 0.7);
   scene.add(hemi);
 
-  var key = new THREE.DirectionalLight(0xfdeacc, 0.95);
+  var key = new THREE.DirectionalLight(0xffffff, 1.15);
   key.position.set(3.6, 6.4, 4.4);
   key.castShadow = true;
   key.shadow.mapSize.set(2048, 2048);
@@ -33,21 +33,21 @@
   key.shadow.bias = -0.0015;
   scene.add(key);
 
-  var rim = new THREE.DirectionalLight(0xff8a3d, 0.28);
+  var rim = new THREE.DirectionalLight(0xff8a3d, 0.14);
   rim.position.set(-4, 2.4, -3.2);
   scene.add(rim);
 
-  var fill = new THREE.AmbientLight(0x140f0a, 0.18);
+  var fill = new THREE.AmbientLight(0xffffff, 0.32);
   scene.add(fill);
 
   // ---------- Ground ----------
-  var groundMat = new THREE.MeshStandardMaterial({ color: 0x100d09, roughness: 0.95, metalness: 0.04 });
+  var groundMat = new THREE.MeshStandardMaterial({ color: 0xe2dfd8, roughness: 0.95, metalness: 0.02 });
   var ground = new THREE.Mesh(new THREE.CircleGeometry(10, 64), groundMat);
   ground.rotation.x = -Math.PI / 2;
   ground.receiveShadow = true;
   scene.add(ground);
 
-  var polarGrid = new THREE.PolarGridHelper(6.4, 16, 6, 64, 0x3a352c, 0x252017);
+  var polarGrid = new THREE.PolarGridHelper(6.4, 16, 6, 64, 0xcac3b3, 0xdad5c9);
   polarGrid.position.y = 0.005;
   scene.add(polarGrid);
 
@@ -65,11 +65,11 @@
     scene.add(line);
     return line;
   }
-  makeDashedRing(3.2, 0xe3711f, 0.55);
-  makeDashedRing(5.4, 0x8a6a4a, 0.28);
+  makeDashedRing(3.2, 0xe3711f, 0.5);
+  makeDashedRing(5.4, 0xb0a894, 0.4);
 
   // ---------- Materials ----------
-  var bodyMat = new THREE.MeshStandardMaterial({ color: 0x18140f, roughness: 0.5, metalness: 0.42 });
+  var bodyMat = new THREE.MeshStandardMaterial({ color: 0x110f0d, roughness: 0.55, metalness: 0.32 });
   var orangeMat = new THREE.MeshStandardMaterial({ color: 0x8a3012, roughness: 0.34, metalness: 0.55, emissive: 0x2a0f05, emissiveIntensity: 0.28 });
   var ringMat = new THREE.MeshStandardMaterial({ color: 0xb5491c, roughness: 0.16, metalness: 0.85, emissive: 0x3a1608, emissiveIntensity: 0.4 });
   var grayMat = new THREE.MeshStandardMaterial({ color: 0x46443e, roughness: 0.48, metalness: 0.42 });
@@ -197,32 +197,37 @@
   var targetBaseYaw = 0;
   var clawOpen = false;
   var clawAngle = deg(3);
+  var speedMult = 1;
 
   var clock = new THREE.Clock();
+  var simTime = 0;
 
   function animate() {
     requestAnimationFrame(animate);
-    var t = clock.getElapsedTime();
+    var dt = clock.getDelta();
+    simTime += dt * speedMult;
+    var t = simTime;
+    var lerpMult = speedMult;
 
     // base: manual swivel, eased toward slider target
-    column.rotation.y += (targetBaseYaw - column.rotation.y) * 0.12;
+    column.rotation.y += (targetBaseYaw - column.rotation.y) * Math.min(0.12 * lerpMult, 0.9);
 
     // shoulder / elbow / wrist: auto-cycle unless locked (locked = target holds current value)
     var shoulderTarget = locks.shoulder ? angles.shoulder : wave(t, 6.0, deg(-16), deg(60), 0.3);
-    angles.shoulder += (shoulderTarget - angles.shoulder) * 0.05;
+    angles.shoulder += (shoulderTarget - angles.shoulder) * Math.min(0.05 * lerpMult, 0.9);
     shoulderPivot.rotation.z = angles.shoulder;
 
     var elbowTarget = locks.elbow ? angles.elbow : wave(t, 5.0, deg(-58), deg(-6), 1.1);
-    angles.elbow += (elbowTarget - angles.elbow) * 0.05;
+    angles.elbow += (elbowTarget - angles.elbow) * Math.min(0.05 * lerpMult, 0.9);
     elbowPivot.rotation.z = angles.elbow;
 
     var wristTarget = locks.wrist ? angles.wrist : wave(t, 3.0, deg(-22), deg(22), 1.9);
-    angles.wrist += (wristTarget - angles.wrist) * 0.06;
+    angles.wrist += (wristTarget - angles.wrist) * Math.min(0.06 * lerpMult, 0.9);
     wristPivot.rotation.z = angles.wrist;
 
     // claw: manual toggle, slow ease both ways
     var clawTarget = clawOpen ? deg(22) : deg(3);
-    clawAngle += (clawTarget - clawAngle) * 0.012;
+    clawAngle += (clawTarget - clawAngle) * Math.min(0.012 * lerpMult, 0.9);
     fingerL.rotation.z = clawAngle;
     fingerR.rotation.z = -clawAngle;
 
@@ -262,6 +267,14 @@
     clawOpen = !clawOpen;
     clawBtn.classList.toggle('open', clawOpen);
     clawBtn.textContent = clawOpen ? 'Close claw' : 'Open claw';
+  });
+
+  var speedBtns = Array.prototype.slice.call(document.querySelectorAll('.speed-btn'));
+  speedBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      speedMult = parseFloat(btn.dataset.speed);
+      speedBtns.forEach(function (b) { b.classList.toggle('active', b === btn); });
+    });
   });
 
   var panelEl = document.getElementById('panel');
