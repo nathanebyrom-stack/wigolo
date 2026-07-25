@@ -242,4 +242,13 @@
     clawBtn.classList.toggle('open', clawOpen);
     clawBtn.textContent = clawOpen ? 'Close claw' : 'Open claw';
   });
+
+  var panelEl = document.getElementById('panel');
+  var minBtn = document.getElementById('panel-min');
+  minBtn.addEventListener('click', function () {
+    var collapsed = panelEl.classList.toggle('collapsed');
+    minBtn.innerHTML = collapsed ? '&#43;' : '&#8722;';
+    minBtn.title = collapsed ? 'Expand' : 'Minimise';
+    minBtn.setAttribute('aria-label', collapsed ? 'Expand controls' : 'Minimise controls');
+  });
 })();

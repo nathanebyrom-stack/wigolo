@@ -26,11 +26,28 @@
   }
 
   .panel{
-    position:absolute; left:5vmin; top:16.5vmin; z-index:5; width:min(74vmin,320px);
+    position:absolute; right:5vmin; bottom:5vmin; z-index:5; width:min(74vmin,320px);
     background:var(--panel-bg); border:1px solid var(--panel-border); border-radius:6px;
     padding:1.6vmin 1.8vmin; backdrop-filter:blur(6px);
     box-shadow:0 .6vmin 2vmin rgba(30,25,15,.08);
   }
+  .panel-header{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:1.4vmin;
+  }
+  .panel-header .title{
+    font-size:clamp(10px,1.2vmin,13px); letter-spacing:.16em; text-transform:uppercase;
+    color:var(--ink); font-weight:700;
+  }
+  .min-btn{
+    width:2.4vmin; height:2.4vmin; min-width:20px; min-height:20px;
+    font-family:inherit; font-size:14px; line-height:1; color:var(--ink);
+    background:#fff; border:1px solid #cfc9bb; border-radius:3px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; padding:0;
+  }
+  .min-btn:hover{ border-color:var(--orange-hot); }
+  .panel.collapsed .panel-header{ margin-bottom:0; }
+  .panel.collapsed .row{ display:none; }
   .panel .row{ margin-bottom:1.5vmin; }
   .panel .row:last-child{ margin-bottom:0; }
   .panel .label{
@@ -67,7 +84,7 @@
   .btn.wide.open{ background:var(--orange-hot); border-color:var(--orange-hot); color:#fff; }
 
   .footer{
-    position:absolute; right:4vmin; bottom:3vmin; text-align:right; z-index:5; pointer-events:none;
+    position:absolute; left:5vmin; bottom:3vmin; text-align:left; z-index:5; pointer-events:none;
     font-size:clamp(9px,1.05vmin,12px); letter-spacing:.18em; text-transform:uppercase; color:#a7a196;
   }
   .footer b{ color:var(--orange-hot); }
@@ -81,7 +98,11 @@
       <div class="sub">Basic motor functions — manual control</div>
     </div>
 
-    <div class="panel">
+    <div class="panel" id="panel">
+      <div class="panel-header">
+        <span class="title">Controls</span>
+        <button class="min-btn" id="panel-min" aria-label="Minimise controls" title="Minimise">&#8722;</button>
+      </div>
       <div class="row">
         <div class="label"><b>Segment length</b><span class="val" id="val-length">100%</span></div>
         <input type="range" id="ctl-length" min="65" max="140" step="1" value="100">
