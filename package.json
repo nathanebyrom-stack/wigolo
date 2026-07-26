@@ -43,7 +43,7 @@
     "agent-tools"
   ],
   "scripts": {
-    "build": "tsup && tsc -p tsconfig.build.json",
+    "build": "node scripts/build.mjs",
     "build:binary": "npm run build && node packaging/binary/bundle.mjs && bash packaging/binary/pack.sh",
     "build:watch": "tsup --watch",
     "dev": "tsx src/index.ts",
