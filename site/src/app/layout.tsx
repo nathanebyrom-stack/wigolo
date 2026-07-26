@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Instrument_Sans, Azeret_Mono } from "next/font/google";
+import {
+  Bricolage_Grotesque,
+  Instrument_Sans,
+  Azeret_Mono,
+  Poppins,
+} from "next/font/google";
 import { asset, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
@@ -17,6 +22,13 @@ const mono = Azeret_Mono({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
   variable: "--font-mono",
+});
+// Card headings only — the geometric bowls read louder at small sizes than the
+// mono label face they replace.
+const poppy = Poppins({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+  variable: "--font-poppy",
 });
 
 const TITLE = "wigolo — local-first web intelligence for AI agents";
@@ -103,7 +115,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`}>
+    <html
+      lang="en"
+      className={`${display.variable} ${body.variable} ${mono.variable} ${poppy.variable}`}
+    >
       <body>
         <script
           type="application/ld+json"

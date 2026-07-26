@@ -8,7 +8,9 @@ export default defineConfig({
   sourcemap: true,
   splitting: false,
   bundle: false,
-  clean: true,
+  // dist is cleaned by scripts/build.mjs before the passes start — cleaning
+  // here instead would wipe the declarations tsc emits alongside us.
+  clean: false,
   dts: false,
   shims: false,
 });
