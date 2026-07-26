@@ -54,18 +54,21 @@
   flex-direction: column;
   gap: 10px;
   padding: 26px;
-  border: 1px solid #2c2c32;
+  border: 1px solid var(--line);
   border-radius: 12px;
-  background: #1a1a18;
+  background: var(--surface);
   transition: border-color 0.2s var(--ease), transform 0.2s var(--ease);
 }
 .card:hover {
-  border-color: #cbb0f7;
+  border-color: var(--factory-purple);
   transform: translateY(-2px);
 }
+/* Card copy runs on white while the section around it stays dark, so these
+   inks are the light-surface set — the section's own #f2f2ec/#a6abac would be
+   invisible here. */
 .glyph {
   font-size: 22px;
-  color: #cbb0f7;
+  color: var(--factory-purple);
   line-height: 1;
 }
 .cardTitle {
@@ -74,12 +77,12 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #f2f2ec;
+  color: var(--ink);
 }
 .cardBody {
   font-size: 14.5px;
   line-height: 1.55;
-  color: #a6abac;
+  color: var(--muted);
 }
 .cardCta {
   margin-top: auto;
@@ -87,7 +90,7 @@
   font-family: var(--font-mono);
   font-size: 12.5px;
   font-weight: 500;
-  color: #cbb0f7;
+  color: var(--factory-purple);
 }
 @media (max-width: 1024px) {
   .inner {
