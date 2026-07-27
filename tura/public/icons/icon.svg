@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="TURA">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#16332a"/>
+      <stop offset="1" stop-color="#0a130e"/>
+    </linearGradient>
+    <linearGradient id="far" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6fa57c"/>
+      <stop offset="1" stop-color="#3e6b50"/>
+    </linearGradient>
+    <linearGradient id="near" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#a8bd99"/>
+      <stop offset="1" stop-color="#4a7c59"/>
+    </linearGradient>
+    <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4d8ba0"/>
+      <stop offset="1" stop-color="#23414f"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="512" rx="114" fill="url(#sky)"/>
+
+  <!-- Moon, low over the ridge -->
+  <circle cx="366" cy="150" r="34" fill="#e8ede9" opacity="0.9"/>
+
+  <!-- Far ridge -->
+  <path d="M0 330 L128 196 L206 268 L268 214 L360 312 L512 208 L512 340 L0 340 Z" fill="url(#far)" opacity="0.65"/>
+
+  <!-- Near summit -->
+  <path d="M0 366 L150 178 L246 288 L302 236 L436 366 Z" fill="url(#near)"/>
+
+  <!-- Snow on the near summit -->
+  <path d="M150 178 L196 236 L172 244 L150 228 L128 246 L104 238 Z" fill="#e8ede9" opacity="0.92"/>
+
+  <!-- Water -->
+  <rect x="0" y="366" width="512" height="146" fill="url(#water)"/>
+
+  <!-- Reflection lines -->
+  <g fill="#e8ede9" opacity="0.22">
+    <rect x="120" y="398" width="120" height="7" rx="3.5"/>
+    <rect x="168" y="428" width="72" height="6" rx="3"/>
+    <rect x="96" y="456" width="160" height="6" rx="3"/>
+    <rect x="300" y="412" width="96" height="6" rx="3"/>
+  </g>
+</svg>

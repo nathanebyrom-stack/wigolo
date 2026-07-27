@@ -1,0 +1,301 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+  TURA — realistic nature theme.
+  Palette sampled from British upland landscape: pine shadow, wet granite,
+  moss, bracken in autumn, rowan berry, lichen and hill mist.
+*/
+
+:root {
+  --radius: 0.875rem;
+
+  /* Surfaces — daylight */
+  --background: #f4f6f2;
+  --foreground: #16211a;
+  --card: #ffffff;
+  --card-foreground: #16211a;
+  --popover: #ffffff;
+  --popover-foreground: #16211a;
+
+  /* Moss green — primary action */
+  --primary: #2f6b4a;
+  --primary-foreground: #f4f6f2;
+
+  --secondary: #e3e9e1;
+  --secondary-foreground: #23342a;
+
+  --muted: #e7ebe5;
+  --muted-foreground: #56655b;
+
+  --accent: #dde7dd;
+  --accent-foreground: #23342a;
+
+  --destructive: #a63d2f;
+  --destructive-foreground: #f7f3ef;
+
+  --border: #d3dbd2;
+  --input: #d3dbd2;
+  --ring: #3d7a55;
+
+  /* Landscape accents */
+  --pine: #16332a;
+  --moss: #4a7c59;
+  --fern: #6fa57c;
+  --lichen: #7d9268;
+  --bracken: #a8722c;
+  --rowan: #a63d2f;
+  --granite: #626d66;
+  --slate-wet: #3e4a48;
+  --bark: #4a3b2c;
+  --mist: #e8ede9;
+  --water: #35697a;
+  --sky: #5f8798;
+
+  /* Adventure tiers */
+  --tier-green: #2a6e49;
+  --tier-green-soft: #d3e7da;
+  --tier-amber: #82590f;
+  --tier-amber-soft: #f2e3c2;
+  --tier-red: #97372a;
+  --tier-red-soft: #f0d6d0;
+
+  /* Map bleed-through scrim (space-separated RGB for rgb(x / a)) */
+  --scrim: 244 246 242;
+  --scrim-strength: 0.82;
+}
+
+.dark {
+  /* Surfaces — pine shadow after dusk */
+  --background: #0c130f;
+  --foreground: #e6ede7;
+  --card: #141d18;
+  --card-foreground: #e6ede7;
+  --popover: #17211b;
+  --popover-foreground: #e6ede7;
+
+  --primary: #6fa57c;
+  --primary-foreground: #0a120d;
+
+  --secondary: #1d2922;
+  --secondary-foreground: #d6e2d8;
+
+  --muted: #1a241e;
+  --muted-foreground: #9aab9f;
+
+  --accent: #223029;
+  --accent-foreground: #dce7de;
+
+  --destructive: #dc7563;
+  --destructive-foreground: #130a08;
+
+  --border: #26332b;
+  --input: #2c3a31;
+  --ring: #6fa57c;
+
+  --pine: #0a130e;
+  --moss: #5f9a70;
+  --fern: #8cbf98;
+  --lichen: #a8bd99;
+  --bracken: #d9a860;
+  --rowan: #d0604d;
+  --granite: #8d9a92;
+  --slate-wet: #26332f;
+  --bark: #6b5540;
+  --mist: #223029;
+  --water: #4d8ba0;
+  --sky: #86aec0;
+
+  --tier-green: #56a877;
+  --tier-green-soft: #1b3326;
+  --tier-amber: #d6a24a;
+  --tier-amber-soft: #33280f;
+  --tier-red: #d0604d;
+  --tier-red-soft: #3a201b;
+
+  --scrim: 12 19 15;
+  --scrim-strength: 0.78;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-pine: var(--pine);
+  --color-moss: var(--moss);
+  --color-fern: var(--fern);
+  --color-lichen: var(--lichen);
+  --color-bracken: var(--bracken);
+  --color-rowan: var(--rowan);
+  --color-granite: var(--granite);
+  --color-slate-wet: var(--slate-wet);
+  --color-bark: var(--bark);
+  --color-mist: var(--mist);
+  --color-water: var(--water);
+  --color-sky: var(--sky);
+
+  --color-tier-green: var(--tier-green);
+  --color-tier-green-soft: var(--tier-green-soft);
+  --color-tier-amber: var(--tier-amber);
+  --color-tier-amber-soft: var(--tier-amber-soft);
+  --color-tier-red: var(--tier-red);
+  --color-tier-red-soft: var(--tier-red-soft);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    "SF Pro Text", "Segoe UI", sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, "Times New Roman",
+    serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    /* iPhone: stop rubber-band from exposing white behind the fixed map */
+    overscroll-behavior-y: none;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Visible, on-brand focus for keyboard users only */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display tracking-tight;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer utilities {
+  /* iPhone safe areas */
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .mb-safe {
+    margin-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .top-safe {
+    top: env(safe-area-inset-top, 0px);
+  }
+
+  /* Panels that let the map bleed through */
+  .bleed-panel {
+    background-color: rgb(var(--scrim) / var(--scrim-strength));
+    backdrop-filter: blur(20px) saturate(1.15);
+    -webkit-backdrop-filter: blur(20px) saturate(1.15);
+  }
+
+  .bleed-panel-strong {
+    background-color: rgb(var(--scrim) / 0.94);
+    backdrop-filter: blur(28px) saturate(1.2);
+    -webkit-backdrop-filter: blur(28px) saturate(1.2);
+  }
+
+  .bleed-panel-light {
+    background-color: rgb(var(--scrim) / 0.55);
+    backdrop-filter: blur(14px) saturate(1.1);
+    -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Fine grain — keeps flat colour from reading as synthetic */
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.3;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  }
+}
+
+/* Leaflet — de-chrome default controls to match the theme */
+.leaflet-container {
+  background: #0c130f;
+  font-family: inherit;
+}
+
+.leaflet-control-attribution {
+  background: var(--card) !important;
+  color: var(--muted-foreground) !important;
+  font-size: 10px !important;
+  padding: 2px 6px !important;
+}
+
+.leaflet-control-attribution a {
+  color: var(--muted-foreground) !important;
+  text-decoration: underline;
+}
+
+/*
+  On the explore screen the map runs the full height of the viewport, which puts
+  the tile attribution behind the tab bar. Attribution is a licence condition,
+  so it is lifted clear of the bar rather than covered.
+*/
+.tura-bleed-map .leaflet-control-attribution {
+  margin-bottom: calc(3.75rem + env(safe-area-inset-bottom, 0px)) !important;
+}
