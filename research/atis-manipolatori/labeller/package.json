@@ -1,0 +1,17 @@
+{
+  "name": "atis-media-audit",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Crawl a site, inventory every image and video, and label each from the page's own signals",
+  "type": "module",
+  "bin": {
+    "atis-media-audit": "./audit.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "demo": "node audit.mjs --from-html test/fixtures/gallery.html --url https://www.atismanipolatori.com/Applicazioni/Applicazioni-Foto/08.-Bobine/Bobine --out ./out"
+  }
+}
