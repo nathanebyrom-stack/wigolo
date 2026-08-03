@@ -8,6 +8,7 @@
 
 import { extractHeadings, extractMeta, extractTitle, iterTags } from './html.mjs';
 import { extractMedia, resolveUrl } from './media.mjs';
+import { curlFetch } from './curl-fetch.mjs';
 
 const SKIP_EXT =
   /\.(?:pdf|zip|rar|7z|gz|tgz|doc|docx|xls|xlsx|ppt|pptx|dwg|dxf|step|stp|exe|dmg|css|js|json|xml|rss|jpe?g|png|gif|webp|avif|svg|ico|mp4|webm|mov|avi|mp3|wav|woff2?|ttf|eot)(?:$|[?#])/i;
@@ -66,28 +67,32 @@ export function robotsAllows(rules, pathname) {
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-/** Fetch with a timeout and bounded retries on transient failures. */
+/**
+ * Fetch with a timeout and bounded retries on transient failures.
+ *
+ * Uses curl as the transport (see lib/curl-fetch.mjs): some sites' WAFs
+ * fingerprint Node's native fetch/https client hello and return 403 to it
+ * regardless of headers, while an identical request via curl succeeds.
+ */
 export async function fetchWithRetry(url, { userAgent, timeoutMs, retries, onRetry }) {
   let lastError;
   for (let attempt = 0; attempt <= retries; attempt += 1) {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeoutMs);
     try {
-      const response = await fetch(url, {
+      const response = await curlFetch(url, {
         headers: { 'user-agent': userAgent, accept: 'text/html,application/xhtml+xml' },
-        signal: controller.signal,
-        redirect: 'follow',
+        timeoutMs,
       });
-      clearTimeout(timer);
       if (response.status >= 500 && attempt < retries) {
         lastError = new Error(`HTTP ${response.status}`);
         await sleep(2 ** attempt * 1000);
         onRetry?.(url, attempt + 1, lastError);
         continue;
       }
+      if (response.status === 0) {
+        throw new Error('curl produced no response (network error or timeout)');
+      }
       return response;
     } catch (error) {
-      clearTimeout(timer);
       lastError = error;
       if (attempt < retries) {
         await sleep(2 ** attempt * 1000);
