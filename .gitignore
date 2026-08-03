@@ -63,3 +63,7 @@ competitive-blueprint.md
 .venv/
 .pytest_cache/
 *.egg-info
+
+# Downloaded third-party media from research crawls — not ours to redistribute
+# in this repo's git history. Regenerate locally with the labeller tool.
+research/atis-manipolatori/media/
