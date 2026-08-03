@@ -9,11 +9,21 @@ Zero dependencies. Node ≥ 20.
 
 ## Why it exists
 
-The retrieval half of this task ran into a hard blocker: this environment's
-egress policy denies all non-allow-listed hosts, so no page of the target site
-could be fetched (`403` at the proxy for every host, `example.com` included).
-This app is the part that *can* be built under that block — so the moment it
-runs somewhere with network access, the labelling is one command.
+The retrieval half of this task originally ran into a hard blocker: an earlier
+environment's egress policy denied all non-allow-listed hosts, so no page of
+the target site could be fetched (`403` at the proxy for every host,
+`example.com` included). This app is the part that could be built under that
+block, so that the moment it ran somewhere with network access, the labelling
+would be one command.
+
+That later run happened on 2026-08-03 — see `research/atis-manipolatori/site-
+information.md` for the labelled results. One gotcha surfaced in the process:
+**Node's built-in `fetch` does not honour the `HTTPS_PROXY` env var**, so in a
+sandboxed environment that routes egress through a proxy, plain `node audit.mjs`
+gets a `403` from the proxy's own fallback path even though the target site is
+reachable (`curl`, which does read `https_proxy`, works). Fix: run with
+`NODE_USE_ENV_PROXY=1 node audit.mjs ...` — that flag makes Node's `fetch`
+respect the proxy env vars (Node ≥ 20, marked experimental).
 
 ## Usage
 

@@ -1,8 +1,9 @@
 # ATIS Manipolatori — site information retrieval
 
 **Target:** https://www.atismanipolatori.com
-**Retrieved:** 2026-07-27
-**Method:** search-index retrieval only (see *Retrieval status* below)
+**Retrieved:** 2026-07-27 (search-index pass); **media audit:** 2026-08-03 (live crawl)
+**Method:** search-index retrieval for the company/product profile below, plus a
+live automated crawl for the media audit (see *Media audit — completed* below)
 
 ---
 
@@ -10,35 +11,92 @@
 
 | Task | Status |
 |---|---|
-| Retrieve all information | **Substantial** — company, products, services, certifications, distributor network, full site taxonomy. Sourced from the search index, not from page source |
-| Label images and video | **Structure recovered, individual assets not labelled** — the site's own photo/video gallery taxonomy is mapped below, but no image or video file could be opened |
+| Retrieve all information | **Substantial** — company, products, services, certifications, distributor network. Sourced from the search index, not from page source. The **site-structure section is stale** — see the redesign note below |
+| Label images and video | **Done** — live crawl of 337 pages across all 6 locales, 236 unique images and 17 unique videos found and labelled. See *Media audit — completed* |
 
-**Why.** This session's environment enforces an egress network policy that denies
-all outbound HTTPS except an allow-list (Anthropic endpoints, package registries,
-GitHub). Every direct fetch returns `403` at the proxy *before* reaching the target:
+**Original blocker (resolved 2026-08-03).** The environment this doc was first
+written in enforced an egress policy that denied all outbound HTTPS except an
+allow-list, so every fetch to the target returned `403` at the proxy — confirmed
+not ATIS-side, since `example.com` failed identically. Only web search worked, so
+everything in the company/product sections above was sourced from indexed
+snippets, not page source. A later environment for this same repo was given
+network access to `www.atismanipolatori.com`, which unblocked the crawl below.
+The company-profile sections have **not** been re-verified against live page
+source — the 403 above applied to search-index retrieval done on 2026-07-27,
+still worth treating as snippet-level unless re-checked.
 
-- `curl https://www.atismanipolatori.com` → `CONNECT tunnel failed, response 403`
-- Identical 403 for `https://example.com`, so this is **not** ATIS blocking us —
-  it is the session's own policy blocking every non-allow-listed host
-- `WebFetch` returns `403 Forbidden` for every URL including `example.com`
-- Playwright/Chromium routes through the same proxy and fails identically
-- Re-tested mid-task; still blocked
+---
 
-Only web **search** works, since it terminates inside the allowed Anthropic API
-surface. Everything below is therefore genuine ATIS site content recovered from
-indexed titles and snippets — but it is snippet-level, not verified page source.
+## Media audit — completed (2026-08-03)
 
-**What this means for the media half.** I recovered the *organisation* of the
-site's media — a 26-category photo gallery and a ~12-category video gallery,
-with the site's own category names, which are themselves labels. What I could
-not do is open individual `<img>`/`<video>` elements to read `src`, `alt`,
-`poster` and captions, or view the assets to describe them. **No invented labels
-appear below.** Where an asset was not seen, it is marked as such.
+Run with `research/atis-manipolatori/labeller/audit.mjs` (see its README for the
+tool itself). Regenerate with:
 
-**To unblock:** re-run in an environment whose network policy allows
-`www.atismanipolatori.com` (plus `youtube.com` / `img.youtube.com` for video
-thumbnails). Network policy is fixed when the environment is created — see
-https://code.claude.com/docs/en/claude-code-on-the-web.
+```bash
+cd research/atis-manipolatori/labeller
+NODE_USE_ENV_PROXY=1 node audit.mjs --url https://www.atismanipolatori.com --out ./out
+```
+
+`NODE_USE_ENV_PROXY=1` matters in this kind of sandboxed environment: Node's
+built-in `fetch` does not read the `HTTPS_PROXY` env var by default, so without
+it every request bypasses the environment's egress proxy and gets a `403` — even
+though the site itself is reachable (`curl`, which does honour `https_proxy`,
+works fine). The flag makes Node's `fetch` route through the same proxy.
+
+### Result
+
+| Metric | Count |
+|---|---:|
+| Pages crawled | 337 (6 locales: it, en, fr, de, es, pt-pt) |
+| Unique images | 236 |
+| Unique videos | 17 (2 self-hosted MP4, 15 YouTube embeds) |
+| Images missing `alt` (unique) | 1 |
+| Images needing visual review (unique) | 1 |
+
+Full outputs (`catalogue.json`, `catalogue.md`, `assets.csv`) are written to
+`labeller/out/`, which is gitignored — regenerate rather than expect it committed.
+
+**Accessibility finding — corrects the earlier speculation.** The original pass
+of this doc flagged the photo gallery as "a strong candidate for missing `alt`
+attributes." Now checked directly: **235 of 236 unique images carry real,
+descriptive, authored `alt` text** (e.g. `mirus-500-ATIS-senza-filo`,
+`Azzeratore di peso per anelli in acciaio`). The single exception is a partner
+logo (`loghi-FESR.png`, an EU regional-funding badge) with no `alt`, picked up
+via its section heading and flagged `needsVisualReview` rather than guessed.
+Site media accessibility is good, not weak.
+
+**Video inventory.** Two self-hosted MP4s loop as hero background video on every
+locale's homepage (`Atis.mp4`, `video-definitivo-mobile-2_1.mp4` — labelled via
+the "Contattaci ora" / "Contact us now" heading). The other 15 are YouTube
+embeds (`youtube-nocookie.com/embed/...`), one per blog post, each carrying a
+real bilingual (IT/EN) title as its label — e.g. *"Come movimentare un anello
+d'acciaio da 138 kg / How to handle a steel ring weighing 138 kg"*. No on-site
+video gallery (`/Applicazioni/Applicazioni-Video`) was found — see the redesign
+note below.
+
+**⚠️ Site redesign since the 2026-07-27 search-index pass.** The old capitalised
+URL structure described below (`/Applicazioni/Applicazioni-Foto`, 26 numbered
+photo categories, `/Applicazioni/Applicazioni-Video`, ~12 video categories) **no
+longer exists on the crawled site.** `/Applicazioni/Applicazioni-Foto` now
+redirects (`301`) to `/soluzioni/?images_video=images`. The site has moved to a
+flat, lowercase, WordPress-native structure:
+
+- `/soluzioni/` — solved-case gallery (was the photo gallery), plus per-solution
+  pages like `/soluzioni/movimentazione-di-bobine-...`
+- `/sistemi-di-presa/` — gripping-systems pages (hook, forks, suction cups,
+  magnets, mechanical/pneumatic clamps), matches the *Gripping systems* section
+  above
+- `/blog/` — the video content lives here now, one YouTube embed per post, not
+  in a separate video gallery
+- `/manipolatori-industriali/{atismirus,acer,ferax,linear}` — product lines
+- No `/Applicazioni/...`, no numbered category taxonomy, no `/web/index.php/`
+  legacy path was reachable during this crawl (400-page cap, all 6 locales
+  covered — see `truncated: false` in `catalogue.json`)
+
+The *Site structure*, *MEDIA — photo gallery* and *MEDIA — video gallery*
+sections further down are kept as originally written for the historical record,
+but should be treated as **describing a previous version of the site**, not
+its current state.
 
 ---
 
@@ -194,7 +252,10 @@ partners abroad (`/en/Company/Sales-Partners`, `/Azienda/Distributori`).
 
 ---
 
-## MEDIA — photo gallery (`/Applicazioni/Applicazioni-Foto`)
+## MEDIA — photo gallery (`/Applicazioni/Applicazioni-Foto`) — historical, superseded
+
+⚠️ **This section describes a site version that no longer exists** — see the
+redesign note in *Media audit — completed* above. Kept for the record only.
 
 The site's main image repository, organised as a **numbered 26-category
 taxonomy** by industry/product, each category holding sub-pages of photographed
@@ -242,7 +303,11 @@ manipulator/application, and a suggested alt text.
 
 ---
 
-## MEDIA — video gallery (`/Applicazioni/Applicazioni-Video`)
+## MEDIA — video gallery (`/Applicazioni/Applicazioni-Video`) — historical, superseded
+
+⚠️ **This section describes a site version that no longer exists** — the crawl
+found video embedded in `/blog/` posts, not a separate gallery. See *Media audit
+— completed* above for the real, labelled inventory. Kept for the record only.
 
 A parallel video gallery, organised by the same industry logic but with a
 **flatter, unnumbered slug scheme**.
@@ -371,12 +436,14 @@ gres slabs, glass and window frames, thermal radiators (*termoarredi*).
 3. **Competitor trademark in a page title** — `/en/solutions/` carries an indexed
    title referencing **INDEVA®**, a Scaglia Indeva brand. Either a comparison
    page or a stale/incorrect meta title; worth checking either way.
-4. **Three coexisting URL generations** plus a `/web/index.php/` legacy tree —
-   likely duplicate-content and canonical-tag issues, and a migration left
-   unfinished.
-5. **Media accessibility is unverified and probably weak** — a photo gallery this
-   large on a site carrying legacy URL structures is a strong candidate for
-   missing `alt` attributes, but this could not be confirmed without page source.
+4. **Three coexisting URL generations** plus a `/web/index.php/` legacy tree were
+   reported by the search index on 2026-07-27; the 2026-08-03 live crawl found
+   none of them reachable from the current homepage — likely fully migrated to
+   the flat `/soluzioni/`, `/sistemi-di-presa/`, `/blog/` structure since then,
+   though old links elsewhere on the web may still 404 or redirect.
+5. ~~Media accessibility is unverified and probably weak~~ — **checked directly
+   by the 2026-08-03 crawl and found good**: 235 of 236 unique images carry real
+   authored `alt` text. Only one asset (a partner logo) lacks it.
 
 ---
 
@@ -387,7 +454,8 @@ gres slabs, glass and window frames, thermal radiators (*termoarredi*).
 - Re-verify before external use: the 600 / 450 / 150 kg capacities, the 5–7 bar
   air requirement, the thirty-vs-forty-years discrepancy, the contact block, and
   the distributor country list.
-- Not retrieved: pricing, lead times, dimensional drawings, datasheet PDFs, the
-  full photo/video category numbering, and every individual media asset.
+- Not retrieved: pricing, lead times, dimensional drawings, datasheet PDFs. Media
+  assets **were** retrieved and labelled on 2026-08-03 — see *Media audit —
+  completed* above; the historical 26-category photo taxonomy no longer applies.
 - A general-presentation PDF catalogue exists on DirectIndustry (third-party
   host) — a good secondary source once network access allows.
