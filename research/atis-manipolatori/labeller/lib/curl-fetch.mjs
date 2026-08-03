@@ -1,12 +1,16 @@
 /**
  * curl-backed HTTP client with a fetch()-shaped return value.
  *
- * Why this exists: atismanipolatori.com's WAF returns 403 to Node's native
- * `fetch`/`https` regardless of headers sent — a TLS/HTTP2 client-hello
- * fingerprint block, not a header check (confirmed: identical headers via
- * curl succeed, via Node fail). curl's handshake passes. This module shells
- * out to curl per request and adapts its output to the subset of the fetch
- * Response API the crawler uses (ok, status, url, headers.get, text()).
+ * Why this exists: in a sandboxed environment with an egress proxy set via
+ * HTTPS_PROXY, Node's built-in fetch (undici) does not honour that env var
+ * by default — it attempts a direct connection, which this kind of
+ * environment intercepts and answers with a 403, regardless of headers
+ * sent. curl honours HTTPS_PROXY natively and succeeds. (Node 22+ has an
+ * experimental fix — running with NODE_USE_ENV_PROXY=1 makes fetch proxy-aware
+ * too — but shelling out to curl works without relying on an experimental
+ * flag or a specific Node version.) This module shells out to curl per
+ * request and adapts its output to the subset of the fetch Response API the
+ * crawler uses (ok, status, url, headers.get, text()).
  */
 
 import { execFile } from 'node:child_process';

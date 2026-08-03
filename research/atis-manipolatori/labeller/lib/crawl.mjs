@@ -70,9 +70,11 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 /**
  * Fetch with a timeout and bounded retries on transient failures.
  *
- * Uses curl as the transport (see lib/curl-fetch.mjs): some sites' WAFs
- * fingerprint Node's native fetch/https client hello and return 403 to it
- * regardless of headers, while an identical request via curl succeeds.
+ * Uses curl as the transport (see lib/curl-fetch.mjs): in a sandboxed
+ * environment with an HTTPS_PROXY set, Node's native fetch doesn't honour it
+ * by default and gets a 403 on the resulting direct connection attempt,
+ * while curl — which does honour HTTPS_PROXY — succeeds on an identical
+ * request. See curl-fetch.mjs for the full explanation.
  */
 export async function fetchWithRetry(url, { userAgent, timeoutMs, retries, onRetry }) {
   let lastError;
