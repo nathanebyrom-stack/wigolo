@@ -4,6 +4,9 @@ node_modules/
 dist/
 *.tgz
 
+# Incremental typecheck state (tsc --incremental)
+.tscache/
+
 # Single-file binary build (build:binary) — artifacts never committed
 packaging/binary/dist/
 /pkg.build.json

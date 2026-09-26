@@ -4,6 +4,12 @@
     "noEmit": false,
     "emitDeclarationOnly": true,
     "declaration": true,
-    "declarationMap": true
+    "declarationMap": true,
+    // Deliberately NOT incremental. This pass emits into dist, which the build
+    // wipes first; a retained buildinfo would report those declarations as
+    // already-emitted and tsc would skip writing them, publishing a package
+    // with zero .d.ts files. The typecheck is cached on the lint config
+    // instead, where noEmit makes stale-output skew impossible.
+    "incremental": false
   }
 }

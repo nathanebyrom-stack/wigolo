@@ -10,10 +10,9 @@
 #
 # Then uninstalls and removes every temp dir. Exits 0 only if both asserts pass.
 #
-# Requires `dist/` to be built first (there is no prepack/prepare script, so a
-# bare `npm pack` on a clean checkout would ship a tarball without dist/). The
-# published npm tarball is built by release CI; this mirrors that by running the
-# build locally when dist/ is missing.
+# A `prepack` script runs the full build on every `npm pack`, so the tarball
+# always carries dist/ with declarations. This pre-builds only to keep the pack
+# step from repeating the work, and to fail loudly here if the build is broken.
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -40,10 +39,11 @@ log "package: $PKG_NAME@$PKG_VERSION"
 log "throwaway prefix: $PREFIX_DIR"
 log "fresh data dir:   $DATA_DIR"
 
-# dist/ must exist for the tarball to carry the CLI (no prepack script).
+# Build up front so a failure surfaces here rather than inside npm pack. The
+# prepack hook would build anyway; this keeps it from running twice.
 if [ ! -f "$REPO_ROOT/dist/index.js" ]; then
-  log "dist/ missing — building (mirrors release CI's prepack build)"
-  npm run build >&2
+  log "dist/ missing — building"
+  npm run build:all >&2
 fi
 
 log "npm pack -> $WORK_DIR"
