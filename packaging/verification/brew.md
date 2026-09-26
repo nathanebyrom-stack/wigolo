@@ -27,11 +27,10 @@ brew install --build-from-source wigolo-verify/local/wigolo
 
 Full sequence (what the script does):
 
-1. `npm pack --pack-destination <tmp>` → local tarball. NOTE: `dist/` must be
-   built first (`npm run build`) — there is no `prepack`/`prepare` script, so a
-   bare `npm pack` on a clean checkout would ship a tarball without `dist/`.
-   The published npm tarball is built by release CI; local verification builds
-   it manually to mirror that.
+1. `npm pack --pack-destination <tmp>` → local tarball. `dist/` is built
+   automatically: a `prepack` script runs the full build (`build:all`) on every
+   pack and publish, so the tarball carries `dist/` with declarations even from
+   a clean checkout.
 2. Temp formula in a local tap: `url` → `file://<tarball>`, `sha256` → the
    tarball's real digest. The committed formula keeps the canonical registry
    URL + `PLACEHOLDER_REFRESHED_AT_RELEASE`.

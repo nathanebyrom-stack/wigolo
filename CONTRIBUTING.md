@@ -9,13 +9,19 @@ Requires Node.js ≥ 20.
 
 ```bash
 npm install
-npm run build        # tsc -> dist/
+npm run build        # JS -> dist/, no type checking (~1s)
+npm run build:all    # JS + declarations, type-checks the project
 npm test             # full vitest suite
 npm run test:unit    # unit tests only
-npm run lint         # tsc --noEmit
+npm run lint         # tsc --noEmit, incremental after the first run
 ```
 
 `npm run dev` runs the CLI from source via `tsx`.
+
+`npm run build` is the fast inner loop and runs **no type checker** — pair it
+with `npm run lint` while iterating. `build:all` is what CI runs and what
+`npm pack`/`npm publish` trigger through `prepack`, so released tarballs always
+carry declarations.
 
 ## Proposing changes
 

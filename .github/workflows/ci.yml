@@ -34,10 +34,11 @@ jobs:
       # Build typechecks on the way through: the declaration pass runs the full
       # checker over the same file set as `npm run lint`, and reports a superset
       # of its diagnostics. Running lint first only bought a second full
-      # typecheck of an already-checked program.
+      # typecheck of an already-checked program. Must stay build:all — plain
+      # `build` is the JS-only fast path and runs no checker at all.
       - name: Typecheck + build
         shell: bash
-        run: npm run build
+        run: npm run build:all
 
       - name: Unit tests
         shell: bash
@@ -57,7 +58,7 @@ jobs:
       - run: npm ci
 
       # Typechecks as part of the build — see the note in lint-build-unit.
-      - run: npm run build
+      - run: npm run build:all
 
       - run: npx playwright install --with-deps chromium
 

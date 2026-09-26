@@ -22,10 +22,10 @@ Reproduce: `scripts/verify-channel-npm.sh` (exit 0 on pass).
 
 ## Pipeline
 
-1. `npm run build` when `dist/` is missing — there is no `prepack`/`prepare`
-   script, so a bare `npm pack` on a clean checkout would ship a tarball
-   without `dist/`. The published npm tarball is built by release CI; the
-   script mirrors that by building locally.
+1. `npm run build` when `dist/` is missing. A `prepack` script now runs the
+   full build (`build:all`) on every `npm pack` and `npm publish`, so the
+   tarball always carries `dist/` with declarations; this step just avoids
+   doing that work twice.
 2. `npm pack` → local `wigolo-0.1.43-beta.2.tgz` in a temp dir.
 3. `NPM_CONFIG_PREFIX=<temp> npm install -g <tarball>` — 385 packages,
    `prebuild-install` resolves the native `better-sqlite3` binding (no
