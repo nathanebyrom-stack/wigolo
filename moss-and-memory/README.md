@@ -21,3 +21,8 @@ Working files for the Moss & Memory bespoke terrarium website.
 | 35 L | Brambly Cottage "Whipe Terrarium Bottle 35 Litre Set" (Wayfair) | 55.5 × 39.3 cm |
 
 Note: `reference-vessels/` shows the 5 L and 15 L bottles planted, not empty; crop or edit them before using them as Kontext inputs for the empty Step 1 frame.
+
+## Reference photos added 6 Oct 2026
+Full product photos captured from rhsplants.co.uk (15 L set: Ø30 × H44 cm, £51.99, in stock on 6 Oct).
+`rhs-15l-empty-tagged.webp` and `rhs-5l-empty-tagged.webp` show the empty bottles. Remove the neck tag with Kontext before using them as a base.
+`rhs-15l-product-page.webp` is a screenshot of the product page.
