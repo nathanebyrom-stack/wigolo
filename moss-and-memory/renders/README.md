@@ -14,3 +14,22 @@
 
 ## Tools
 `tools/gen.py krea|kontext ...` calls the `mcp-tools` Gradio spaces. `tools/sheet.py` makes a contact sheet for review.
+
+## Decision 6 Oct 2026: no figures inside the terrarium
+Figures personalise a piece too much. No terrarium image may show figures inside the glass.
+Figures are a separate selection: each set is photographed on its own, and on the site the sets sit
+beside the terrarium or down the side of the screen. No more than 10 categories. Current range (8):
+
+1. The Gathering: mixed-race group of six (one set)
+2. Christmas: Santa, snowman, reindeer, small wrapped present
+3. Valentine's: couple on a bench with a small red heart
+4. Wedding: bride and groom
+5. Family: two parents, two children
+6. Pets: a dog and a cat
+7. The Golfer: golfer with putter and pin flag
+8. The Adventurer: hiker with backpack and walking pole
+
+Scroll build Step 4 ("Choose Your Figures") shows the planted bottle unchanged, with a small figure set
+standing on the slate beside it, never inside. Gallery and flagship renders drop the figures from their prompts.
+Figure-set renders use Krea (no bottle in frame, so shape drift doesn't matter): studio macro shot of
+hand-painted 1:87-scale figures on slate against charcoal, matching the scroll set-up.
