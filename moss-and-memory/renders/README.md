@@ -33,3 +33,18 @@ Scroll build Step 4 ("Choose Your Figures") shows the planted bottle unchanged, 
 standing on the slate beside it, never inside. Gallery and flagship renders drop the figures from their prompts.
 Figure-set renders use Krea (no bottle in frame, so shape drift doesn't matter): studio macro shot of
 hand-painted 1:87-scale figures on slate against charcoal, matching the scroll set-up.
+
+## Run of 7 Oct 2026 (6 renders, then quota)
+- **Approved master: `scroll-step3-planted-master.webp`.** The real RHS 15 L planted photo
+  (`reference-vessels/rhs-15l-planted-full.webp`, cropped 150,20,850,950), restaged by Kontext onto slate
+  against charcoal. It has real plants, real glass and real condensation. Steps 2, 1, 4 and 5 are edited
+  from this frame so all five share one camera:
+  - Step 2: remove all plants, leaving the flat soil, with pebbles visible at the bottom against the glass.
+  - Step 1: from Step 2, remove all soil and pebbles, leaving clean empty glass.
+  - Step 4: from Step 3, add a small set of hand-painted miniature figures standing on the slate BESIDE the bottle.
+  - Step 5: from Step 4, turn on a warm LED glow from the cork.
+- `empty-15l-from-tagged-photo.webp`: a good empty 15 L (tag removed) from a *different* photo, so its
+  camera doesn't match the master. Keep it for flagships and size cards, not the scroll.
+- Rejected: Kontext *adding* substrate or plants to an empty bottle. It gave a cocoa-powder mound,
+  soil and pebble layers in the wrong order, and a cut-out fern with moss balls. Kontext removes things well
+  and invents planting badly, so start from real planted photos.
