@@ -18,16 +18,15 @@
 ## Decision 6 Oct 2026: no figures inside the terrarium
 Figures personalise a piece too much. No terrarium image may show figures inside the glass.
 Figures are a separate selection: each set is photographed on its own, and on the site the sets sit
-beside the terrarium or down the side of the screen. No more than 10 categories. Current range (8):
+beside the terrarium or down the side of the screen. No more than 10 categories. Current range (7; Family merged into The Gathering on 7 Oct):
 
 1. The Gathering: mixed-race group of six (one set)
 2. Christmas: Santa, snowman, reindeer, small wrapped present
 3. Valentine's: couple on a bench with a small red heart
 4. Wedding: bride and groom
-5. Family: two parents, two children
-6. Pets: a dog and a cat
-7. The Golfer: golfer with putter and pin flag
-8. The Adventurer: hiker with backpack and walking pole
+5. Pets: a dog and a cat
+6. The Golfer: golfer with putter and pin flag
+7. The Adventurer: hiker with backpack and walking pole
 
 Scroll build Step 4 ("Choose Your Figures") shows the planted bottle unchanged, with a small figure set
 standing on the slate beside it, never inside. Gallery and flagship renders drop the figures from their prompts.
@@ -48,3 +47,11 @@ hand-painted 1:87-scale figures on slate against charcoal, matching the scroll s
 - Rejected: Kontext *adding* substrate or plants to an empty bottle. It gave a cocoa-powder mound,
   soil and pebble layers in the wrong order, and a cut-out fern with moss balls. Kontext removes things well
   and invents planting badly, so start from real planted photos.
+
+## Decision 7 Oct 2026: colour, not just green; likeness option kept
+Every terrarium image carries at least two colour accents against the moss and ferns, using plants we can
+source: Purple Velvet Plant (Gynura aurantiaca), Begonia 'Black Bat' (near-black, red undersides), the
+red-and-silver spotted Begonia amphioxus x malachosticta, Aluminium Plant (silver), pink or red fittonia.
+For the scroll build, make one extra Kontext edit on the Step 3 master before deriving the other steps:
+"Add a purple velvet plant and a red-spotted begonia among the existing plants. Keep everything else exactly the same."
+The +£40 likeness painting option stays on the order form. The brand pack doc was updated to match on 7 Oct.
