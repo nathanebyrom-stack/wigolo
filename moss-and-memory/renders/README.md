@@ -55,3 +55,19 @@ red-and-silver spotted Begonia amphioxus x malachosticta, Aluminium Plant (silve
 For the scroll build, make one extra Kontext edit on the Step 3 master before deriving the other steps:
 "Add a purple velvet plant and a red-spotted begonia among the existing plants. Keep everything else exactly the same."
 The +£40 likeness painting option stays on the order form. The brand pack doc was updated to match on 7 Oct.
+
+## Run of 8 Oct 2026 (5 renders, then quota)
+Approved and saved in `scroll/` (880 × 1168 px, all one camera):
+- `step3-plants.webp`: the master plus a colour pass (purple velvet plant, red fittonia). This is now the Step 3 master.
+- `step2-foundation.webp`: plants removed, giving pebbles under compost in the right order. (The first try left a patched rectangle in the soil and was rejected.)
+- `step1-base.webp`: soil removed, leaving a clean empty bottle.
+
+Known seam: Step 3 doesn't show the white pebbles, so they fade out between Steps 2 and 3.
+
+Rejected: `step4-REJECTED-camera-moved.webp`. Kontext zoomed out, made the slate glittery and drew the figures at a quarter of the
+bottle's height. The figurine itself is clean, so `figure-valentines-candidate.webp` is a cropped stand-in for the Valentine's set.
+
+**Plan change for Step 4:** don't composite figures into the photo. Step 4 shows the Step 3 photo with a figure-set card
+fading in beside it on the site (the user asked for figures beside the terrarium or down the side of the screen).
+**Step 5** is then one Kontext edit from `step3-plants`: "Turn on a warm amber LED glow coming from the cork, lighting
+the plants inside. Keep everything else exactly the same." So only one render stands between now and a live scroll sequence.
