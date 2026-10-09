@@ -71,3 +71,17 @@ bottle's height. The figurine itself is clean, so `figure-valentines-candidate.w
 fading in beside it on the site (the user asked for figures beside the terrarium or down the side of the screen).
 **Step 5** is then one Kontext edit from `step3-plants`: "Turn on a warm amber LED glow coming from the cork, lighting
 the plants inside. Keep everything else exactly the same." So only one render stands between now and a live scroll sequence.
+
+## Run of 9 Oct 2026: scroll and hero live
+- `scroll/step5-light.webp` approved: a Kontext glow edit of step3-plants. Live site version 5 now has:
+  - the photo scroll (Steps 1, 2, 3, 5, with Step 4 fading in a Valentine's figure card beside the glass);
+  - a hero photo that switches lit/unlit on tap (step5 / step3);
+  - "Concept render" badges;
+  - drawn illustrations with figure sets beside the bottle, never inside.
+- `flagship-5l-base.webp` approved: the RHS 5 L planted photo restaged on slate (its pink fittonia already adds colour).
+  Next edit: the cork LED glow only, using the Step 5 wording.
+- Rejected twice: Kontext *adding* a purple velvet plant to the 5 L. It drew a fuzzy cartoon star. Asking for glow and
+  plant in one edit also gave a floating lamp mid-bottle. Use one change per edit, and prefer recolouring an existing
+  plant over adding a new one.
+- Still to do: 5 L glow, then 15 L flagship (can reuse step5-light), 35 L (Whipe empty photo; planting needs a real
+  photo or careful edits), the 9 gallery pieces, the 7 figure-set photos and the 60 plant thumbnails.
