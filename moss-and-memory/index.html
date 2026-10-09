@@ -1,5 +1,6 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Moss &amp; Memory</title>
-<meta name="description" content="Bespoke living terrariums with hand-painted figures and built-in LED lighting. 10, 15 and 35 litres, made to order.">
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Moss &amp; Memory</title>
+<meta name="description" content="Bespoke living terrariums with built-in LED lighting and hand-painted figure sets. 5, 15 and 35 litres, made to order.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Figtree:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap">
@@ -60,6 +61,10 @@
   .rail-dot { width: 8px; height: 8px; border-radius: 99px; background: var(--line); transition: background .3s, transform .3s; }
   .rail-dot.on { background: var(--moss); transform: scale(1.35); }
   .rail-dot.done { background: rgba(147, 200, 110, .5); }
+  .j-shot { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 18px; opacity: 0; will-change: opacity; }
+  .j-shot:first-child { opacity: 1; }
+  .badge { position: absolute; z-index: 2; font-family: "DM Mono", ui-monospace, monospace; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--fg); background: rgba(10, 19, 16, .72); border: 1px solid var(--line); border-radius: 99px; padding: 4px 10px; backdrop-filter: blur(4px); }
+  .j-fig { position: absolute; z-index: 3; right: 3%; bottom: 3%; width: 32%; max-width: 170px; opacity: 0; transform: translateY(14px); will-change: opacity, transform; }
 
   /* options */
   .opt { position: relative; display: block; cursor: pointer; }
@@ -148,7 +153,7 @@
       <div class="j-bg" id="jBg"></div>
       <div class="relative h-full max-w-6xl mx-auto px-4 pt-20 pb-6 flex flex-col md:grid md:grid-cols-2 md:items-center gap-4 md:gap-10">
         <div class="flex-1 md:flex-none min-h-0 flex items-center justify-center md:h-[78svh]">
-          <div id="jArt" class="h-full max-h-[78svh] aspect-[320/412] max-w-full"></div>
+          <div id="jArt" class="relative h-full max-h-[78svh] aspect-[880/1168] max-w-full"></div>
         </div>
         <div class="min-w-0 shrink-0">
           <p class="eyebrow mb-3">From empty glass to living world</p>
@@ -650,15 +655,13 @@ const Terra = (() => {
     }
     return '';
   }
-  function figures(list, v, r, s, B) {
+  // figure sets stand on the table beside the glass, never inside the terrarium
+  function figuresBeside(list, r, id) {
     if (!list || !list.length) return '';
-    const k = clamp((v.hw(v.soil) - 14) / 88, .7, 1.05) * 2.05;
-    const W = Math.min(v.hw(v.soil) - 44, 58), n = list.length;
-    return list.map((t, i) => {
-      const off = t === 'golfer' ? -6 * k : 0;
-      const x = 150 + (n === 1 ? 0 : -W + 2 * W * i / (n - 1)) * .9 + off;
-      const g = figureSet(t, x, v.soil + 11, k, r);
-      return B ? `<g class="drop">${g}</g>` : g;
+    const k = 1.55, X = [38, 262, 8, 292];
+    return list.slice(0, 4).map((t, i) => {
+      const x = X[i] - (t === 'golfer' ? 6 * k : 0);
+      return `<ellipse cx="${f(x + (t === 'golfer' ? 6 * k : 0))}" cy="390" rx="22" ry="3.5" fill="url(#sd-${id})"/>` + figureSet(t, x, 388, k, r);
     }).join('');
   }
 
@@ -834,7 +837,7 @@ const Terra = (() => {
 
     const P = plants(cfg.plants || 'woodland', v, r, s);
     const keep = keepsakes(cfg.keeps, v, r, id, s, B);
-    const figs = figures(cfg.figures, v, r, s, B);
+    const figs = figuresBeside(cfg.figures, r, id);
     let lightsG = '';
     if (lit) {
       const startY = v.cork ? v.cork.y + v.cork.h - 4 : v.top;
@@ -851,7 +854,7 @@ const Terra = (() => {
       ${lit ? grp(4, lightsG, 'lt') : ''}
       ${grp(2, wrapPl(P.mid))}
       ${grp(2, wrapPl(P.front))}
-      ${grp(3, keep + figs)}
+      ${grp(3, keep)}
       ${grp(2, wrapPl(P.details))}
       ${grp(B ? 4 : 0, dew)}
       <rect x="${f(hlX)}" y="0" width="9" height="400" fill="url(#hl-${id})" opacity=".2"/>
@@ -888,7 +891,7 @@ const Terra = (() => {
     }
 
     const label = opts.label || 'Illustration of a bespoke terrarium';
-    return `<svg class="terra" viewBox="-10 -14 320 412" role="img" aria-label="${label}" xmlns="http://www.w3.org/2000/svg"><defs>${defs}</defs>${back}${contents}${cap}${front}${tag}</svg>`;
+    return `<svg class="terra" viewBox="-10 -14 320 412" role="img" aria-label="${label}" xmlns="http://www.w3.org/2000/svg"><defs>${defs}</defs>${back}${contents}${cap}${front}${figs}${tag}</svg>`;
   }
 
   return { render, vessels: V };
@@ -916,7 +919,7 @@ const Terra = (() => {
       copy: 'Small enough for a bedside table, deep enough to hold a whole story. A single scene composed by hand around one moment, with jewel-like plants growing in their own rain cycle and a warm glow set into the cork.' },
     '15': { name: '15 litre', label: 'The Signature', base: 295, w: '66%', h: 'approx. 42 cm tall', figs: 2, picks: 5, tiers: 'SM',
       fits: 'Small & medium plants · up to 2 figure scenes',
-      copy: 'Room for a landscape to breathe: layered planting, a winding stone path and figures living out your scene, from a proposal on a mossy ridge to a golfer lining up the putt of his life.' },
+      copy: 'Room for a landscape to breathe: layered planting, a winding stone path and pops of colour from purple velvet plant and fittonia, with a figure set standing beside the glass.' },
     '35': { name: '35 litre', label: 'The Heirloom', base: 395, w: '82%', h: '55.5 cm tall, 39.3 cm wide', figs: 4, picks: 8, tiers: 'SML',
       fits: 'All plants · up to 4 figure scenes',
       copy: 'Living sculpture. A full miniature world of rising terrain, rock outcrops, trailing vines and a tropical canopy, lit with a gallery glow and built to mature over years.' }
@@ -955,7 +958,7 @@ const Terra = (() => {
   /* hero */
   const HERO = { vessel: 'demijohn', size: '5', plants: 'tropical', figures: ['couple'], light: 'fairy', engrave: 'Will you?', seed: 21 };
   const heroArt = $('#heroArt');
-  heroArt.innerHTML = Terra.render(HERO, { label: 'A glowing belly-bottle terrarium with two miniature figures sitting on a mossy ridge' });
+  heroArt.innerHTML = Terra.render(HERO, { label: 'A glowing belly-bottle terrarium with a miniature couple standing beside the glass' });
   heroArt.addEventListener('click', () => heroArt.classList.toggle('lights-off'));
 
   /* journey */
@@ -963,12 +966,20 @@ const Terra = (() => {
     ['The Base', 'It begins with clear, hand-selected glass: an empty stage waiting for your story.'],
     ['The Foundation', 'Drainage stones, activated carbon and a rich botanical substrate form the hidden engine that keeps your world alive for years.'],
     ['Choose Your Plants', 'Moss, ferns and jewel-toned tropicals are planted by hand, chosen to thrive in the glass’s own rain cycle.'],
-    ['Choose Your Figures', 'Now the story arrives: a couple resting on a mossy ridge, a golfer lining up the perfect putt. Hand-painted, placed with tweezers.'],
+    ['Choose Your Figures', 'Now the story arrives: choose a set of hand-painted figures to stand beside the glass, from a Christmas scene to a wedding party. The planting stays yours to enjoy for years.'],
     ['Let There Be Light', 'The built-in LEDs glow on, and glass, leaf and figure catch the light. Your world, alive after dark.']
   ];
-  const JCFG = { vessel: 'demijohn', size: '15', plants: 'tropical', figures: ['golfer'], light: 'warm', seed: 42 };
+  // concept-render photos of one 15 L build, one camera; step 4 reuses step 3 and adds the figure card beside the glass
+  const SHOTS = [
+    ['img/step1-base.webp', 0, 'An empty recycled-glass belly bottle with a cork'],
+    ['img/step2-foundation.webp', 1, 'The bottle with drainage pebbles and compost added'],
+    ['img/step3-plants.webp', 2, 'The bottle planted with ferns, purple velvet plant and red fittonia'],
+    ['img/step5-light.webp', 4, 'The planted bottle lit by a warm LED in the cork']
+  ];
   const jArt = $('#jArt');
-  jArt.innerHTML = Terra.render(JCFG, { build: true, label: 'A belly-bottle terrarium being built step by step as you scroll' });
+  jArt.innerHTML = SHOTS.map(([src, , alt], i) => `<img class="j-shot" src="${src}" alt="${alt}" width="880" height="1168" decoding="async"${i ? ' loading="lazy"' : ''}>`).join('')
+    + '<span class="badge left-3 top-3">Concept render</span>'
+    + `<figure class="j-fig rounded-2xl border border-line bg-ink2 overflow-hidden shadow-2xl"><img src="img/figure-valentines.webp" alt="Hand-painted miniature couple on a bench" width="280" height="330" loading="lazy" class="w-full h-auto"><figcaption class="px-2.5 py-1.5 md:px-3 md:py-2 text-[11px] md:text-xs leading-tight"><span class="block font-medium text-fg">Valentine’s set</span><span class="hidden md:block text-muted mt-0.5">Stands beside the glass</span></figcaption></figure>`;
   $('#jPanels').innerHTML = STEPS.map((s, i) => `<div class="j-panel${i === 0 ? ' on' : ''}" data-i="${i}">
       <p class="font-mono text-xs text-muted tnum mb-3">Step ${i + 1} of ${STEPS.length}</p>
       <h3 class="font-display text-4xl md:text-5xl leading-tight mb-4">${s[0]}</h3>
@@ -976,20 +987,17 @@ const Terra = (() => {
       ${i === STEPS.length - 1 ? '<a href="#design" class="btn btn-primary mt-6">Design yours</a>' : ''}
     </div>`).join('');
   $('#rail').innerHTML = STEPS.map(() => '<span class="rail-dot"></span>').join('');
-  const groups = [...jArt.querySelectorAll('.st')], panels = $$('.j-panel'), dots = $$('.rail-dot'), jBg = $('#jBg'), journey = $('#journey');
+  const shots = [...jArt.querySelectorAll('.j-shot')], jFig = jArt.querySelector('.j-fig'), panels = $$('.j-panel'), dots = $$('.rail-dot'), jBg = $('#jBg'), journey = $('#journey');
   let active = -1;
   function drawJourney() {
     const rect = journey.getBoundingClientRect();
     const total = journey.offsetHeight - window.innerHeight;
     const sp = clamp(-rect.top / total) * (STEPS.length - .001);
     const idx = Math.floor(sp);
-    groups.forEach(g => {
-      const s = +g.dataset.s, t = clamp((sp - s + .1) / .6), e = ease(t);
-      if (s === 1) { g.style.opacity = e; g.style.transform = `translateY(${(1 - e) * -36}px)`; }
-      else if (s === 2) [...g.querySelectorAll('.pl')].forEach((d, i, a) => { const tt = ease(clamp(t * (1 + a.length * .12) - i * .12)); d.style.transform = `scale(${tt})`; d.style.opacity = tt > 0 ? 1 : 0; });
-      else if (s === 3) { const ds = [...g.querySelectorAll('.drop')]; ds.forEach((d, i, a) => { const tt = ease(clamp(t * (1 + a.length * .3) - i * .3)); d.style.opacity = tt; d.style.transform = `translateY(${(1 - tt) * -120}px)`; }); if (!ds.length) g.style.opacity = e; }
-      else g.style.opacity = e;
-    });
+    // each photo fades in over the one before as its step arrives
+    shots.forEach((img, i) => { if (i) img.style.opacity = ease(clamp((sp - SHOTS[i][1] + .25) / .5)).toFixed(3); });
+    const fe = ease(clamp((sp - 3 + .25) / .5));
+    jFig.style.opacity = fe.toFixed(3); jFig.style.transform = `translateY(${((1 - fe) * 14).toFixed(1)}px)`;
     jBg.style.setProperty('--glow', (ease(clamp((sp - 3.9) / .6)) * .16).toFixed(3));
     if (idx !== active) {
       active = idx;
@@ -1006,7 +1014,7 @@ const Terra = (() => {
   /* process */
   const PROCESS = [
     ['Custom scenes', 'Tell us the place, the moment or the mood. We sketch a landscape around it, from a coastal path to a jungle ravine, and refine it with you before a single plant goes in.'],
-    ['Custom characters', 'Hand-painted miniature figures bring the scene to life: a couple on a mossy ridge, a golfer on a tiny green, a beloved dog. Tell us who they are and we’ll match the details.'],
+    ['Custom characters', 'Choose a set of hand-painted miniature figures to display beside your terrarium. We can paint them to look like the people in your photos.'],
     ['LED illumination', 'Discreet lighting is built into every piece and tuned to the composition. Switch it on and the glass becomes a glowing window into another world.'],
     ['Low maintenance', 'Sealed terrariums water themselves in a gentle rain cycle. Bright, indirect light, an occasional mist and a trim every few months is all it asks.']
   ];
@@ -1139,7 +1147,7 @@ const Terra = (() => {
   const FAQ = [
     ['Why does it take two weeks?', 'Every terrarium is built to order: figures painted, plants sourced, the scene composed by hand. Then it’s sealed and watched for four days while the water cycle settles. That rest keeps it healthy for years.'],
     ['How big are the sizes?', 'Every piece is built in a hand-finished recycled-glass belly bottle with a natural cork. The 35 litre stands 55.5 cm tall and 39.3 cm wide; the 5 litre is about 30 cm and the 15 litre about 42 cm tall. Exact dimensions are confirmed in your sketch.'],
-    ['How do plants get through the neck?', 'We unpot each plant, tease the roots and lower it in with long-handled tools, then firm the soil and place the figures with tweezers. It\u2019s slow, careful work, and it\u2019s why larger plants are only offered in the 35 litre.'],
+    ['How do plants get through the neck?', 'We unpot each plant, tease the roots and lower it in with long-handled tools, then firm the soil and settle the moss. It\u2019s slow, careful work, and it\u2019s why larger plants are only offered in the 35 litre.'],
     ['Can the figures look like us?', 'Yes. Choose likeness painting and send a couple of photos. We match hair, clothing and colours on figures about 2 cm tall. Expect charm rather than portrait detail at that scale.'],
     ['How do the lights work?', 'An LED is set into the cork of every piece. A small rechargeable battery is hidden with it and charges by USB-C, and a built-in timer runs the light for 6 hours each evening.'],
     ['How long will it live?', 'A sealed terrarium can thrive for many years. Keep it in bright, indirect light and trim anything that touches the glass. We include a care card and long scissors.'],
@@ -1260,4 +1268,5 @@ const Terra = (() => {
   $('#cAgain').addEventListener('click', () => { $('#confirm').hidden = true; $('#design').scrollIntoView({ behavior: 'smooth' }); });
 })();
 </script>
-</html>
+
+</body></html>
