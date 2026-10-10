@@ -136,6 +136,14 @@ destructive changes without approval.
   read clean: consistent British English, no typos found, no unsupported
   claims, numbers consistent with each other across pages.
 
+**P5 — external link security/UX**
+- The footer's LinkedIn icon link opened in the same tab with no
+  `rel="noopener"` on all 7 pages (inconsistent with the Privacy page's
+  external links, which already had both). Added `target="_blank"
+  rel="noopener"` everywhere for consistency and to avoid the
+  `window.opener` reverse-tabnabbing risk. Re-verified: still 0 violations,
+  0 errors, 0 broken links.
+
 ### Still outstanding (not blocking, queued for next pass)
 - Extend the hero animation/badge-row treatment from the homepage to the
   inner pages' `page-hero` banners, for visual consistency (cosmetic, not
