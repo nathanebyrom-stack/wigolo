@@ -1,0 +1,1278 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Moss &amp; Memory</title>
+<meta name="description" content="Bespoke living terrariums with built-in LED lighting and hand-painted figure sets. 5, 15 and 35 litres, made to order.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Figtree:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink: 'var(--ink)', ink2: 'var(--ink-2)', ink3: 'var(--ink-3)',
+          fg: 'var(--fg)', muted: 'var(--muted)', line: 'var(--line)',
+          moss: 'var(--moss)', amber: 'var(--amber)', glass: 'var(--glass)'
+        },
+        fontFamily: {
+          display: ['Gloock', 'Georgia', 'serif'],
+          sans: ['Figtree', 'system-ui', 'sans-serif'],
+          mono: ['"DM Mono"', 'ui-monospace', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+<style>
+  /* Layout: a dark conservatory at night. Content-sized hero, one long sticky scroll story, then gallery, sizes and the order designer. */
+  :root {
+    --ink: #0a1310;      /* page ground: deep bottle-glass green */
+    --ink-2: #101d18;    /* raised surface */
+    --ink-3: #172821;    /* inputs, chips */
+    --fg: #e7efe9;
+    --muted: #9db2a6;
+    --line: rgba(196, 228, 212, .13);
+    --moss: #93c86e;     /* living accent */
+    --amber: #ffc56e;    /* fairy-light accent */
+    --glass: #9fdccf;
+    color-scheme: dark;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--ink); color: var(--fg); font-family: Figtree, system-ui, sans-serif; font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  h1, h2, h3 { text-wrap: balance; }
+  .eyebrow { font-family: "DM Mono", ui-monospace, monospace; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--moss); }
+  .tnum { font-variant-numeric: tabular-nums; }
+  :focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; border-radius: 6px; }
+
+  /* terrarium engine */
+  .terra { display: block; width: 100%; height: auto; overflow: visible; }
+  .pl, .drop, .grow { transform-box: fill-box; transform-origin: 50% 100%; }
+  .lt { transition: opacity .7s ease; }
+  .lights-off .lt { opacity: 0 !important; }
+  @keyframes twinkle { 0%, 100% { opacity: 1 } 50% { opacity: .45 } }
+  .bulb { animation: twinkle 3.2s ease-in-out infinite; }
+  @keyframes hue { to { filter: hue-rotate(360deg) } }
+  .rainbow { animation: hue 9s linear infinite; }
+
+  /* journey */
+  .j-panel { position: absolute; inset: 0 auto auto 0; width: 100%; opacity: 0; transform: translateY(18px); transition: opacity .45s ease, transform .45s ease; pointer-events: none; }
+  .j-panel.on { opacity: 1; transform: none; pointer-events: auto; }
+  .j-bg { position: absolute; inset: 0; background: radial-gradient(60% 55% at 30% 55%, rgba(255, 197, 110, var(--glow, 0)) 0%, transparent 70%), var(--ink); transition: background .3s; }
+  .rail-dot { width: 8px; height: 8px; border-radius: 99px; background: var(--line); transition: background .3s, transform .3s; }
+  .rail-dot.on { background: var(--moss); transform: scale(1.35); }
+  .rail-dot.done { background: rgba(147, 200, 110, .5); }
+  .j-shot { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 18px; opacity: 0; will-change: opacity; }
+  .j-shot:first-child { opacity: 1; }
+  .hero-off { opacity: 0; transition: opacity .7s ease; }
+  .lights-off .hero-off { opacity: 1; }
+  .badge { position: absolute; z-index: 2; font-family: "DM Mono", ui-monospace, monospace; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--fg); background: rgba(10, 19, 16, .72); border: 1px solid var(--line); border-radius: 99px; padding: 4px 10px; backdrop-filter: blur(4px); }
+  .j-fig { position: absolute; z-index: 3; right: 3%; bottom: 3%; width: 32%; max-width: 170px; opacity: 0; transform: translateY(14px); will-change: opacity, transform; }
+
+  /* options */
+  .opt { position: relative; display: block; cursor: pointer; }
+  .opt input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .opt .card { display: flex; height: 100%; flex-direction: column; gap: 2px; border: 1px solid var(--line); background: var(--ink-3); border-radius: 12px; padding: 12px 14px; transition: border-color .2s, background .2s; }
+  .opt:hover .card { border-color: rgba(196, 228, 212, .3); }
+  .opt input:checked + .card { border-color: var(--moss); background: rgba(147, 200, 110, .1); }
+  .opt input:focus-visible + .card { outline: 2px solid var(--amber); outline-offset: 2px; }
+  .opt .card svg { color: var(--muted); }
+  .opt input:checked + .card svg { color: var(--moss); }
+  .field { width: 100%; background: var(--ink-3); border: 1px solid var(--line); border-radius: 10px; padding: 11px 13px; color: var(--fg); font: inherit; }
+  .field::placeholder { color: #6f857a; }
+  .field:focus { outline: none; border-color: var(--moss); }
+  .chip { border: 1px solid var(--line); border-radius: 99px; padding: 7px 14px; font-size: 14px; color: var(--muted); background: transparent; transition: all .2s; }
+  .chip[aria-pressed="true"] { background: var(--fg); color: var(--ink); border-color: var(--fg); }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 99px; padding: 13px 22px; font-weight: 600; transition: transform .2s, background .2s; }
+  .btn-primary { background: var(--amber); color: #22180a; }
+  .btn-primary:hover { background: #ffd28c; transform: translateY(-1px); }
+  .btn-ghost { border: 1px solid var(--line); color: var(--fg); }
+  .btn-ghost:hover { border-color: rgba(196, 228, 212, .35); }
+  .g-card { text-align: left; border-radius: 18px; transition: transform .35s ease; }
+  .g-card:hover { transform: translateY(-4px); }
+  .g-art { border-radius: 16px; background: radial-gradient(70% 60% at 50% 60%, #15261f 0%, #0c1612 100%); border: 1px solid var(--line); padding: 18px 26px 8px; }
+  details summary { cursor: pointer; list-style: none; }
+  details summary::-webkit-details-marker { display: none; }
+  details[open] .plus { transform: rotate(45deg); }
+  .plus { transition: transform .25s; }
+  dialog::backdrop { background: rgba(4, 9, 7, .78); backdrop-filter: blur(4px); }
+  dialog { background: var(--ink-2); color: var(--fg); border: 1px solid var(--line); border-radius: 22px; padding: 0; width: min(920px, calc(100% - 32px)); max-height: calc(100% - 32px); }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .bulb, .rainbow { animation: none; }
+    .j-panel, .g-card, .lt { transition: none; }
+  }
+</style>
+<div class="border-b border-line bg-ink2 text-center text-[13px] text-muted px-4 py-2">
+  Every terrarium is built to order. Order today and yours will be ready by <span id="leadDate" class="text-fg font-medium">…</span>.
+</div>
+
+<header class="sticky z-40 border-b border-line bg-[rgba(10,19,16,.82)] backdrop-blur" style="top: env(safe-area-inset-top, 0px)">
+  <nav class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
+    <a href="#top" class="flex items-center gap-2.5">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M10 3h6v4c0 1.6 6 2.6 6 7v7.5c0 1.4-1.1 2.5-2.5 2.5h-13C5.1 24 4 22.9 4 21.5V14c0-4.4 6-5.4 6-7V3Z" fill="none" stroke="var(--glass)" stroke-width="1.4"/><path d="M5 18c3-1 5 1 8 0s5-1 8 0v3.5c0 1-.8 1.8-1.8 1.8H6.8c-1 0-1.8-.8-1.8-1.8V18Z" fill="var(--moss)"/><circle cx="16" cy="13" r="1.4" fill="var(--amber)"/></svg>
+      <span class="font-display text-xl tracking-tight">Moss &amp; Memory</span>
+    </a>
+    <div class="hidden md:flex items-center gap-7 text-sm text-muted">
+      <a href="#journey" class="hover:text-fg">How it's made</a>
+      <a href="#gallery" class="hover:text-fg">Gallery</a>
+      <a href="#sizes" class="hover:text-fg">Sizes</a>
+      <a href="#plants" class="hover:text-fg">Plants</a>
+      <a href="#faq" class="hover:text-fg">FAQ</a>
+    </div>
+    <a href="#design" class="btn btn-primary !py-2.5 !px-4 text-sm">Design yours</a>
+  </nav>
+</header>
+
+<main id="top">
+  <!-- Hero -->
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(45% 60% at 74% 55%, rgba(255,197,110,.13), transparent 70%)"></div>
+    <div class="relative max-w-6xl mx-auto px-4 pt-12 pb-16 md:pt-16 md:pb-20 grid md:grid-cols-[1.05fr_.95fr] gap-10 items-center">
+      <div class="min-w-0">
+        <p class="eyebrow mb-5">Bespoke living terrariums</p>
+        <h1 class="font-display text-[44px] leading-[1.02] md:text-[76px] tracking-tight">A world of your own, under glass.</h1>
+        <p class="mt-6 text-lg text-muted max-w-[34rem]">Bespoke living terrariums, hand-built to your story and lit from within. 5, 15 and 35 litres, from £220.</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="#design" class="btn btn-primary">Design your terrarium</a>
+          <a href="#journey" class="btn btn-ghost">See how it's made</a>
+        </div>
+        <dl class="mt-10 grid grid-cols-3 gap-4 max-w-md border-t border-line pt-6">
+          <div><dt class="eyebrow !text-muted !text-[11px]">Made to order</dt><dd class="font-display text-2xl mt-1">14 days</dd></div>
+          <div><dt class="eyebrow !text-muted !text-[11px]">Sizes</dt><dd class="font-display text-2xl mt-1">5–35 L</dd></div>
+          <div><dt class="eyebrow !text-muted !text-[11px]">From</dt><dd class="font-display text-2xl mt-1">£220</dd></div>
+        </dl>
+      </div>
+      <div class="min-w-0 flex flex-col items-center">
+        <button id="heroArt" class="w-full max-w-[380px] cursor-pointer" aria-label="Switch the terrarium lights on or off"></button>
+        <p class="font-mono text-xs text-muted mt-2">Tap the glass to switch the lights</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Journey: 5-step scroll build -->
+  <section id="journey" class="relative" style="height: 560vh" aria-label="How a terrarium is built">
+    <div class="sticky top-0 h-[100svh] overflow-hidden">
+      <div class="j-bg" id="jBg"></div>
+      <div class="relative h-full max-w-6xl mx-auto px-4 pt-20 pb-6 flex flex-col md:grid md:grid-cols-2 md:items-center gap-4 md:gap-10">
+        <div class="flex-1 md:flex-none min-h-0 flex items-center justify-center md:h-[78svh]">
+          <div id="jArt" class="relative h-full max-h-[78svh] aspect-[880/1168] max-w-full"></div>
+        </div>
+        <div class="min-w-0 shrink-0">
+          <p class="eyebrow mb-3">From empty glass to living world</p>
+          <div class="flex items-center gap-2 mb-5" id="rail" aria-hidden="true"></div>
+          <div class="relative min-h-[230px] md:min-h-[300px]" id="jPanels" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Customisation & process -->
+  <section class="max-w-6xl mx-auto px-4 py-20 md:py-28">
+    <div class="grid md:grid-cols-[.8fr_1.2fr] gap-10 md:gap-16">
+      <div>
+        <p class="eyebrow mb-4">Fully bespoke</p>
+        <h2 class="font-display text-4xl md:text-5xl leading-tight">Your story, composed by hand.</h2>
+        <p class="mt-5 text-muted max-w-md">Every piece is a self-sustaining miniature ecosystem, designed with you and built for one home only.</p>
+        <a href="#design" class="btn btn-ghost mt-8">Begin your commission</a>
+      </div>
+      <dl class="grid sm:grid-cols-2 gap-px bg-line rounded-2xl overflow-hidden border border-line" id="process"></dl>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section id="gallery" class="border-t border-line bg-ink2">
+    <div class="max-w-6xl mx-auto px-4 py-20 md:py-28">
+      <div class="flex flex-wrap items-end justify-between gap-6 mb-10">
+        <div>
+          <p class="eyebrow mb-4">Gallery</p>
+          <h2 class="font-display text-4xl md:text-5xl leading-tight">Worlds we've imagined.</h2>
+          <p class="mt-4 text-muted max-w-lg">Example designs to spark ideas. Open one to see what's inside, then make it your own.</p>
+        </div>
+        <button id="galLights" class="btn btn-ghost text-sm" aria-pressed="true">
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber" id="galLightsDot"></span><span id="galLightsTxt">Lights on</span>
+        </button>
+      </div>
+      <div class="flex flex-wrap gap-2 mb-8" id="filters" role="group" aria-label="Filter gallery"></div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10" id="galGrid"></div>
+    </div>
+  </section>
+
+  <!-- Sizes -->
+  <section id="sizes" class="max-w-6xl mx-auto px-4 py-20 md:py-28">
+    <p class="eyebrow mb-4">Three sizes</p>
+    <div class="flex flex-wrap items-end justify-between gap-6 mb-12">
+      <h2 class="font-display text-4xl md:text-5xl leading-tight max-w-xl">From a single scene to a whole world.</h2>
+      <p class="text-muted max-w-sm">Every size includes hand-picked plants, your figures, built-in LED lighting and free insured UK delivery.</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-4" id="sizeGrid"></div>
+  </section>
+
+  <!-- Gifts & occasions -->
+  <section class="border-y border-line bg-ink2">
+    <div class="max-w-6xl mx-auto px-4 py-20 md:py-28">
+      <div class="grid md:grid-cols-[.8fr_1.2fr] gap-10 md:gap-16">
+        <div>
+          <p class="eyebrow mb-4">Gifts &amp; occasions</p>
+          <h2 class="font-display text-4xl md:text-5xl leading-tight">For the moments that deserve more than flowers.</h2>
+          <p class="mt-5 text-muted max-w-md">Flowers fade by Friday. A bespoke terrarium keeps growing. Each one is built around the person you're giving it to, with their story, their figures and their favourite colours, sealed in glass and lit from within.</p>
+          <p class="mt-4 text-muted max-w-md">Every piece is made to order, so no two are ever the same.</p>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-px bg-line rounded-2xl overflow-hidden border border-line" id="occasions"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Plant library -->
+  <section id="plants" class="max-w-6xl mx-auto px-4 py-20 md:py-28">
+    <div class="flex flex-wrap items-end justify-between gap-6 mb-8">
+      <div>
+        <p class="eyebrow mb-4">Choose your plants</p>
+        <h2 class="font-display text-4xl md:text-5xl leading-tight max-w-2xl">Sixty plants that love life under glass.</h2>
+        <p class="mt-4 text-muted max-w-xl">Jewel orchids, crested ferns, velvet begonias and iridescent spikemoss, each chosen to thrive in the humid air of a sealed glass world. Pick your favourites, or let us compose a palette for you.</p>
+      </div>
+      <div class="w-full sm:w-auto"><label for="plantSearch" class="sr-only">Search plants</label><input id="plantSearch" class="field sm:w-72" placeholder="Search by name" autocomplete="off"></div>
+    </div>
+    <div class="flex flex-wrap gap-2 mb-3" id="plantFilters" role="group" aria-label="Filter plants"></div>
+    <p class="text-sm text-muted mb-8" id="plantHint"></p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="plantGrid"></div>
+    <div class="mt-8 text-center"><button id="plantMore" class="btn btn-ghost text-sm">Show all plants</button></div>
+  </section>
+
+  <!-- Timeline -->
+  <section class="border-y border-line bg-ink2">
+    <div class="max-w-6xl mx-auto px-4 py-20 md:py-24">
+      <div class="grid md:grid-cols-[.8fr_1.2fr] gap-10 md:gap-16">
+        <div>
+          <p class="eyebrow mb-4">Why two weeks</p>
+          <h2 class="font-display text-4xl md:text-5xl leading-tight">A sealed garden needs time to settle.</h2>
+          <p class="mt-5 text-muted max-w-md">A closed terrarium waters itself. Moisture rises, condenses on the glass and runs back to the roots. We watch every piece through that cycle for four days before it leaves the studio, so it arrives balanced.</p>
+        </div>
+        <ol class="relative border-l border-line ml-2 space-y-7" id="timeline"></ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- Designer -->
+  <section id="design" class="max-w-6xl mx-auto px-4 py-20 md:py-28">
+    <p class="eyebrow mb-4">Design yours</p>
+    <h2 class="font-display text-4xl md:text-5xl leading-tight max-w-2xl">Compose it here. We'll send a sketch before we start.</h2>
+    <p class="mt-4 text-muted max-w-xl">No payment today. We reply within one working day with a sketch of your terrarium and a secure payment link.</p>
+
+    <div class="mt-12 grid lg:grid-cols-[1.25fr_.75fr] gap-10 items-start">
+      <form id="designForm" class="space-y-10 min-w-0" novalidate>
+        <fieldset>
+          <legend class="font-display text-2xl mb-1">1. The occasion</legend>
+          <p class="text-sm text-muted mb-4">Helps us suggest plants, figures and wording.</p>
+          <div class="flex flex-wrap gap-2" id="fOccasion"></div>
+        </fieldset>
+        <fieldset>
+          <legend class="font-display text-2xl mb-4">2. The size</legend>
+          <div class="grid sm:grid-cols-3 gap-3" id="fSize"></div>
+        </fieldset>
+        <fieldset>
+          <legend class="font-display text-2xl mb-1">3. Your plants</legend>
+          <p class="text-sm text-muted mb-4">Choose a planting style and we'll compose it, or hand-pick from the <a href="#plants" class="text-moss underline underline-offset-2">plant library</a>.</p>
+          <div class="grid sm:grid-cols-3 gap-3" id="fPlants"></div>
+          <div class="mt-4 rounded-xl border border-line p-4">
+            <p class="text-sm font-medium">Your hand-picked plants <span class="text-muted font-normal tnum" id="pickCount"></span></p>
+            <ul class="mt-2 flex flex-wrap gap-2" id="pickList"></ul>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend class="font-display text-2xl mb-1">4. Your figures</legend>
+          <p class="text-sm text-muted mb-4" id="figHint">Hand-painted miniature figures, included.</p>
+          <div class="grid sm:grid-cols-2 gap-3" id="fFigures"></div>
+          <label class="mt-4 flex items-center gap-3 text-sm cursor-pointer"><input type="checkbox" id="fLikeness" name="likeness" class="w-4 h-4 accent-[var(--moss)]"> Paint the figures to look like the people in my photos <span class="text-muted">(+£40)</span></label>
+        </fieldset>
+        <fieldset>
+          <legend class="font-display text-2xl mb-1">5. Lighting</legend>
+          <p class="text-sm text-muted mb-4">An LED is built into the cork of every piece, with a hidden rechargeable battery charged by USB-C and a 6-hour timer.</p>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="fLight"></div>
+        </fieldset>
+        <fieldset class="space-y-4">
+          <legend class="font-display text-2xl mb-4">6. Finishing touches</legend>
+          <div>
+            <label for="fEngrave" class="text-sm font-medium">Engraved brass tag <span class="text-muted font-normal">(+£12, up to 24 characters)</span></label>
+            <input id="fEngrave" name="engrave" maxlength="24" class="field mt-2" placeholder="Leave blank for no tag" autocomplete="off">
+          </div>
+          <label class="flex items-center gap-3 text-sm cursor-pointer"><input type="checkbox" id="fKeep" name="keepsake" class="w-4 h-4 accent-[var(--moss)]"> Include a keepsake of mine, such as beach stones or a shell <span class="text-muted">(free, we post you an envelope)</span></label>
+          <div>
+            <label for="fNeeded" class="text-sm font-medium">Do you need it by a date? <span class="text-muted font-normal">(optional)</span></label>
+            <input id="fNeeded" name="needed" type="date" class="field mt-2 max-w-xs">
+            <p id="neededMsg" class="text-sm mt-2" hidden></p>
+          </div>
+        </fieldset>
+        <fieldset class="space-y-4">
+          <legend class="font-display text-2xl mb-4">7. Your details</legend>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div><label for="fName" class="text-sm font-medium">Name</label><input id="fName" name="name" class="field mt-2" autocomplete="name" required></div>
+            <div><label for="fEmail" class="text-sm font-medium">Email</label><input id="fEmail" name="email" type="email" class="field mt-2" autocomplete="email" required></div>
+          </div>
+          <div><label for="fNotes" class="text-sm font-medium">Tell us the story <span class="text-muted font-normal">(optional)</span></label><textarea id="fNotes" name="notes" rows="4" class="field mt-2" placeholder="The place, the people, their colours, what the figures should be doing."></textarea></div>
+          <p id="formErr" class="text-sm text-[#ff9b8a]" hidden></p>
+        </fieldset>
+      </form>
+
+      <aside class="lg:sticky lg:top-24 min-w-0" aria-label="Your design">
+        <div class="rounded-3xl border border-line bg-ink2 overflow-hidden">
+          <div class="relative" style="background: radial-gradient(70% 60% at 50% 60%, #16281f 0%, #0c1612 100%)">
+            <div class="h-[400px] flex items-end justify-center pt-14 pb-3">
+              <div id="pvArt" class="transition-[width] duration-500 ease-out" style="width: 72%"></div>
+            </div>
+            <span id="pvSize" class="absolute top-4 left-4 font-mono text-xs text-muted border border-line rounded-full px-2.5 py-1">15 L</span>
+          </div>
+          <div class="p-6">
+            <p class="font-display text-2xl" id="pvTitle">Your terrarium</p>
+            <ul class="mt-4 space-y-2 text-sm tnum" id="pvLines"></ul>
+            <div class="mt-5 pt-4 border-t border-line flex items-baseline justify-between">
+              <span class="text-muted text-sm">Estimated total</span>
+              <span class="font-display text-3xl tnum" id="pvTotal">£0</span>
+            </div>
+            <p class="mt-3 text-sm text-muted" id="pvReady"></p>
+            <button type="submit" form="designForm" class="btn btn-primary w-full mt-5">Request my terrarium</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div id="confirm" class="mt-12 rounded-3xl border border-moss/40 bg-ink2 p-8" hidden tabindex="-1">
+      <p class="eyebrow mb-3">Design received</p>
+      <h3 class="font-display text-3xl">Thank you, <span id="cName"></span>.</h3>
+      <p class="mt-3 text-muted max-w-xl">Your reference is <span id="cRef" class="font-mono text-fg"></span>. We'll email <span id="cEmail" class="text-fg"></span> within one working day with a sketch and a payment link.</p>
+      <p class="mt-4 text-xs font-mono text-muted border border-line rounded-lg inline-block px-3 py-2">Site preview: design requests are not sent anywhere yet.</p>
+      <div class="mt-6"><button type="button" id="cAgain" class="btn btn-ghost text-sm">Design another</button></div>
+    </div>
+  </section>
+
+  <!-- Care -->
+  <section class="border-t border-line bg-ink2">
+    <div class="max-w-6xl mx-auto px-4 py-16 grid md:grid-cols-3 gap-8">
+      <div><p class="font-mono text-xs text-moss mb-2">LIGHT</p><h3 class="font-display text-2xl mb-2">Bright, never direct</h3><p class="text-muted text-sm">A spot near a window, out of full sun. Direct sun overheats a sealed jar in an afternoon.</p></div>
+      <div><p class="font-mono text-xs text-moss mb-2">WATER</p><h3 class="font-display text-2xl mb-2">Almost never</h3><p class="text-muted text-sm">Morning mist on the glass is normal. If it stays dry for a week, add a teaspoon of rainwater.</p></div>
+      <div><p class="font-mono text-xs text-moss mb-2">TRIM</p><h3 class="font-display text-2xl mb-2">Every few months</h3><p class="text-muted text-sm">Snip anything touching the glass with the long scissors in your care kit. That's the whole routine.</p></div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="max-w-3xl mx-auto px-4 py-20 md:py-28">
+    <p class="eyebrow mb-4">Questions</p>
+    <h2 class="font-display text-4xl md:text-5xl leading-tight mb-10">Good to know</h2>
+    <div class="divide-y divide-[var(--line)] border-y border-line" id="faqList"></div>
+  </section>
+</main>
+
+<footer class="border-t border-line">
+  <div class="max-w-6xl mx-auto px-4 py-12 grid md:grid-cols-[1.4fr_1fr_1fr] gap-8 text-sm">
+    <div>
+      <p class="font-display text-2xl">Moss &amp; Memory</p>
+      <p class="text-muted mt-2 max-w-xs">Bespoke living terrariums, hand-built to order in the UK.</p>
+    </div>
+    <div>
+      <p class="font-mono text-xs text-muted mb-3">STUDIO</p>
+      <p class="select-all">hello@mossandmemory.co.uk</p>
+      <p class="text-muted mt-1">Replies within one working day</p>
+    </div>
+    <div>
+      <p class="font-mono text-xs text-muted mb-3">EXPLORE</p>
+      <ul class="space-y-1.5"><li><a class="hover:text-moss" href="#gallery">Gallery</a></li><li><a class="hover:text-moss" href="#plants">Plant library</a></li><li><a class="hover:text-moss" href="#design">Design yours</a></li></ul>
+    </div>
+  </div>
+  <p class="max-w-6xl mx-auto px-4 pb-10 text-xs text-muted">© 2026 Moss &amp; Memory</p>
+</footer>
+
+<dialog id="modal" aria-labelledby="mTitle">
+  <div class="grid md:grid-cols-2">
+    <div class="p-8 flex items-end justify-center" style="background: radial-gradient(70% 60% at 50% 60%, #16281f 0%, #0c1612 100%)"><div id="mArt" class="w-full max-w-[340px]"></div></div>
+    <div class="p-7 md:p-9 min-w-0 flex flex-col">
+      <div class="flex justify-between items-start gap-4">
+        <h3 id="mTitle" class="font-display text-3xl"></h3>
+        <button id="mClose" class="text-muted hover:text-fg text-2xl leading-none px-2" aria-label="Close">×</button>
+      </div>
+      <p id="mStory" class="mt-3 text-muted"></p>
+      <dl id="mSpec" class="mt-6 grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-sm"></dl>
+      <div class="mt-auto pt-8 flex flex-wrap items-center justify-between gap-4">
+        <p class="font-display text-3xl tnum" id="mPrice"></p>
+        <button id="mUse" class="btn btn-primary">Customise this design</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+<script>
+/* ---------- Terrarium engine: every illustration on the page is drawn here ---------- */
+const Terra = (() => {
+  const R = seed => { let a = seed >>> 0; return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; };
+  const rr = (r, a, b) => a + (b - a) * r();
+  const pick = (r, arr) => arr[Math.floor(r() * arr.length)];
+  const f = n => Math.round(n * 10) / 10;
+  const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+  let UID = 0;
+
+  const cork = (cx, y, wT, wB, h) => ({ cx, y, wT, wB, h });
+  // recycled-glass belly bottle (demijohn) — the studio's three stocked vessels: 5 L, 15 L, 35 L
+  const DJ = (() => {
+    const segs = [[[150, 382], [218, 382], [270, 350], [270, 278]], [[270, 278], [270, 184], [164, 160], [164, 118]]];
+    const pts = [];
+    segs.forEach(([a, b, c, d]) => { for (let i = 0; i <= 80; i++) { const t = i / 80, m = 1 - t; pts.push([m * m * m * a[0] + 3 * m * m * t * b[0] + 3 * m * t * t * c[0] + t * t * t * d[0], m * m * m * a[1] + 3 * m * m * t * b[1] + 3 * m * t * t * c[1] + t * t * t * d[1]]); } });
+    pts.sort((p, q) => p[1] - q[1]);
+    return y => {
+      if (y < 118) return 11;
+      for (let i = 1; i < pts.length; i++) if (pts[i][1] >= y) { const [x0, y0] = pts[i - 1], [x1, y1] = pts[i]; return (x0 + (x1 - x0) * ((y - y0) / ((y1 - y0) || 1))) - 153; }
+      return 0;
+    };
+  })();
+
+  const V = {
+    demijohn: { d: 'M136 40 L136 118 C136 160 30 184 30 278 C30 350 82 382 150 382 C218 382 270 350 270 278 C270 184 164 160 164 118 L164 40 Z',
+      drain: 348, soil: 316, top: 122, plantH: 160, cork: cork(150, 10, 36, 27, 40), lip: [34, 36], tint: true, hw: y => Math.max(0, DJ(y)) },
+    bottle: { d: 'M128 62 L128 98 C128 122 44 128 44 176 L44 360 Q44 382 66 382 L234 382 Q256 382 256 360 L256 176 C256 128 172 122 172 98 L172 62 Z',
+      drain: 350, soil: 316, top: 74, plantH: 150, cork: cork(150, 30, 54, 42, 42), lip: [60, 52],
+      hw: y => y < 100 ? 20 : y < 176 ? 20 + 86 * Math.sin((y - 100) / 76 * Math.PI / 2) : 106 },
+    petite: { d: 'M134 92 L134 138 C134 168 88 176 88 214 L88 364 Q88 382 106 382 L194 382 Q212 382 212 364 L212 214 C212 176 166 168 166 138 L166 92 Z',
+      drain: 356, soil: 332, top: 100, plantH: 95, cork: cork(150, 64, 38, 30, 34), lip: [90, 38],
+      hw: y => y < 140 ? 12 : y < 214 ? 12 + 48 * Math.sin((y - 140) / 74 * Math.PI / 2) : 60 },
+    globe: { d: 'M124 76 L124 113 A130 130 0 1 0 176 113 L176 76 Z',
+      drain: 340, soil: 300, top: 86, plantH: 160, cork: cork(150, 46, 58, 46, 38), lip: [74, 58],
+      hw: y => y < 114 ? 22 : Math.sqrt(Math.max(0, 16900 - (y - 240) ** 2)) - 4 },
+    jar: { d: 'M52 124 L248 124 L248 362 Q248 382 228 382 L72 382 Q52 382 52 362 Z',
+      drain: 350, soil: 318, top: 132, plantH: 165, hw: () => 94 },
+    drop: { d: 'M150 56 C176 100 262 188 262 268 A112 112 0 0 1 38 268 C38 188 124 100 150 56 Z',
+      drain: 344, soil: 308, top: 74, plantH: 140,
+      hw: y => y < 268 ? 106 * Math.pow(Math.max(0, (y - 56) / 212), .6) : Math.sqrt(Math.max(0, 12544 - (y - 268) ** 2)) - 4 },
+    cloche: { d: 'M58 360 L58 172 C58 84 242 84 242 172 L242 360 Z',
+      drain: 334, soil: 302, top: 112, plantH: 165,
+      hw: y => y >= 172 ? 88 : 88 * Math.sqrt(Math.max(0, 1 - ((172 - y) / 80) ** 2)) },
+    flask: { d: 'M132 58 L132 140 L48 356 Q40 382 66 382 L234 382 Q260 382 252 356 L168 140 L168 58 Z',
+      drain: 352, soil: 322, top: 72, plantH: 120, cork: cork(150, 28, 46, 36, 42), lip: [56, 46],
+      hw: y => y < 140 ? 16 : 16 + (y - 140) * (84 / 216) },
+    hex: { d: 'M150 66 L256 138 L256 318 L150 382 L44 318 L44 138 Z',
+      drain: 336, soil: 302, top: 150, plantH: 150,
+      hw: y => y < 138 ? Math.max(0, (y - 66) * (106 / 72) - 4) : y < 318 ? 102 : Math.max(0, 102 - (y - 318) * (106 / 64)) }
+  };
+
+  const LIGHTS = { fairy: ['#ffcf7a', '#ffb54d', '#ffe3a3'], warm: ['#ffcf7a', '#ffb54d', '#ffe3a3'], cool: ['#a6dcff', '#7cc6ff', '#d9f1ff'], rainbow: ['#ff7aa8', '#ffd36b', '#7dffb2', '#79b8ff', '#c79bff'] };
+
+  const leaf = (x, y, l, w, a, fill) => `<path d="M0 0 Q${f(l * .5)} ${f(-w)} ${f(l)} 0 Q${f(l * .5)} ${f(w)} 0 0Z" transform="translate(${f(x)} ${f(y)}) rotate(${f(a)})" fill="${fill}"/>`;
+
+  function frond(r, x, y, h, lean, o) {
+    const p1x = x + lean * .15, p1y = y - h * .65, p2x = x + lean, p2y = y - h;
+    let s = `<path d="M${f(x)} ${f(y)} Q${f(p1x)} ${f(p1y)} ${f(p2x)} ${f(p2y)}" stroke="${o.stem}" stroke-width="${o.sw || 1.3}" fill="none" stroke-linecap="round"/>`;
+    const n = Math.max(5, Math.round(h / (o.gap || 6)));
+    for (let i = 2; i <= n; i++) {
+      const t = i / n, m = 1 - t;
+      const px = m * m * x + 2 * m * t * p1x + t * t * p2x, py = m * m * y + 2 * m * t * p1y + t * t * p2y;
+      const dx = 2 * m * (p1x - x) + 2 * t * (p2x - p1x), dy = 2 * m * (p1y - y) + 2 * t * (p2y - p1y);
+      const a = Math.atan2(dy, dx) * 180 / Math.PI;
+      const L = Math.max(o.lmax * .22, o.lmax * Math.sin(Math.PI * Math.pow(m, 1.6)));
+      const c = o.cols[i % o.cols.length];
+      s += leaf(px, py, L, L * o.lw, a - o.spread, c) + leaf(px, py, L, L * o.lw, a + o.spread, c);
+    }
+    return s;
+  }
+  const fern = (r, x, y, h, lean, cols) => frond(r, x, y, h, lean, { stem: '#3d6e33', cols, lw: .24, spread: 70, gap: 6.2, lmax: h * .2, sw: 1.1 });
+  const palm = (r, x, y, h, lean) => frond(r, x, y, h, lean, { stem: '#2f5a2a', cols: ['#2f7a3a', '#3b8c44', '#4a9a4e'], lw: .11, spread: 118, gap: 7, lmax: h * .34, sw: 1.6 });
+
+  function fittonia(r, x, y, s, kind) {
+    const P = { pink: ['#2e6b3a', '#ff9dbf'], red: ['#b8365a', '#ffd2de'], white: ['#3b7944', '#eef8ea'] }[kind];
+    let g = ''; const n = 7 + Math.floor(r() * 3);
+    for (let i = 0; i < n; i++) {
+      const a = -165 + 150 * (i / (n - 1)) + rr(r, -8, 8), l = rr(r, 15, 22) * s, w = l * .42;
+      const bx = x + rr(r, -4, 4) * s, by = y - rr(r, 0, 9) * s;
+      g += `<g transform="translate(${f(bx)} ${f(by)}) rotate(${f(a)})"><path d="M0 0 C${f(l * .25)} ${f(-w * 1.1)} ${f(l * .8)} ${f(-w)} ${f(l)} 0 C${f(l * .8)} ${f(w)} ${f(l * .25)} ${f(w * 1.1)} 0 0Z" fill="${P[0]}"/><path d="M1 0 L${f(l * .95)} 0 M${f(l * .12)} 0 L${f(l * .22)} ${f(-w * .6)} M${f(l * .12)} 0 L${f(l * .22)} ${f(w * .6)} M${f(l * .32)} 0 L${f(l * .46)} ${f(-w * .66)} M${f(l * .32)} 0 L${f(l * .46)} ${f(w * .66)} M${f(l * .56)} 0 L${f(l * .7)} ${f(-w * .55)} M${f(l * .56)} 0 L${f(l * .7)} ${f(w * .55)}" stroke="${P[1]}" stroke-width=".7" fill="none"/></g>`;
+    }
+    return g;
+  }
+
+  function hypo(r, x, y, h, s) {
+    let g = '';
+    [-14, 2, 16].forEach((lean, k) => {
+      const hh = h * rr(r, .7, 1), tx = x + lean * s, ty = y - hh;
+      g += `<path d="M${f(x)} ${f(y)} Q${f(x + lean * .3 * s)} ${f(y - hh * .6)} ${f(tx)} ${f(ty)}" stroke="#7a4a5a" stroke-width="1.2" fill="none"/>`;
+      for (let j = 1; j <= 3; j++) {
+        const t = j / 3, px = x + (tx - x) * t, py = y + (ty - y) * t, l = (13 - j * 1.5) * s, w = l * .45;
+        [-35, -145].forEach(a => {
+          a += rr(r, -10, 10);
+          g += `<g transform="translate(${f(px)} ${f(py)}) rotate(${f(a)})"><path d="M0 0 C${f(l * .3)} ${f(-w)} ${f(l * .8)} ${f(-w)} ${f(l)} 0 C${f(l * .8)} ${f(w)} ${f(l * .3)} ${f(w)} 0 0Z" fill="${k === 1 ? '#f58bb2' : '#f6a3c2'}"/>`;
+          for (let d = 0; d < 4; d++) g += `<circle cx="${f(rr(r, l * .25, l * .85))}" cy="${f(rr(r, -w * .45, w * .45))}" r="${f(rr(r, .7, 1.5) * s)}" fill="#3e7a47"/>`;
+          g += `</g>`;
+        });
+      }
+    });
+    return g;
+  }
+
+  function moss(r, x, y, w, h, cols) {
+    cols = cols || ['#2f5a25', '#3f7430', '#4f8a3a', '#63a046', '#7cb95a'];
+    let s = `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(w / 2)}" ry="${f(h * .45)}" fill="${cols[0]}"/>`;
+    const n = Math.round(w * h / 8);
+    const pts = [];
+    for (let i = 0; i < n; i++) { const u = rr(r, -1, 1), v = Math.sqrt(r()); pts.push([x + u * w / 2, y - v * h * Math.sqrt(1 - u * u) * .95, rr(r, 2, 4.6)]); }
+    pts.sort((a, b) => b[1] - a[1]);
+    pts.forEach(p => { s += `<circle cx="${f(p[0])}" cy="${f(p[1])}" r="${f(p[2])}" fill="${cols[1 + Math.floor(r() * (cols.length - 1))]}"/>`; });
+    for (let i = 0; i < n / 3; i++) { const u = rr(r, -.8, .8); s += `<circle cx="${f(x + u * w / 2)}" cy="${f(y - h * Math.sqrt(1 - u * u) * rr(r, .6, .95))}" r="${f(rr(r, .8, 1.6))}" fill="#b5e08f" opacity=".7"/>`; }
+    return s;
+  }
+
+  function shroom(x, y, s, cap) {
+    const h = 13 * s, cw = 8 * s;
+    let g = `<path d="M${f(x - 1.7 * s)} ${f(y)} Q${f(x - 1.1 * s)} ${f(y - h * .5)} ${f(x - .9 * s)} ${f(y - h)} L${f(x + .9 * s)} ${f(y - h)} Q${f(x + 1.1 * s)} ${f(y - h * .5)} ${f(x + 1.7 * s)} ${f(y)}Z" fill="#f2e9d6"/>`;
+    g += `<path d="M${f(x - cw)} ${f(y - h + 1)} Q${f(x)} ${f(y - h - cw * 1.25)} ${f(x + cw)} ${f(y - h + 1)} Z" fill="${cap}"/>`;
+    g += `<path d="M${f(x - cw * .85)} ${f(y - h + .6)} L${f(x + cw * .85)} ${f(y - h + .6)}" stroke="#d9c7a8" stroke-width="1"/>`;
+    if (cap === '#d6423a') g += `<circle cx="${f(x - cw * .4)}" cy="${f(y - h - cw * .25)}" r="${f(1 * s)}" fill="#fff"/><circle cx="${f(x + cw * .3)}" cy="${f(y - h - cw * .45)}" r="${f(.8 * s)}" fill="#fff"/><circle cx="${f(x + cw * .02)}" cy="${f(y - h - cw * .05)}" r="${f(.6 * s)}" fill="#fff"/>`;
+    return g;
+  }
+
+  function clubmoss(r, x, y, s, cols) {
+    let g = '';
+    for (let i = 0; i < 6; i++) g += frond(r, x + rr(r, -6, 6) * s, y, rr(r, 16, 26) * s, rr(r, -16, 16) * s, { stem: '#4f8f45', cols, lw: .38, spread: 58, gap: 3.2, lmax: 6 * s, sw: .8 });
+    return g;
+  }
+
+  function ivy(r, x0, x1, y, s) {
+    const mid = (x0 + x1) / 2;
+    let g = `<path d="M${f(x0)} ${f(y)} Q${f(mid)} ${f(y - 30 * s)} ${f(x1)} ${f(y - 8 * s)}" stroke="#3a5e2f" stroke-width="1.2" fill="none"/>`;
+    for (let i = 1; i < 9; i++) {
+      const t = i / 9, m = 1 - t;
+      const px = m * m * x0 + 2 * m * t * mid + t * t * x1, py = m * m * y + 2 * m * t * (y - 30 * s) + t * t * (y - 8 * s);
+      const l = rr(r, 7, 10) * s;
+      g += leaf(px, py, l, l * .6, (i % 2 ? -60 : -120) + rr(r, -15, 15), i % 3 ? '#2f6b36' : '#3f8044');
+    }
+    return g;
+  }
+
+  function dried(r, x, y, h, kind, s) {
+    const lean = rr(r, -10, 10) * s, tx = x + lean, ty = y - h;
+    let g = `<path d="M${f(x)} ${f(y)} Q${f(x + lean * .2)} ${f(y - h * .6)} ${f(tx)} ${f(ty)}" stroke="#b9a777" stroke-width="1" fill="none"/>`;
+    if (kind === 'lav') for (let i = 0; i < 7; i++) { const t = i / 7; g += `<ellipse cx="${f(tx - lean * .06 * t + (i % 2 ? 1.6 : -1.6) * s)}" cy="${f(ty + t * 14 * s)}" rx="${f(1.9 * s)}" ry="${f(2.8 * s)}" fill="${i % 2 ? '#8e72c9' : '#a58bdc'}"/>`; }
+    if (kind === 'bunny') g += `<ellipse cx="${f(tx)}" cy="${f(ty)}" rx="${f(3.6 * s)}" ry="${f(6.5 * s)}" fill="#efe6d2"/><ellipse cx="${f(tx - 1 * s)}" cy="${f(ty - 1.5 * s)}" rx="${f(1.5 * s)}" ry="${f(3 * s)}" fill="#fffaf0" opacity=".8"/>`;
+    if (kind === 'gyp') for (let i = 0; i < 14; i++) g += `<circle cx="${f(tx + rr(r, -9, 9) * s)}" cy="${f(ty + rr(r, -6, 6) * s)}" r="${f(rr(r, 1, 1.9) * s)}" fill="#fbf7ee"/>`;
+    return g;
+  }
+
+  function fmn(r, x, y, s) {
+    let g = '';
+    for (let k = 0; k < 4; k++) {
+      const cx = x + rr(r, -10, 10) * s, cy = y - rr(r, 4, 12) * s;
+      g += `<path d="M${f(cx)} ${f(y)} L${f(cx)} ${f(cy)}" stroke="#4f7d3d" stroke-width=".8"/>`;
+      for (let p = 0; p < 5; p++) { const a = p / 5 * Math.PI * 2; g += `<circle cx="${f(cx + Math.cos(a) * 1.8 * s)}" cy="${f(cy + Math.sin(a) * 1.8 * s)}" r="${f(1.4 * s)}" fill="#7fb0f2"/>`; }
+      g += `<circle cx="${f(cx)}" cy="${f(cy)}" r="${f(.9 * s)}" fill="#ffe27a"/>`;
+    }
+    return g;
+  }
+
+  /* keepsakes */
+  function stone(x, y, rx, ry, col, rot, id, band) {
+    let g = `<g transform="translate(${f(x)} ${f(y)}) rotate(${f(rot)})"><ellipse rx="${f(rx)}" ry="${f(ry)}" fill="${col}"/>`;
+    if (band) g += `<path d="M${f(-rx * .96)} ${f(ry * .05)} Q0 ${f(ry * .7)} ${f(rx * .96)} ${f(-ry * .2)}" stroke="#f6f2ea" stroke-width="${f(ry * .26)}" fill="none"/>`;
+    g += `<ellipse rx="${f(rx)}" ry="${f(ry)}" fill="url(#sh-${id})"/><ellipse cx="${f(-rx * .35)}" cy="${f(-ry * .42)}" rx="${f(rx * .36)}" ry="${f(ry * .2)}" fill="#fff" opacity=".3"/></g>`;
+    return g;
+  }
+  function seaglass(r, x, y, sz, col) {
+    let pts = [];
+    for (let i = 0; i < 6; i++) { const a = i / 6 * Math.PI * 2 + rr(r, -.3, .3), rad = sz * rr(r, .7, 1.1); pts.push(`${f(x + Math.cos(a) * rad)},${f(y + Math.sin(a) * rad * .62)}`); }
+    return `<polygon points="${pts.join(' ')}" fill="${col}" stroke="${col}" stroke-width="2.4" stroke-linejoin="round" opacity=".85"/><ellipse cx="${f(x - sz * .3)}" cy="${f(y - sz * .2)}" rx="${f(sz * .35)}" ry="${f(sz * .13)}" fill="#fff" opacity=".45"/>`;
+  }
+  function scallop(x, y, s) {
+    const w = 10 * s, h = 13 * s;
+    let g = `<path d="M${f(x)} ${f(y)} L${f(x - w)} ${f(y - h * .6)} Q${f(x)} ${f(y - h * 1.35)} ${f(x + w)} ${f(y - h * .6)} Z" fill="#f4cdb2"/>`;
+    for (let i = 1; i < 6; i++) { const a = Math.PI + i / 6 * Math.PI; g += `<path d="M${f(x)} ${f(y)} L${f(x + Math.cos(a) * w * 1.05)} ${f(y + Math.sin(a) * h * .95)}" stroke="#d99777" stroke-width=".8"/>`; }
+    return g + `<path d="M${f(x - 3 * s)} ${f(y)} L${f(x + 3 * s)} ${f(y)} L${f(x + 2 * s)} ${f(y - 2.5 * s)} L${f(x - 2 * s)} ${f(y - 2.5 * s)}Z" fill="#e7b497"/>`;
+  }
+  const cowrie = (x, y, s) => `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(7.5 * s)}" ry="${f(4.6 * s)}" fill="#f0e2c9"/><path d="M${f(x - 5 * s)} ${f(y + 1 * s)} Q${f(x)} ${f(y + 2.4 * s)} ${f(x + 5 * s)} ${f(y + 1 * s)}" stroke="#8a6a45" stroke-width="1" fill="none"/><circle cx="${f(x - 2 * s)}" cy="${f(y - 1.6 * s)}" r="${f(.9 * s)}" fill="#c9a77c"/><circle cx="${f(x + 2.2 * s)}" cy="${f(y - 2 * s)}" r="${f(.7 * s)}" fill="#c9a77c"/>`;
+  function crystal(x, y, w, h, rot, col) {
+    return `<g transform="translate(${f(x)} ${f(y)}) rotate(${f(rot)})"><polygon points="${f(-w)},0 ${f(-w)},${f(-h * .7)} 0,${f(-h)} ${f(w)},${f(-h * .7)} ${f(w)},0" fill="${col}"/><polygon points="0,${f(-h)} ${f(w)},${f(-h * .7)} ${f(w)},0 0,0" fill="#fff" opacity=".22"/><polygon points="${f(-w)},${f(-h * .7)} 0,${f(-h)} 0,${f(-h * .78)} ${f(-w * .6)},${f(-h * .62)}" fill="#fff" opacity=".35"/></g>`;
+  }
+  function ring(x, y, s, id) {
+    return `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(13 * s)}" ry="${f(4.5 * s)}" fill="#7d858a"/><ellipse cx="${f(x)}" cy="${f(y - 1 * s)}" rx="${f(11 * s)}" ry="${f(2.6 * s)}" fill="#959ca1"/>
+      <ellipse cx="${f(x)}" cy="${f(y - 10 * s)}" rx="${f(6.5 * s)}" ry="${f(8 * s)}" fill="none" stroke="url(#gold-${id})" stroke-width="${f(2.6 * s)}"/>
+      <path d="M${f(x - 3.2 * s)} ${f(y - 18 * s)} L${f(x)} ${f(y - 22.5 * s)} L${f(x + 3.2 * s)} ${f(y - 18 * s)} L${f(x)} ${f(y - 15.5 * s)}Z" fill="#eaf7ff" stroke="#bfe3ff" stroke-width=".5"/>
+      <path d="M${f(x + 6 * s)} ${f(y - 25 * s)} l${f(1 * s)} ${f(2.6 * s)} l${f(2.6 * s)} ${f(1 * s)} l${f(-2.6 * s)} ${f(1 * s)} l${f(-1 * s)} ${f(2.6 * s)} l${f(-1 * s)} ${f(-2.6 * s)} l${f(-2.6 * s)} ${f(-1 * s)} l${f(2.6 * s)} ${f(-1 * s)}Z" fill="#fff" opacity=".9"/>`;
+  }
+
+
+  /* miniature figures (hand-painted scale figures, ~2 cm tall in a 15 L jar) */
+  const SKIN = ['#efc9a4', '#d9a77f', '#a8714c', '#7a4e33'];
+  function person(x, y, k, o) {
+    const sk = o.skin || SKIN[0], fl = o.flip ? -1 : 1;
+    let g = `<g transform="translate(${f(x)} ${f(y)}) scale(${fl} 1)${o.tilt ? ` rotate(${o.tilt} 0 ${f(-9 * k)})` : ''}">`;
+    const hair = long => long
+      ? `<path d="M${f(-1.9 * k)} ${f(-o.hy)} Q${f(-2.2 * k)} ${f(-o.hy - 2.6 * k)} 0 ${f(-o.hy - 2.4 * k)} Q${f(2.2 * k)} ${f(-o.hy - 2.6 * k)} ${f(1.9 * k)} ${f(-o.hy)} L${f(2.1 * k)} ${f(-o.hy + 3 * k)} L${f(-2.1 * k)} ${f(-o.hy + 3 * k)}Z" fill="${o.hair}"/>`
+      : `<path d="M${f(-1.85 * k)} ${f(-o.hy + .2 * k)} Q${f(-1.9 * k)} ${f(-o.hy - 2.3 * k)} 0 ${f(-o.hy - 2.2 * k)} Q${f(1.9 * k)} ${f(-o.hy - 2.3 * k)} ${f(1.85 * k)} ${f(-o.hy - .1 * k)} Q${f(.6 * k)} ${f(-o.hy - 1.2 * k)} ${f(-1.85 * k)} ${f(-o.hy + .2 * k)}Z" fill="${o.hair}"/>`;
+    if (o.pose === 'sit') {
+      o.hy = 11 * k;
+      g += `<path d="M${f(-1.7 * k)} ${f(-4.3 * k)} L${f(4.4 * k)} ${f(-4.6 * k)} Q${f(5.3 * k)} ${f(-4.4 * k)} ${f(5.2 * k)} ${f(-3.4 * k)} L${f(5.2 * k)} 0 L${f(3.8 * k)} 0 L${f(3.6 * k)} ${f(-2.8 * k)} L${f(-1.7 * k)} ${f(-2.5 * k)}Z" fill="${o.bottom}"/>`;
+      g += `<ellipse cx="${f(5.2 * k)}" cy="${f(-.3 * k)}" rx="${f(1.2 * k)}" ry="${f(.55 * k)}" fill="#2e2620"/>`;
+      if (o.long) g += hair(true);
+      g += `<path d="M${f(-2.2 * k)} ${f(-3.4 * k)} Q${f(-2.7 * k)} ${f(-9.2 * k)} 0 ${f(-9.4 * k)} Q${f(2.5 * k)} ${f(-9.2 * k)} ${f(2.1 * k)} ${f(-3.4 * k)}Z" fill="${o.top}"/>`;
+      g += `<path d="M${f(1.3 * k)} ${f(-8.4 * k)} Q${f(2.9 * k)} ${f(-6.2 * k)} ${f(3.8 * k)} ${f(-4.7 * k)}" stroke="${o.top}" stroke-width="${f(1.25 * k)}" stroke-linecap="round" fill="none"/><circle cx="${f(3.9 * k)}" cy="${f(-4.6 * k)}" r="${f(.55 * k)}" fill="${sk}"/>`;
+    } else {
+      o.hy = 13.6 * k;
+      const bend = o.pose === 'putt' ? 1 : 0;
+      g += `<rect x="${f(-1.5 * k)}" y="${f(-6.6 * k)}" width="${f(1.3 * k)}" height="${f(6.6 * k)}" rx="${f(.4 * k)}" fill="${o.bottom}"/><rect x="${f(.2 * k)}" y="${f(-6.6 * k)}" width="${f(1.3 * k)}" height="${f(6.6 * k)}" rx="${f(.4 * k)}" fill="${o.bottom}"/>`;
+      g += `<ellipse cx="${f(-.9 * k)}" cy="${f(-.2 * k)}" rx="${f(1 * k)}" ry="${f(.5 * k)}" fill="#2e2620"/><ellipse cx="${f(1 * k)}" cy="${f(-.2 * k)}" rx="${f(1 * k)}" ry="${f(.5 * k)}" fill="#2e2620"/>`;
+      if (o.pack) g += `<rect x="${f(-3.4 * k)}" y="${f(-11.4 * k)}" width="${f(2.2 * k)}" height="${f(4.6 * k)}" rx="${f(.6 * k)}" fill="${o.pack}"/>`;
+      if (o.long) g += hair(true);
+      g += o.dress
+        ? `<path d="M${f(-2 * k)} ${f(-11.8 * k)} L${f(2 * k)} ${f(-11.8 * k)} L${f(3 * k)} ${f(-4.2 * k)} L${f(-3 * k)} ${f(-4.2 * k)}Z" fill="${o.top}"/>`
+        : `<path d="M${f(-2.1 * k)} ${f(-11.8 * k)} L${f(2.1 * k)} ${f(-11.8 * k)} L${f(1.7 * k)} ${f(-6.2 * k)} L${f(-1.7 * k)} ${f(-6.2 * k)}Z" fill="${o.top}"/>`;
+      if (bend) g += `<path d="M${f(1.4 * k)} ${f(-11.2 * k)} Q${f(2.4 * k)} ${f(-9 * k)} ${f(2.2 * k)} ${f(-7.2 * k)}" stroke="${o.top}" stroke-width="${f(1.2 * k)}" stroke-linecap="round" fill="none"/><path d="M${f(2.2 * k)} ${f(-7.2 * k)} L${f(4.6 * k)} ${f(-.3 * k)}" stroke="#c9ccd0" stroke-width="${f(.45 * k)}"/><rect x="${f(4.2 * k)}" y="${f(-.7 * k)}" width="${f(1.6 * k)}" height="${f(.7 * k)}" fill="#9aa1a8"/>`;
+      else g += `<path d="M${f(-1.9 * k)} ${f(-11.2 * k)} L${f(-2.5 * k)} ${f(-7 * k)} M${f(1.9 * k)} ${f(-11.2 * k)} L${f(2.5 * k)} ${f(-7 * k)}" stroke="${o.top}" stroke-width="${f(1.15 * k)}" stroke-linecap="round"/>`;
+      if (o.staff) g += `<path d="M${f(2.8 * k)} ${f(-9 * k)} L${f(3.4 * k)} 0" stroke="#7a5534" stroke-width="${f(.5 * k)}"/>`;
+    }
+    g += `<rect x="${f(-.55 * k)}" y="${f(-o.hy + 1.2 * k)}" width="${f(1.1 * k)}" height="${f(1.4 * k)}" fill="${sk}"/><circle cx="0" cy="${f(-o.hy)}" r="${f(1.8 * k)}" fill="${sk}"/>`;
+    if (o.cap) g += `<path d="M${f(-1.9 * k)} ${f(-o.hy - .2 * k)} Q0 ${f(-o.hy - 2.9 * k)} ${f(1.9 * k)} ${f(-o.hy - .2 * k)}Z" fill="${o.cap}"/><path d="M${f(1.2 * k)} ${f(-o.hy - .4 * k)} L${f(3.4 * k)} ${f(-o.hy - .1 * k)}" stroke="${o.cap}" stroke-width="${f(.7 * k)}" stroke-linecap="round"/>`;
+    else if (!o.long) g += hair(false);
+    else g += `<path d="M${f(-1.9 * k)} ${f(-o.hy)} Q${f(-1.9 * k)} ${f(-o.hy - 2.4 * k)} 0 ${f(-o.hy - 2.3 * k)} Q${f(1.9 * k)} ${f(-o.hy - 2.4 * k)} ${f(1.9 * k)} ${f(-o.hy)} Q${f(.4 * k)} ${f(-o.hy - 1.4 * k)} ${f(-1.9 * k)} ${f(-o.hy)}Z" fill="${o.hair}"/>`;
+    return g + '</g>';
+  }
+  function dog(x, y, k, col) {
+    return `<g transform="translate(${f(x)} ${f(y)})"><path d="M${f(-3 * k)} ${f(-3 * k)} Q${f(-5.4 * k)} ${f(-5.6 * k)} ${f(-5 * k)} ${f(-6.4 * k)}" stroke="${col}" stroke-width="${f(.7 * k)}" fill="none" stroke-linecap="round"/>
+      <rect x="${f(-2.8 * k)}" y="${f(-2.4 * k)}" width="${f(.8 * k)}" height="${f(2.4 * k)}" fill="${col}"/><rect x="${f(1.6 * k)}" y="${f(-2.4 * k)}" width="${f(.8 * k)}" height="${f(2.4 * k)}" fill="${col}"/>
+      <ellipse cx="0" cy="${f(-3.2 * k)}" rx="${f(3.4 * k)}" ry="${f(1.7 * k)}" fill="${col}"/><circle cx="${f(3.3 * k)}" cy="${f(-4.9 * k)}" r="${f(1.5 * k)}" fill="${col}"/>
+      <ellipse cx="${f(4.6 * k)}" cy="${f(-4.5 * k)}" rx="${f(1 * k)}" ry="${f(.65 * k)}" fill="${col}"/><circle cx="${f(5.4 * k)}" cy="${f(-4.6 * k)}" r="${f(.3 * k)}" fill="#1c1410"/>
+      <ellipse cx="${f(2.6 * k)}" cy="${f(-5.2 * k)}" rx="${f(.6 * k)}" ry="${f(1.1 * k)}" fill="#6e4a26" transform="rotate(20 ${f(2.6 * k)} ${f(-5.2 * k)})"/><circle cx="${f(3.6 * k)}" cy="${f(-5.3 * k)}" r="${f(.22 * k)}" fill="#1c1410"/></g>`;
+  }
+  function figureSet(type, x, y, k, r) {
+    switch (type) {
+      case 'couple':
+        return moss(r, x + 1 * k, y + 1, 26 * k, 7 * k) +
+          person(x - 3.5 * k, y - 4.6 * k, k, { pose: 'sit', top: '#2f4a6b', bottom: '#33343d', hair: '#3a2a1e', skin: SKIN[0] }) +
+          person(x + 1.6 * k, y - 4.6 * k, k, { pose: 'sit', top: '#c9536a', bottom: '#c9536a', hair: '#6b3f22', long: true, skin: SKIN[1], tilt: -10 });
+      case 'golfer': {
+        let g = `<ellipse cx="${f(x + 6 * k)}" cy="${f(y)}" rx="${f(17 * k)}" ry="${f(3.4 * k)}" fill="#7fc25a"/>`;
+        for (let i = -3; i <= 3; i++) g += `<path d="M${f(x + 6 * k + i * 4.6 * k)} ${f(y - 3 * k)} l${f(1.6 * k)} ${f(6 * k)}" stroke="#93d26c" stroke-width="${f(1.6 * k)}" opacity=".5"/>`;
+        g += `<ellipse cx="${f(x + 6 * k)}" cy="${f(y)}" rx="${f(17 * k)}" ry="${f(3.4 * k)}" fill="none" stroke="#5e9a40" stroke-width=".8"/>`;
+        g += `<ellipse cx="${f(x + 16 * k)}" cy="${f(y)}" rx="${f(1.2 * k)}" ry="${f(.45 * k)}" fill="#1f2a18"/><path d="M${f(x + 16 * k)} ${f(y)} L${f(x + 16 * k)} ${f(y - 17 * k)}" stroke="#eef0f0" stroke-width="${f(.45 * k)}"/><path d="M${f(x + 16 * k)} ${f(y - 17 * k)} L${f(x + 21 * k)} ${f(y - 15.4 * k)} L${f(x + 16 * k)} ${f(y - 13.8 * k)}Z" fill="#e0453a"/>`;
+        g += `<circle cx="${f(x + 6.4 * k)}" cy="${f(y - .5 * k)}" r="${f(.55 * k)}" fill="#fff"/>`;
+        return g + person(x, y, k, { pose: 'putt', top: '#f2f2ee', bottom: '#2c3e5c', cap: '#1e3a5f', skin: SKIN[0] });
+      }
+      case 'hiker':
+        return `<path d="M${f(x - 7 * k)} ${f(y + 1)} L${f(x - 4 * k)} ${f(y - 6 * k)} L${f(x + 3 * k)} ${f(y - 7 * k)} L${f(x + 7 * k)} ${f(y + 1)}Z" fill="#7d8388"/><path d="M${f(x - 4 * k)} ${f(y - 6 * k)} L${f(x + 3 * k)} ${f(y - 7 * k)} L${f(x + 1 * k)} ${f(y - 3 * k)}Z" fill="#a3a9ad"/>` +
+          person(x - .5 * k, y - 6.4 * k, k, { top: '#d0562e', bottom: '#4a4f3a', hair: '#2b2018', pack: '#3d5a40', staff: true, skin: SKIN[2] });
+      case 'dog':
+        return dog(x, y, k * 1.05, '#c8924e');
+      case 'family':
+        return person(x - 5 * k, y, k, { top: '#3e6b5a', bottom: '#2f3340', hair: '#2a1d14', skin: SKIN[1] }) +
+          person(x + 5 * k, y, k, { top: '#d9a441', bottom: '#d9a441', dress: true, long: true, hair: '#5a3418', skin: SKIN[1] }) +
+          person(x, y, k * .62, { top: '#c9536a', bottom: '#2f3340', hair: '#2a1d14', skin: SKIN[1] });
+    }
+    return '';
+  }
+  // figure sets stand on the table beside the glass, never inside the terrarium
+  function figuresBeside(list, r, id) {
+    if (!list || !list.length) return '';
+    const k = 1.55, X = [38, 262, 8, 292];
+    return list.slice(0, 4).map((t, i) => {
+      const x = X[i] - (t === 'golfer' ? 6 * k : 0);
+      return `<ellipse cx="${f(x + (t === 'golfer' ? 6 * k : 0))}" cy="390" rx="22" ry="3.5" fill="url(#sd-${id})"/>` + figureSet(t, x, 388, k, r);
+    }).join('');
+  }
+
+  function keepsakes(list, v, r, id, s, B) {
+    const items = [];
+    const STONES = ['#d8d2c7', '#a49e95', '#6c777d', '#e6d6c4', '#c2ad98', '#3a3f42', '#8d9a8f'];
+    (list || []).forEach(k => {
+      if (k === 'beach' || k === 'own') for (let i = 0; i < (k === 'own' ? 2 : 3); i++) items.push(['stone']);
+      if (k === 'wish') items.push(['wish']);
+      if (k === 'seaglass') for (let i = 0; i < 3; i++) items.push(['glass']);
+      if (k === 'shells') { items.push(['scallop']); items.push(['cowrie']); }
+      if (k === 'crystals') { items.push(['crystal']); items.push(['crystal']); }
+      if (k === 'ring') items.push(['ring']);
+    });
+    if (!items.length) return '';
+    // ring always front and centre
+    const ri = items.findIndex(i => i[0] === 'ring');
+    if (ri > -1) { const [it] = items.splice(ri, 1); items.splice(Math.floor(items.length / 2), 0, it); }
+    const W = Math.min(v.hw(v.soil) - 34, 64), n = items.length; s *= 1.12;
+    const glassCols = ['#8fd8c8', '#6fbf8a', '#4a74c9', '#dff1ec', '#9ad0e6'];
+    const crystalCols = ['#9b6bd1', '#f2b4c6', '#d9eef6'];
+    let out = '';
+    items.forEach((it, i) => {
+      const x = 150 + (n === 1 ? 0 : (-W + 2 * W * i / (n - 1))) + rr(r, -4, 4) * s;
+      const y = v.soil + rr(r, 6, 13);
+      let g = '';
+      switch (it[0]) {
+        case 'stone': g = stone(x, y, rr(r, 7, 11) * s, rr(r, 4.5, 6.5) * s, pick(r, STONES), rr(r, -15, 15), id); break;
+        case 'wish': g = stone(x, y, 11 * s, 7 * s, '#5f686d', rr(r, -8, 8), id, true); break;
+        case 'glass': g = seaglass(r, x, y, rr(r, 6, 8.5) * s, pick(r, glassCols)); break;
+        case 'scallop': g = scallop(x, y + 2, s); break;
+        case 'cowrie': g = cowrie(x, y, s); break;
+        case 'crystal': { const c = pick(r, crystalCols); g = crystal(x - 4 * s, y + 2, 4 * s, 18 * s, -14, c) + crystal(x + 4 * s, y + 2, 3.5 * s, 13 * s, 16, c) + crystal(x, y + 3, 4.5 * s, 22 * s, 2, c); break; }
+        case 'ring': g = ring(x, y + 3, s * 1.05, id); break;
+      }
+      out += B ? `<g class="drop">${g}</g>` : g;
+    });
+    return out;
+  }
+
+  /* plant compositions: returns {back, mid, front, details} */
+  function plants(style, v, r, s) {
+    const W = v.hw(v.soil) - 14, y = v.soil, H = v.plantH;
+    const X = t => 150 + t * W;
+    const tall = (t, hf) => {
+      const x = X(t), h = H * hf, tipHalf = Math.max(8, v.hw(y - h) - 12), lean0 = rr(r, -12, 12) * s;
+      const tip = clamp(x + lean0 + t * 14, 150 - tipHalf, 150 + tipHalf);
+      return [x, h, tip - x];
+    };
+    const clump = (t, hf, cols) => {
+      const x = X(t), base = H * hf;
+      return [[-26, .72], [0, 1], [24, .82]].map(([dl, k]) => {
+        const h = base * k * rr(r, .92, 1.05), tipHalf = Math.max(8, v.hw(y - h) - 10);
+        const tip = clamp(x + (dl + t * 10 + rr(r, -6, 6)) * s, 150 - tipHalf, 150 + tipHalf);
+        return fern(r, x + dl * .08, y, h, tip - x, cols);
+      }).join('');
+    };
+    const P = { back: [], mid: [], front: [], details: [] };
+    const fernG = ['#4e9a45', '#5fae4f', '#6dbb58'], fernC = ['#3f8f6b', '#56a77d', '#6fbf8f'], club = ['#8fd18a', '#a9e3a0', '#d4f5c8'];
+    const mossC = ['#2a5226', '#356b33', '#478a43', '#5ba356', '#7cc070'];
+    switch (style) {
+      case 'woodland':
+        [[-.48, .82], [.46, .68], [0, .98]].forEach(([t, hf]) => P.back.push(clump(t, hf, fernG)));
+        P.mid.push(ivy(r, X(-.85), X(.15), y + 2, s));
+        P.mid.push(clubmoss(r, X(.72), y, s, club));
+        P.front.push(moss(r, X(-.7), y + 6, 46 * s, 16 * s), moss(r, X(.74), y + 6, 40 * s, 14 * s));
+        P.details.push(shroom(X(-.42), y + 9, s, '#d6423a') + shroom(X(-.34), y + 10, s * .7, '#d6423a'), shroom(X(.55), y + 9, s * .8, '#c99a63'));
+        break;
+      case 'tropical': {
+        const [x, h] = tall(-.25, .98);
+        [-38, 6, 42].forEach(l => P.back.push(palm(r, x, y, h * rr(r, .82, 1), clamp(l * s, -(v.hw(y - h) - 10) - (x - 150), (v.hw(y - h) - 10) - (x - 150)))));
+        P.back.push(hypo(r, X(.55), y, H * .5, s));
+        P.mid.push(fittonia(r, X(-.66), y, s, 'pink'), fittonia(r, X(.22), y + 2, s * 1.1, 'red'), fittonia(r, X(.78), y, s * .85, 'white'));
+        P.front.push(moss(r, X(-.86), y + 6, 30 * s, 12 * s), moss(r, X(.88), y + 6, 26 * s, 11 * s));
+        break; }
+      case 'grotto':
+        [[-.58, .78], [-.08, .98], [.5, .8]].forEach(([t, hf]) => P.back.push(clump(t, hf, fernC)));
+        P.mid.push(clubmoss(r, X(-.38), y + 2, s * 1.1, club), clubmoss(r, X(.55), y + 2, s, club));
+        P.front.push(moss(r, X(-.72), y + 6, 44 * s, 15 * s, mossC), moss(r, X(.72), y + 6, 44 * s, 15 * s, mossC));
+        break;
+      case 'meadow':
+        [-.62, -.52, -.42, -.3, .08, .2].forEach(t => P.back.push(dried(r, X(t), y, H * rr(r, .5, .8), 'lav', s)));
+        [.32, .44, .56].forEach(t => P.back.push(dried(r, X(t), y, H * rr(r, .55, .8), 'bunny', s)));
+        [-.18, -.05, .68, .78].forEach(t => P.back.push(dried(r, X(t), y, H * rr(r, .4, .62), 'gyp', s)));
+        P.mid.push(clubmoss(r, X(-.82), y + 2, s * .9, fernG), clubmoss(r, X(.84), y + 2, s * .9, fernG));
+        P.front.push(moss(r, X(-.7), y + 6, 40 * s, 13 * s), moss(r, X(.72), y + 6, 38 * s, 13 * s));
+        P.details.push(fmn(r, X(-.55), y + 9, s), fmn(r, X(.55), y + 9, s));
+        break;
+      default: { // signature
+        const [x, h] = tall(-.32, .96);
+        [-36, 4, 38].forEach(l => P.back.push(palm(r, x, y, h * rr(r, .8, 1), l * s)));
+        P.back.push(clump(.45, .78, fernG));
+        P.mid.push(fittonia(r, X(-.72), y, s, 'pink'), fittonia(r, X(.2), y + 1, s * 1.05, 'red'), clubmoss(r, X(.75), y, s, club));
+        P.front.push(moss(r, X(-.78), y + 6, 40 * s, 14 * s), moss(r, X(.8), y + 6, 36 * s, 13 * s));
+        P.details.push(shroom(X(-.48), y + 10, s, '#d6423a') + shroom(X(-.4), y + 11, s * .7, '#d6423a'), shroom(X(.6), y + 10, s * .85, '#c99a63'));
+      }
+    }
+    return P;
+  }
+
+  function lightString(v, cols, r, id, startY) {
+    const y0 = v.top + 8, y1 = v.soil - 16, N = 15, pts = [[150, startY]];
+    const ph = rr(r, 0, 6);
+    for (let i = 0; i <= N; i++) {
+      const t = i / N, y = y0 + (y1 - y0) * t, a = Math.max(0, v.hw(y) - 14) * .88;
+      pts.push([150 + a * Math.sin(t * Math.PI * 3.3 + ph), y]);
+    }
+    let d = `M${f(pts[0][0])} ${f(pts[0][1])}`;
+    for (let i = 0; i < pts.length - 1; i++) {
+      const p0 = pts[Math.max(0, i - 1)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(pts.length - 1, i + 2)];
+      d += ` C${f(p1[0] + (p2[0] - p0[0]) / 6)} ${f(p1[1] + (p2[1] - p0[1]) / 6)} ${f(p2[0] - (p3[0] - p1[0]) / 6)} ${f(p2[1] - (p3[1] - p1[1]) / 6)} ${f(p2[0])} ${f(p2[1])}`;
+    }
+    let g = `<path d="${d}" stroke="#c98a55" stroke-width=".9" fill="none" opacity=".75"/>`;
+    pts.slice(2).forEach((p, i) => {
+      const ci = i % cols.length;
+      g += `<g class="bulb" style="animation-delay:${f(-r() * 3)}s"><circle cx="${f(p[0])}" cy="${f(p[1])}" r="9" fill="url(#halo-${id}-${ci})"/><circle cx="${f(p[0])}" cy="${f(p[1])}" r="1.9" fill="#fffaf0"/></g>`;
+    });
+    return g;
+  }
+
+  function render(cfg, opts = {}) {
+    const id = 't' + (++UID) + Math.floor(Math.random() * 1e4);
+    const vk = cfg.vessel === 'bottle' && cfg.size === 'petite' ? 'petite' : cfg.vessel;
+    const v = V[vk] || V.bottle;
+    const r = R(cfg.seed || 7);
+    const B = !!opts.build;
+    const lit = cfg.light && cfg.light !== 'none';
+    const cols = LIGHTS[cfg.light] || LIGHTS.warm;
+    const strand = cfg.light === 'fairy' || cfg.light === 'rainbow';
+    const main = cols[0];
+    const s = clamp((v.hw(v.soil) - 14) / 88, .62, 1.08);
+    const grp = (stage, inner, cls = '') => B ? `<g class="st ${cls}" data-s="${stage}">${inner}</g>` : (cls ? `<g class="${cls}">${inner}</g>` : inner);
+    const wrapPl = arr => arr.map(x => B ? `<g class="pl">${x}</g>` : x).join('');
+
+    let defs = `<clipPath id="c-${id}"><path d="${v.d}"/></clipPath>
+      <linearGradient id="gl-${id}" x1="0" x2="1"><stop offset="0" stop-color="#8fd8c8" stop-opacity="${v.tint ? .3 : .13}"/><stop offset=".45" stop-color="#8fd8c8" stop-opacity="${v.tint ? .1 : .03}"/><stop offset="1" stop-color="#8fd8c8" stop-opacity="${v.tint ? .28 : .12}"/></linearGradient>
+      <linearGradient id="hl-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".3" stop-color="#fff" stop-opacity=".9"/><stop offset=".75" stop-color="#fff" stop-opacity=".5"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+      <linearGradient id="so-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5e3f29"/><stop offset="1" stop-color="#36241a"/></linearGradient>
+      <linearGradient id="ck-${id}" x1="0" x2="1"><stop offset="0" stop-color="#a87447"/><stop offset=".5" stop-color="#d2a476"/><stop offset="1" stop-color="#9a663b"/></linearGradient>
+      <linearGradient id="gold-${id}" x1="0" x2="1"><stop offset="0" stop-color="#b8892f"/><stop offset=".5" stop-color="#fbe39a"/><stop offset="1" stop-color="#c79a3e"/></linearGradient>
+      <linearGradient id="br-${id}" x1="0" x2="1"><stop offset="0" stop-color="#a77d33"/><stop offset=".5" stop-color="#e6c477"/><stop offset="1" stop-color="#b48a3c"/></linearGradient>
+      <linearGradient id="wd-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a6a42"/><stop offset="1" stop-color="#5d3c22"/></linearGradient>
+      <radialGradient id="sh-${id}" cx=".38" cy=".32" r=".75"><stop offset=".45" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".38"/></radialGradient>
+      <radialGradient id="sd-${id}"><stop offset="0" stop-color="#000" stop-opacity=".55"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>`;
+    if (lit) {
+      cols.forEach((c, i) => { defs += `<radialGradient id="halo-${id}-${i}"><stop offset="0" stop-color="${c}" stop-opacity=".95"/><stop offset=".35" stop-color="${c}" stop-opacity=".45"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></radialGradient>`; });
+      defs += `<linearGradient id="cone-${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${main}" stop-opacity=".55"/><stop offset="1" stop-color="${main}" stop-opacity="0"/></linearGradient>
+        <radialGradient id="am-${id}"><stop offset="0" stop-color="${main}" stop-opacity=".42"/><stop offset="1" stop-color="${main}" stop-opacity="0"/></radialGradient>
+        <radialGradient id="og-${id}"><stop offset="0" stop-color="${main}" stop-opacity=".3"/><stop offset=".6" stop-color="${main}" stop-opacity=".08"/><stop offset="1" stop-color="${main}" stop-opacity="0"/></radialGradient>`;
+    }
+
+    const midY = (v.top + v.soil) / 2;
+    let back = '';
+    if (lit) back += grp(4, `<circle cx="150" cy="${f(midY + 20)}" r="200" fill="url(#og-${id})"/>`, 'lt');
+    if (vk !== 'drop') back += `<ellipse cx="150" cy="${vk === 'cloche' ? 384 : 386}" rx="132" ry="9" fill="url(#sd-${id})"/>`;
+    if (lit && vk !== 'drop') back += grp(4, `<ellipse cx="150" cy="388" rx="150" ry="12" fill="url(#og-${id})"/>`, 'lt');
+    back += `<path d="${v.d}" fill="url(#gl-${id})"/>`;
+
+    // contents
+    const dt = v.drain, ct = dt - 7;
+    let drain = `<rect x="0" y="${dt}" width="300" height="${400 - dt}" fill="#5a3b2a"/>`;
+    for (let i = 0; i < 120; i++) {
+      const x = rr(r, 14, 286), y = rr(r, dt + 3, dt + 46), rx = rr(r, 3.6, 7);
+      drain += `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(rx)}" ry="${f(rx * .82)}" fill="${pick(r, ['#b9714a', '#a5603d', '#c98761', '#8e5034', '#b06a44'])}"/><circle cx="${f(x - rx * .35)}" cy="${f(y - rx * .35)}" r="${f(rx * .3)}" fill="#f5c9a8" opacity=".25"/>`;
+    }
+    let char = `<path d="M0 ${ct} Q75 ${ct - 2} 150 ${ct} T300 ${ct} L300 ${dt + 4} L0 ${dt + 4}Z" fill="#181615"/>`;
+    for (let i = 0; i < 40; i++) char += `<circle cx="${f(rr(r, 10, 290))}" cy="${f(rr(r, ct, dt + 2))}" r="${f(rr(r, .5, 1.3))}" fill="#3a3633"/>`;
+    let sd = `M0 ${ct + 2} L0 ${v.soil}`;
+    for (let x = 0; x <= 300; x += 20) sd += ` L${x} ${f(v.soil + Math.sin(x / 31 + (cfg.seed || 1)) * 2.4 + rr(r, -1.2, 1.2))}`;
+    sd += ` L300 ${ct + 2}Z`;
+    let soil = `<path d="${sd}" fill="url(#so-${id})"/>`;
+    for (let i = 0; i < 45; i++) soil += `<circle cx="${f(rr(r, 10, 290))}" cy="${f(rr(r, v.soil + 3, ct))}" r="${f(rr(r, .5, 1.4))}" fill="${pick(r, ['#efe7da', '#2a1b12', '#7a5236'])}" opacity=".8"/>`;
+
+    const P = plants(cfg.plants || 'woodland', v, r, s);
+    const keep = keepsakes(cfg.keeps, v, r, id, s, B);
+    const figs = figuresBeside(cfg.figures, r, id);
+    let lightsG = '';
+    if (lit) {
+      const startY = v.cork ? v.cork.y + v.cork.h - 4 : v.top;
+      const ledY = v.cork ? v.cork.y + v.cork.h : vk === 'jar' ? 126 : v.top - 4;
+      lightsG = `<path d="M${150 - 16} ${f(ledY)} L${f(150 - v.hw(v.soil) - 10)} ${v.soil + 10} L${f(150 + v.hw(v.soil) + 10)} ${v.soil + 10} L${150 + 16} ${f(ledY)}Z" fill="url(#cone-${id})" style="mix-blend-mode:screen"/><ellipse cx="150" cy="${f(ledY + 2)}" rx="13" ry="3" fill="#fff8ea"/><ellipse cx="150" cy="${f(ledY + 2)}" rx="30" ry="9" fill="url(#halo-${id}-0)"/>${strand ? `<g class="${cfg.light === 'rainbow' ? 'rainbow' : ''}">${lightString(v, cols, r, id, startY)}</g>` : ''}<ellipse cx="150" cy="${f(midY + 30)}" rx="150" ry="${f((v.soil - v.top) * .8)}" fill="url(#am-${id})" style="mix-blend-mode:screen"/>`;
+    }
+    let dew = '';
+    if (vk !== 'hex') for (let i = 0; i < 34; i++) { const y = rr(r, v.top + 10, v.soil - 40), side = r() < .5 ? -1 : 1, x = 150 + side * (v.hw(y) - rr(r, 1, 18)); dew += `<circle cx="${f(x)}" cy="${f(y)}" r="${f(rr(r, .6, 1.7))}" fill="#e9fbf6" opacity="${f(rr(r, .25, .6))}"/>`; }
+
+    const hlX = 150 - v.hw(v.soil) + 9;
+    const contents = `<g clip-path="url(#c-${id})">
+      ${grp(1, drain)}${grp(1, char)}${grp(1, soil)}
+      ${grp(2, wrapPl(P.back))}
+      ${lit ? grp(4, lightsG, 'lt') : ''}
+      ${grp(2, wrapPl(P.mid))}
+      ${grp(2, wrapPl(P.front))}
+      ${grp(3, keep)}
+      ${grp(2, wrapPl(P.details))}
+      ${grp(B ? 4 : 0, dew)}
+      <rect x="${f(hlX)}" y="0" width="9" height="400" fill="url(#hl-${id})" opacity=".2"/>
+      <rect x="${f(300 - hlX - 7)}" y="0" width="3.5" height="400" fill="url(#hl-${id})" opacity=".14"/>
+    </g>`;
+
+    // vessel front
+    let front = '';
+    if (vk === 'hex') {
+      const b = `stroke="url(#br-${id})" fill="none" stroke-linejoin="round"`;
+      front += `<path d="${v.d}" ${b} stroke-width="3"/><path d="M44 138 L256 138 M44 318 L256 318 M97 138 L97 318 M203 138 L203 318 M150 66 L97 138 M150 66 L203 138 M97 318 L150 382 M203 318 L150 382" ${b} stroke-width="1.3" opacity=".9"/>`;
+    } else {
+      front += `<path d="${v.d}" fill="none" stroke="${v.tint ? '#7fd3c2' : '#c8f0e4'}" stroke-opacity="${v.tint ? .16 : .07}" stroke-width="${v.tint ? 9 : 7}" stroke-linejoin="round"/><path d="${v.d}" fill="none" stroke="#d6f6ee" stroke-opacity=".6" stroke-width="2" stroke-linejoin="round"/>`;
+      if (v.tint) front += `<path d="M58 300 C58 340 96 366 150 368 C204 366 242 340 242 300" fill="none" stroke="#9fe0d2" stroke-opacity=".18" stroke-width="5"/><path d="M52 250 C58 214 96 188 128 172" fill="none" stroke="#ffffff" stroke-opacity=".22" stroke-width="5" stroke-linecap="round"/><path d="M236 320 C240 300 240 282 236 262" fill="none" stroke="#ffffff" stroke-opacity=".14" stroke-width="3" stroke-linecap="round"/>`;
+    }
+    let cap = '';
+    if (v.cork) {
+      const c = v.cork, l = c.cx - c.wT / 2, rt = c.cx + c.wT / 2;
+      let ck = `<path d="M${f(l)} ${f(c.y + 3)} Q${f(l)} ${f(c.y)} ${f(l + 3)} ${f(c.y)} L${f(rt - 3)} ${f(c.y)} Q${f(rt)} ${f(c.y)} ${f(rt)} ${f(c.y + 3)} L${f(c.cx + c.wB / 2)} ${f(c.y + c.h)} L${f(c.cx - c.wB / 2)} ${f(c.y + c.h)}Z" fill="url(#ck-${id})"/><ellipse cx="${c.cx}" cy="${f(c.y + 1.5)}" rx="${f(c.wT / 2 - 2)}" ry="2.2" fill="#e2bd94"/>`;
+      for (let i = 0; i < 16; i++) ck += `<circle cx="${f(c.cx + rr(r, -c.wB / 2 + 3, c.wB / 2 - 3))}" cy="${f(rr(r, c.y + 4, c.y + c.h - 3))}" r="${f(rr(r, .5, 1.2))}" fill="#6e4524" opacity=".6"/>`;
+      cap = ck;
+      front += `<rect x="${f(150 - v.lip[1] / 2)}" y="${v.lip[0]}" width="${v.lip[1]}" height="7" rx="3.5" fill="#bfeee2" fill-opacity=".12" stroke="#dcf5ee" stroke-opacity=".6" stroke-width="1.5"/>`;
+    }
+    if (vk === 'jar') front += `<path d="M56 112 Q150 54 244 112 Z" fill="#bfeee2" fill-opacity=".08" stroke="#dcf5ee" stroke-opacity=".5" stroke-width="1.6"/><circle cx="150" cy="74" r="10" fill="#bfeee2" fill-opacity=".14" stroke="#dcf5ee" stroke-opacity=".55" stroke-width="1.5"/><rect x="44" y="112" width="212" height="13" rx="5" fill="#bfeee2" fill-opacity=".1" stroke="#dcf5ee" stroke-opacity=".55" stroke-width="1.5"/>`;
+    if (vk === 'cloche') front += `<rect x="146" y="98" width="8" height="8" fill="#bfeee2" fill-opacity=".15"/><circle cx="150" cy="92" r="9" fill="#bfeee2" fill-opacity=".16" stroke="#dcf5ee" stroke-opacity=".55" stroke-width="1.5"/><rect x="34" y="358" width="232" height="24" rx="6" fill="url(#wd-${id})"/><rect x="34" y="358" width="232" height="4" rx="2" fill="#c08a5c" opacity=".6"/>`;
+    if (vk === 'drop') front += `<path d="M150 -14 L150 40" stroke="#b9a07a" stroke-width="1.4"/><circle cx="150" cy="44" r="5" fill="none" stroke="url(#br-${id})" stroke-width="2"/><path d="M138 64 Q150 44 162 64 Z" fill="url(#br-${id})"/>`;
+
+    let tag = '';
+    if (cfg.engrave) {
+      const txt = String(cfg.engrave).slice(0, 24).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+      const w = Math.max(50, txt.length * 4.4 + 22);
+      const [tx, ty, rot] = vk === 'drop' ? [160, 20, 8] : [Math.min(206, 312 - w), 360, -7];
+      tag = grp(3, `<g transform="translate(${f(tx)} ${ty}) rotate(${rot})"><path d="M5 11 Q-6 2 -10 -10" stroke="#b9a07a" stroke-width="1" fill="none"/><rect width="${f(w)}" height="22" rx="4" fill="url(#br-${id})"/><rect x="2" y="2" width="${f(w - 4)}" height="18" rx="3" fill="none" stroke="#8a6626" stroke-opacity=".5" stroke-width=".6"/><circle cx="7" cy="11" r="2" fill="#5e4418"/><text x="${f(w / 2 + 4)}" y="14.4" font-size="7.4" text-anchor="middle" fill="#3e2c0c" font-family="'DM Mono', monospace" letter-spacing=".3">${txt}</text></g>`);
+    }
+
+    const label = opts.label || 'Illustration of a bespoke terrarium';
+    return `<svg class="terra" viewBox="-10 -14 320 412" role="img" aria-label="${label}" xmlns="http://www.w3.org/2000/svg"><defs>${defs}</defs>${back}${contents}${cap}${front}${figs}${tag}</svg>`;
+  }
+
+  return { render, vessels: V };
+})();
+</script>
+<script>
+/* ---------- Site ---------- */
+(() => {
+  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+  const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+  const ease = t => 1 - Math.pow(1 - t, 3);
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const gbp = n => '£' + (Number.isInteger(n) ? n : n.toFixed(2));
+  const LEAD = 14;
+  const fmtDate = d => d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'long' });
+  const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const ready = addDays(today, LEAD);
+  $('#leadDate').textContent = fmtDate(ready);
+
+  /* catalogue */
+  const SIZES = {
+    '5': { name: '5 litre', label: 'The Keepsake', img: 'img/size-5l.webp', alt: 'A 5 litre belly-bottle terrarium with pink fittonia, lit from the cork', base: 220, w: '50%', h: 'approx. 30 cm tall', figs: 1, picks: 3, tiers: 'S',
+      fits: 'Small plants · 1 figure scene',
+      copy: 'Small enough for a bedside table, deep enough to hold a whole story. A single scene composed by hand around one moment, with jewel-like plants growing in their own rain cycle and a warm glow set into the cork.' },
+    '15': { name: '15 litre', label: 'The Signature', img: 'img/step5-light.webp', alt: 'A 15 litre belly-bottle terrarium with purple velvet plant and red fittonia, lit from the cork', base: 295, w: '66%', h: 'approx. 42 cm tall', figs: 2, picks: 5, tiers: 'SM',
+      fits: 'Small & medium plants · up to 2 figure scenes',
+      copy: 'Room for a landscape to breathe: layered planting, a winding stone path and pops of colour from purple velvet plant and fittonia, with a figure set standing beside the glass.' },
+    '35': { name: '35 litre', label: 'The Heirloom', img: 'img/size-35l.webp', alt: 'A 35 litre belly-bottle terrarium with ferns and red fittonia', base: 395, w: '82%', h: '55.5 cm tall, 39.3 cm wide', figs: 4, picks: 8, tiers: 'SML',
+      fits: 'All plants · up to 4 figure scenes',
+      copy: 'Living sculpture. A full miniature world of rising terrain, rock outcrops, trailing vines and a tropical canopy, lit with a gallery glow and built to mature over years.' }
+  };
+  const VESSELS = { demijohn: { name: 'Belly bottle', add: 0 } };
+  const PLANTS = {
+    tropical: { name: 'Tropical colour', desc: 'Pink fittonia, polka dot plant and a parlour palm.' },
+    woodland: { name: 'Woodland', desc: 'Ferns, cushion moss, ivy and tiny toadstools.' },
+    grotto: { name: 'Fern grotto', desc: 'Layers of cool green ferns and spikemoss.' }
+  };
+  const FIGURES = {
+    couple: { name: 'A couple on a mossy ridge', desc: 'Two figures sitting together, painted in your colours.' },
+    golfer: { name: 'A golfer on the green', desc: 'Putting on a hand-trimmed moss green, with flag and ball.' },
+    hiker: { name: 'A hiker on the summit', desc: 'Backpack, walking pole and a rocky outcrop.' },
+    dog: { name: 'Your dog', desc: 'Matched to their breed and markings.' },
+    family: { name: 'A family', desc: 'Two adults and a child, hand in hand.' }
+  };
+  const LIGHTS = { warm: { name: 'Warm glow', add: 0 }, cool: { name: 'Moonlight', add: 0 }, fairy: { name: 'Warm glow + fairy string', add: 15 }, rainbow: { name: 'Colour-changing', add: 25 } };
+  const ENGRAVE = 12, LIKENESS = 40;
+  const PLANT_LIB = [{"n":"Aluminium Plant","b":"Pilea cadierei","t":"S","l":"Tolerates low light","h":"Moderate–high","pet":true,"d":"Easy and fast; pinch to keep compact.","c":"#8fa59a","c2":"#e3ece6","img":null},{"n":"Aluminium Plant 'Ellen Silver'","b":"Pilea cadierei 'Ellen Silver'","t":"S","l":"Tolerates low light","h":"Moderate–high","pet":true,"d":"Easy, bright filler for small builds.","c":"#8fa59a","c2":"#e3ece6","img":null},{"n":"Arthrostemma parvifolium","b":"","t":"S","l":"Bright, indirect","h":"Moderate–high","pet":false,"d":"Magenta flowers; humid builds.","c":"#b8405a","c2":"#f3b2bf","img":null},{"n":"Artillery Plant","b":"Pilea microphylla","t":"S","l":"Bright, indirect","h":"Moderate–high","pet":true,"d":"Fine-textured carpet that suits miniature lawns and greens.","c":"#4f9a45","c2":"#b9e3a0","img":null},{"n":"Begonia 'Black Bat'","b":"","t":"S","l":"Bright, indirect","h":"High","pet":false,"d":"Architectural, gothic accent.","c":"#2b2431","c2":"#7a4a5a","img":null},{"n":"Begonia 'Black Mountain'","b":"","t":"S","l":"Bright, indirect","h":"High","pet":false,"d":"Dramatic contrast against bright moss.","c":"#2b2431","c2":"#7a4a5a","img":null},{"n":"Begonia 'Pink Panther'","b":"","t":"S","l":"Bright, indirect","h":"High","pet":false,"d":"Romantic pink tones for Valentine's builds.","c":"#e07a9d","c2":"#ffd0de","img":null},{"n":"Begonia 'Speckled'","b":"","t":"S","l":"Bright, indirect","h":"High","pet":false,"d":"Speckled foliage catches LED light.","c":"#8fa59a","c2":"#e3ece6","img":null},{"n":"Begonia 'Temuyuk Silver'","b":"Begonia Temuyuk Silver","t":"S","l":"Bright, indirect","h":"High","pet":false,"d":"Metallic glow under LEDs.","c":"#8fa59a","c2":"#e3ece6","img":null},{"n":"Begonia amphioxus x malachosticta","b":"","t":"S","l":"Bright, indirect","h":"High","pet":false,"d":"Collector's showpiece hybrid for humid builds.","c":"#b8405a","c2":"#f3b2bf","img":null},{"n":"Begonia filiformis 'Irmsch'","b":"","t":"S","l":"Bright, indirect","h":"High","pet":false,"d":"Delicate texture for humid terrariums.","c":"#4f9a45","c2":"#b9e3a0","img":null},{"n":"Begonia ignita","b":"","t":"S","l":"Bright, indirect","h":"High","pet":false,"d":"Rare Sulawesi species; orange flowers.","c":"#b8405a","c2":"#f3b2bf","img":null},{"n":"Bulbophyllum capitatum","b":"","t":"S","l":"Bright, indirect","h":"Moderate–high","pet":true,"d":"Mount on wood or stone; yellow star flowers in summer.","c":"#4f9a45","c2":"#b9e3a0","img":null},{"n":"Chamaeranthemum venosum","b":"","t":"S","l":"Bright, indirect","h":"Moderate–high","pet":false,"d":"Ideal for the terrarium floor in low light.","c":"#4f9a45","c2":"#b9e3a0","img":null},{"n":"Cissus amazonica","b":"","t":"S","l":"Bright, indirect","h":"Moderate–high","pet":false,"d":"Elegant climber for back walls.","c":"#8fa59a","c2":"#e3ece6","img":null},{"n":"Creeping Button Fern","b":"Pyrrosia nummularifolia","t":"S","l":"Bright, indirect","h":"High","pet":true,"d":"Clothes stones and wood; high humidity.","c":"#4f9a45","c2":"#b9e3a0","img":null},{"n":"Creeping Oak-leaf Fig","b":"Ficus quercifolia 'creeping oak leaf'","t":"S","l":"Bright, indirect","h":"Moderate–high","pet":false,"d":"Quickly coats backgrounds and rocks.","c":"#4f9a45","c2":"#b9e3a0","img":null},{"n":"Earth Star","b":"Cryptanthus bivittatus","t":"S","l":"Bright, indirect","h":"Moderate–high","pet":true,"d":"Low, sculptural; brighter light deepens the pink.","c":"#e07a9d","c2":"#ffd0de","img":null},{"n":"Friendship Plant 'Norfolk'","b":"Pilea Norfolk","t":"S","l":"Bright, indirect","h":"Moderate–high","pet":true,"d":"Textured ground cover; burgundy undersides.","c":"#4f9a45","c2":"#b9e3a0","img":null},{"n":"Little Tree Plant","b":"Biophytum zenkeri","t":"S","l":"Bright, indirect","h":"Moderate–high","pet":false,"d":"Scale tree for figure scenes; folds at night.","c":"#4f9a45","c2":"#b9e3a0","img":null},{"n":"Michaelmoelleria vietnamensis","b":"","t":"S","l":"Bright, indirect","h":"High","pet":false,"d":"Rare gesneriad that grows on damp rock; a collector's centrepiece.","c":"#4f9a45","c2":"#b9e3a0","img":null},{"n":"Painted Spikemoss","b":"Selaginella picta","t":"S","l":"Bright, indirect","h":"Moderate–high","pet":true,"d":"Dramatic, spreading mat.","c":"#6ea65a","c2":"#f1f4df","img":null},{"n":"Pilea hitchcockii","b":"","t":"S","l":"Bright, indirect","h":"Moderate–high","pet":true,"d":"A staple terrarium plant; keep moist.","c":"#8fa59a","c2":"#e3ece6","img":null},{"n":"Primulina sinovietnamica","b":"","t":"S","l":"Bright, indirect","h":"Moderate–high","pet":true,"d":"Compact rosette, lilac flowers; pet friendly.","c":"#4f9a45","c2":"#b9e3a0","img":null},{"n":"Red Flame Ivy 'Crispy'","b":"Hemigraphis repanda 'Crispy Red Flame'","t":"S","l":"Bright, indirect","h":"Moderate–high","pet":true,"d":"Warm-toned ground cover.","c":"#7d4fb3","c2":"#c79bff","img":null},{"n":"Ripple Peperomia 'Abricos'","b":"Peperomia caperata 'Abricos'","t":"S","l":"Low to bright indirect","h":"Moderate–high","pet":true,"d":"Warm colour in a small footprint.","c":"#b8405a","c2":"#f3b2bf","img":null},{"n":"Sensitive Life Plant","b":"Biophytum sensitivum","t":"S","l":"Tolerates low light","h":"Moderate–high","pet":true,"d":"Leaflets fold when touched; a living miniature tree for scenes.","c":"#4f9a45","c2":"#b9e3a0","img":null},{"n":"Shingling Marcgravia","b":"Marcgravia sp. El Coca","t":"S","l":"Bright, indirect","h":"Moderate–high","pet":false,"d":"Needs terrarium conditions; striking on a back panel.","c":"#2b2431","c2":"#7a4a5a","img":null},{"n":"Solanum uleanum","b":"","t":"S","l":"Bright, indirect","h":"Moderate–high","pet":false,"d":"Fast colourful climber.","c":"#7d4fb3","c2":"#c79bff","img":null},{"n":"Variegated Leatherleaf Fern","b":"Rumohra adiantiformis 'Variegata'","t":"S","l":"Bright, indirect","h":"High","pet":true,"d":"Tough, long-lasting fern; high humidity.","c":"#4f9a45","c2":"#b9e3a0","img":null},{"n":"Waffle Plant 'Snow White'","b":"Hemigraphis 'Snow White'","t":"S","l":"Bright, indirect","h":"Moderate–high","pet":true,"d":"Bright low ground cover.","c":"#6ea65a","c2":"#f1f4df","img":null},{"n":"Wallich's Spikemoss","b":"Selaginella wallichi","t":"S","l":"Bright, indirect","h":"High","pet":true,"d":"Fast carpeting cover; keep moist.","c":"#4f9a45","c2":"#b9e3a0","img":null},{"n":"Asparagus Fern","b":"Asparagus Setaceus Plumosus","t":"M","l":"Tolerates low light","h":"High","pet":false,"d":"Airy texture behind figures; prefers higher humidity. Grows fast, trim to fit.","c":"#4f9a45","c2":"#b9e3a0","img":null},{"n":"Begonia 'Alaska Creek'","b":"","t":"M","l":"Bright, indirect","h":"High","pet":false,"d":"Silver sparkle under LED light; likes humidity.","c":"#8fa59a","c2":"#e3ece6","img":null},{"n":"Begonia amphioxus","b":"","t":"M","l":"Bright, indirect","h":"High","pet":false,"d":"A true terrarium species; keep humid and out of direct light.","c":"#b8405a","c2":"#f3b2bf","img":null},{"n":"Bird's Nest Fern 'Parvati'","b":"Asplenium parvati","t":"M","l":"Tolerates low light","h":"High","pet":true,"d":"Architectural focal fern; loves humidity, tolerates low light.","c":"#4f9a45","c2":"#b9e3a0","img":null},{"n":"Bloodleaf","b":"Iresine herbstii","t":"M","l":"Bright, indirect","h":"High","pet":true,"d":"Strong colour pop; pinch to keep bushy.","c":"#e07a9d","c2":"#ffd0de","img":null},{"n":"Bromeliad 'Tropical Night'","b":"Vriesea 'Tropical Night'","t":"M","l":"Bright, indirect","h":"Moderate–high","pet":true,"d":"Rosette focal point; water the central cup, never the substrate.","c":"#7d4fb3","c2":"#c79bff","img":null},{"n":"Chirita 'Pretty Turtle'","b":"Primulina dryas 'Pretty Turtle'","t":"M","l":"Bright, indirect","h":"Moderate–high","pet":true,"d":"Neat rosette, may flower lavender; pet friendly.","c":"#8fa59a","c2":"#e3ece6","img":null},{"n":"Crocodile Fern","b":"Microsorum Crocodyllus","t":"M","l":"Tolerates low light","h":"High","pet":true,"d":"Bold architectural backdrop; loves humidity and low light.","c":"#4f9a45","c2":"#b9e3a0","img":null},{"n":"Hand Fern","b":"Hemionitis doryopteris","t":"M","l":"Tolerates low light","h":"High","pet":true,"d":"Perfect small-scale fern for detailed scenes.","c":"#4f9a45","c2":"#b9e3a0","img":null},{"n":"Iron Cross Begonia","b":"Begonia Masoniana 'Mountain'","t":"M","l":"Bright, indirect","h":"High","pet":false,"d":"Statement foliage for the 15L and 35L; warm and humid.","c":"#4f9a45","c2":"#b9e3a0","img":null},{"n":"Jewel Orchid","b":"Ludisia discolor","t":"M","l":"Bright, indirect","h":"Moderate–high","pet":true,"d":"Luxurious foliage that glows under LEDs; easy for an orchid.","c":"#2b2431","c2":"#7a4a5a","img":null},{"n":"Moon Valley Pilea","b":"Pilea mollis 'Moon Valley'","t":"M","l":"Tolerates low light","h":"Moderate–high","pet":true,"d":"Compact textured mound; happy in low light.","c":"#9cc24a","c2":"#e2f0a8","img":null},{"n":"Peacock Fern","b":"Selaginella uncinata","t":"M","l":"Tolerates low light","h":"High","pet":true,"d":"Classic terrarium carpet; low light, high humidity.","c":"#4f8fae","c2":"#bfe6f2","img":null},{"n":"Peacock Moss 'Patina'","b":"Selaginella uncinata 'Patina'","t":"M","l":"Bright, indirect","h":"Moderate–high","pet":true,"d":"Shimmering ground cover; thrives in terrarium humidity.","c":"#7d4fb3","c2":"#c79bff","img":null},{"n":"Peperomia 'Pepperspot'","b":"Peperomia Pepperspot","t":"M","l":"Tolerates low light","h":"Moderate–high","pet":true,"d":"Trailing accent for ledges and rock edges; low fuss.","c":"#b8405a","c2":"#f3b2bf","img":null},{"n":"Pink Maidenhair Fern","b":"Adiantum tenerum 'Scutum Roseum'","t":"M","l":"Bright, indirect","h":"High","pet":true,"d":"Soft romantic texture; must have steady humidity, ideal under glass.","c":"#e07a9d","c2":"#ffd0de","img":null},{"n":"Purple Velvet Plant","b":"Gynura aurantiaca 'Purple Passion'","t":"M","l":"Tolerates low light","h":"Moderate–high","pet":true,"d":"Beginner-friendly colour; pinch regularly to keep compact under glass.","c":"#7d4fb3","c2":"#c79bff","img":null},{"n":"Ripple Peperomia 'Quito'","b":"Peperomia caperata 'Quito'","t":"M","l":"Low to bright indirect","h":"Moderate–high","pet":true,"d":"Compact textured accent; low fuss.","c":"#b8405a","c2":"#f3b2bf","img":null},{"n":"Round-leaf Peperomia","b":"Peperomia rotundifolia","t":"M","l":"Tolerates low light","h":"Moderate–high","pet":true,"d":"Fine-scale creeper that keeps miniature figures in proportion.","c":"#4f9a45","c2":"#b9e3a0","img":null},{"n":"Saunders' Vriesea","b":"Vriesea 'Saundersii'","t":"M","l":"Bright, indirect","h":"Moderate–high","pet":true,"d":"Cool-toned rosette; water the cup only.","c":"#e07a9d","c2":"#ffd0de","img":null},{"n":"Seersucker Plant","b":"Geogenanthus poeppigii","t":"M","l":"Tolerates low light","h":"Moderate–high","pet":true,"d":"Unusual low-growing texture; happy in low light.","c":"#7d4fb3","c2":"#c79bff","img":null},{"n":"Shaggy Leaf Climbing Fig","b":"Ficus Villosa","t":"M","l":"Bright, indirect","h":"Moderate–high","pet":false,"d":"Climber for back walls in larger builds.","c":"#4f9a45","c2":"#b9e3a0","img":null},{"n":"Shingle Plant","b":"Monstera Dubia","t":"M","l":"Tolerates low light","h":"Moderate–high","pet":false,"d":"Living wallpaper for back panels or a cork branch.","c":"#8fa59a","c2":"#e3ece6","img":null},{"n":"String of Turtles","b":"Peperomia Prostrata","t":"M","l":"Tolerates low light","h":"Moderate–high","pet":true,"d":"Slow trailing ground cover; very compact and low fuss.","c":"#4f9a45","c2":"#b9e3a0","img":null},{"n":"Variegated Baby Rubber Plant","b":"Peperomia obtipan Bicolor","t":"M","l":"Low to bright indirect","h":"Moderate–high","pet":true,"d":"Bright, sturdy accent; tolerates drier spots in open designs.","c":"#6ea65a","c2":"#f1f4df","img":null},{"n":"Variegated Watermelon Begonia","b":"Pellionia repens variegated","t":"M","l":"Bright, indirect","h":"High","pet":false,"d":"Shingling trailer for terrarium floors; needs high humidity.","c":"#6ea65a","c2":"#f1f4df","img":null},{"n":"Microgramma nitida","b":"","t":"L","l":"Bright, indirect","h":"High","pet":true,"d":"Epiphytic fern for clothing back walls and branches; high humidity. 17 cm pot best in 35L.","c":"#4f9a45","c2":"#b9e3a0","img":null},{"n":"Parlour Palm","b":"Chamaedorea elegans","t":"L","l":"Tolerates low light","h":"Moderate–high","pet":true,"d":"The classic terrarium canopy plant; slow-growing and tolerant of low light. 17 cm pots suit the 35L only.","c":"#4f9a45","c2":"#b9e3a0","img":null}];
+  const TIER = { S: 'Small', M: 'Medium', L: 'Large' };
+
+  const price = c => {
+    const s = SIZES[c.size];
+    const lines = [[`${s.name} ${VESSELS[c.vessel].name.toLowerCase()}`, s.base + VESSELS[c.vessel].add]];
+    lines.push([(c.picks && c.picks.length ? `${c.picks.length} hand-picked plants` : PLANTS[c.plants].name + ' planting'), 0]);
+    (c.figures || []).forEach(k => lines.push([FIGURES[k].name, 0]));
+    if (c.likeness) lines.push(['Figures painted to your likeness', LIKENESS]);
+    lines.push([LIGHTS[c.light].name + ' LED lighting', LIGHTS[c.light].add]);
+    if (c.engrave) lines.push([`Engraved tag: “${c.engrave}”`, ENGRAVE]);
+    const total = lines.reduce((a, l) => a + l[1], 0);
+    return { lines, total };
+  };
+  const artCfg = c => ({ ...c, keeps: [...(c.keeps || []), ...(c.keepsake ? ['beach'] : [])] });
+
+  /* hero */
+  const heroArt = $('#heroArt');
+  // concept-render photo pair from the same camera: lit (step 5) and unlit (step 3)
+  heroArt.innerHTML = `<span class="relative block aspect-[880/1168] rounded-[22px] overflow-hidden border border-line shadow-2xl">
+      <img src="img/step5-light.webp" alt="A 15 litre belly-bottle terrarium with purple velvet plant and red fittonia, lit warm from the cork" width="880" height="1168" class="absolute inset-0 w-full h-full object-cover" fetchpriority="high">
+      <img src="img/step3-plants.webp" alt="" width="880" height="1168" class="hero-off absolute inset-0 w-full h-full object-cover">
+      <span class="badge left-3 top-3">Concept render</span></span>`;
+  heroArt.addEventListener('click', () => heroArt.classList.toggle('lights-off'));
+
+  /* journey */
+  const STEPS = [
+    ['The Base', 'It begins with clear, hand-selected glass: an empty stage waiting for your story.'],
+    ['The Foundation', 'Drainage stones, activated carbon and a rich botanical substrate form the hidden engine that keeps your world alive for years.'],
+    ['Choose Your Plants', 'Moss, ferns and jewel-toned tropicals are planted by hand, chosen to thrive in the glass’s own rain cycle.'],
+    ['Choose Your Figures', 'Now the story arrives: choose a set of hand-painted figures to stand beside the glass, from a Christmas scene to a wedding party. The planting stays yours to enjoy for years.'],
+    ['Let There Be Light', 'The built-in LEDs glow on, and glass, leaf and figure catch the light. Your world, alive after dark.']
+  ];
+  // concept-render photos of one 15 L build, one camera; step 4 reuses step 3 and adds the figure card beside the glass
+  const SHOTS = [
+    ['img/step1-base.webp', 0, 'An empty recycled-glass belly bottle with a cork'],
+    ['img/step2-foundation.webp', 1, 'The bottle with drainage pebbles and compost added'],
+    ['img/step3-plants.webp', 2, 'The bottle planted with ferns, purple velvet plant and red fittonia'],
+    ['img/step5-light.webp', 4, 'The planted bottle lit by a warm LED in the cork']
+  ];
+  const jArt = $('#jArt');
+  jArt.innerHTML = SHOTS.map(([src, , alt], i) => `<img class="j-shot" src="${src}" alt="${alt}" width="880" height="1168" decoding="async"${i ? ' loading="lazy"' : ''}>`).join('')
+    + '<span class="badge left-3 top-3">Concept render</span>'
+    + `<figure class="j-fig rounded-2xl border border-line bg-ink2 overflow-hidden shadow-2xl"><img src="img/figure-valentines.webp" alt="Hand-painted miniature couple on a bench" width="280" height="330" loading="lazy" class="w-full h-auto"><figcaption class="px-2.5 py-1.5 md:px-3 md:py-2 text-[11px] md:text-xs leading-tight"><span class="block font-medium text-fg">Valentine’s set</span><span class="hidden md:block text-muted mt-0.5">Stands beside the glass</span></figcaption></figure>`;
+  $('#jPanels').innerHTML = STEPS.map((s, i) => `<div class="j-panel${i === 0 ? ' on' : ''}" data-i="${i}">
+      <p class="font-mono text-xs text-muted tnum mb-3">Step ${i + 1} of ${STEPS.length}</p>
+      <h3 class="font-display text-4xl md:text-5xl leading-tight mb-4">${s[0]}</h3>
+      <p class="text-muted text-base md:text-lg max-w-md">${s[1]}</p>
+      ${i === STEPS.length - 1 ? '<a href="#design" class="btn btn-primary mt-6">Design yours</a>' : ''}
+    </div>`).join('');
+  $('#rail').innerHTML = STEPS.map(() => '<span class="rail-dot"></span>').join('');
+  const shots = [...jArt.querySelectorAll('.j-shot')], jFig = jArt.querySelector('.j-fig'), panels = $$('.j-panel'), dots = $$('.rail-dot'), jBg = $('#jBg'), journey = $('#journey');
+  let active = -1;
+  function drawJourney() {
+    const rect = journey.getBoundingClientRect();
+    const total = journey.offsetHeight - window.innerHeight;
+    const sp = clamp(-rect.top / total) * (STEPS.length - .001);
+    const idx = Math.floor(sp);
+    // each photo fades in over the one before as its step arrives
+    shots.forEach((img, i) => { if (i) img.style.opacity = ease(clamp((sp - SHOTS[i][1] + .25) / .5)).toFixed(3); });
+    const fe = ease(clamp((sp - 3 + .25) / .5));
+    jFig.style.opacity = fe.toFixed(3); jFig.style.transform = `translateY(${((1 - fe) * 14).toFixed(1)}px)`;
+    jBg.style.setProperty('--glow', (ease(clamp((sp - 3.9) / .6)) * .16).toFixed(3));
+    if (idx !== active) {
+      active = idx;
+      panels.forEach((el, i) => el.classList.toggle('on', i === idx));
+      dots.forEach((d, i) => { d.classList.toggle('on', i === idx); d.classList.toggle('done', i < idx); });
+    }
+  }
+  let ticking = false;
+  const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { drawJourney(); ticking = false; }); } };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  drawJourney();
+
+  /* process */
+  const PROCESS = [
+    ['Custom scenes', 'Tell us the place, the moment or the mood. We sketch a landscape around it, from a coastal path to a jungle ravine, and refine it with you before a single plant goes in.'],
+    ['Custom characters', 'Choose a set of hand-painted miniature figures to display beside your terrarium. We can paint them to look like the people in your photos.'],
+    ['LED illumination', 'Discreet lighting is built into every piece and tuned to the composition. Switch it on and the glass becomes a glowing window into another world.'],
+    ['Low maintenance', 'Sealed terrariums water themselves in a gentle rain cycle. Bright, indirect light, an occasional mist and a trim every few months is all it asks.']
+  ];
+  $('#process').innerHTML = PROCESS.map(([t, d]) => `<div class="bg-ink p-6"><dt class="font-display text-2xl">${t}</dt><dd class="text-sm text-muted mt-2">${d}</dd></div>`).join('');
+
+  /* gallery */
+  const GALLERY = [
+    { name: 'The Proposal', vessel: 'demijohn', size: '5', plants: 'tropical', figures: ['couple'], keeps: ['ring'], light: 'fairy', engrave: 'Will you?', seed: 21, tags: ['valentine', 'anniversary'], story: 'Two figures on a mossy ridge, a ring waiting on a beach stone and warm lights for the moment you hand it over.' },
+    { name: 'The 18th Green', vessel: 'demijohn', size: '15', plants: 'woodland', figures: ['golfer'], light: 'warm', engrave: 'Happy 60th, Dad', seed: 5, tags: ['birthday'], story: 'A hand-trimmed moss green, a flag on the 18th and a golfer lining up the putt of his life.' },
+    { name: 'Summit', vessel: 'demijohn', size: '35', plants: 'grotto', figures: ['hiker'], light: 'cool', seed: 9, tags: ['birthday', 'yourself'], story: 'A hiker on a rocky outcrop above a valley of ferns, lit by cool moonlight.' },
+    { name: 'Valentine’s Ridge', vessel: 'demijohn', size: '15', plants: 'tropical', figures: ['couple'], light: 'fairy', seed: 3, tags: ['valentine'], story: 'Pink fittonia, a parlour palm and the two of you, threaded with a warm fairy string.' },
+    { name: 'Christmas Eve', vessel: 'demijohn', size: '15', plants: 'woodland', figures: ['family'], light: 'fairy', engrave: 'Christmas 2026', seed: 8, tags: ['christmas'], story: 'A family in a wintry woodland, with red toadstools and a twinkling fairy string.' },
+    { name: 'Best Friend', vessel: 'demijohn', size: '5', plants: 'woodland', figures: ['dog'], light: 'warm', engrave: 'Good boy, Biscuit', seed: 17, tags: ['birthday', 'yourself'], story: 'Their dog, painted to match, asleep in the moss beneath a fern.' },
+    { name: 'Aurora', vessel: 'demijohn', size: '35', plants: 'tropical', figures: [], keeps: ['crystals'], light: 'rainbow', seed: 14, tags: ['yourself'], story: 'Amethyst points among tropical foliage, with colour-changing light that drifts slowly through the spectrum.' },
+    { name: 'Ten Years', vessel: 'demijohn', size: '35', plants: 'tropical', figures: ['couple', 'dog'], light: 'warm', engrave: 'Ten years · 2016–2026', seed: 30, tags: ['anniversary'], story: 'A decade together, recreated: the two of you, the dog and the garden you grew.' },
+    { name: 'Moonlit Grotto', vessel: 'demijohn', size: '5', plants: 'grotto', figures: [], keeps: ['seaglass'], light: 'cool', seed: 12, tags: ['yourself', 'christmas'], story: 'Layered ferns and frosted sea glass under a cool moonlight glow. Pure calm for a bedside table.' }
+  ];
+  const FILTERS = [['all', 'All'], ['anniversary', 'Anniversaries'], ['birthday', 'Birthdays'], ['christmas', 'Christmas'], ['valentine', 'Valentine’s'], ['yourself', 'For yourself']];
+  $('#filters').innerHTML = FILTERS.map(([k, l], i) => `<button class="chip" data-f="${k}" aria-pressed="${i === 0}">${l}</button>`).join('');
+  $('#galGrid').innerHTML = GALLERY.map((g, i) => `<button class="g-card group" data-i="${i}" data-tags="${g.tags.join(' ')}" aria-label="Open ${esc(g.name)}">
+      <div class="g-art">${Terra.render(g, { label: g.name })}</div>
+      <div class="flex items-baseline justify-between gap-3 mt-4 px-1">
+        <div class="min-w-0"><h3 class="font-display text-2xl">${g.name}</h3><p class="text-sm text-muted">${SIZES[g.size].name} · ${VESSELS[g.vessel].name}${g.figures.length ? ' · ' + g.figures.length + (g.figures.length > 1 ? ' figure scenes' : ' figure scene') : ''}</p></div>
+        <span class="font-mono text-sm tnum shrink-0">${gbp(price(g).total)}</span>
+      </div>
+    </button>`).join('');
+  $('#filters').addEventListener('click', e => {
+    const b = e.target.closest('.chip'); if (!b) return;
+    $$('#filters .chip').forEach(c => c.setAttribute('aria-pressed', c === b));
+    const f = b.dataset.f;
+    $$('.g-card').forEach(c => { c.hidden = f !== 'all' && !c.dataset.tags.split(' ').includes(f); });
+  });
+  const galGrid = $('#galGrid'), galBtn = $('#galLights');
+  galBtn.addEventListener('click', () => {
+    const off = galGrid.classList.toggle('lights-off');
+    galBtn.setAttribute('aria-pressed', !off);
+    $('#galLightsTxt').textContent = off ? 'Lights off' : 'Lights on';
+    $('#galLightsDot').style.background = off ? 'var(--line)' : 'var(--amber)';
+  });
+
+  /* modal */
+  const modal = $('#modal'); let current = null;
+  galGrid.addEventListener('click', e => {
+    const c = e.target.closest('.g-card'); if (!c) return;
+    const g = GALLERY[+c.dataset.i]; current = g;
+    $('#mArt').innerHTML = Terra.render(g, { label: g.name });
+    $('#mTitle').textContent = g.name;
+    $('#mStory').textContent = g.story;
+    const spec = [['Size', `${SIZES[g.size].name} · ${SIZES[g.size].label}`], ['Vessel', VESSELS[g.vessel].name], ['Planting', PLANTS[g.plants].name], ['Figures', g.figures.length ? g.figures.map(k => FIGURES[k].name).join(', ') : 'None'], ['Lighting', LIGHTS[g.light].name], ['Tag', g.engrave ? `“${g.engrave}”` : 'None'], ['Ready in', `${LEAD} days`]];
+    $('#mSpec').innerHTML = spec.map(([k, v]) => `<dt class="text-muted">${k}</dt><dd>${esc(v)}</dd>`).join('');
+    $('#mPrice').textContent = gbp(price(g).total);
+    if (modal.showModal) modal.showModal(); else modal.setAttribute('open', '');
+  });
+  const closeModal = () => modal.close ? modal.close() : modal.removeAttribute('open');
+  $('#mClose').addEventListener('click', closeModal);
+  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+  $('#mUse').addEventListener('click', () => { if (current) applyConfig(current); closeModal(); $('#design').scrollIntoView({ behavior: 'smooth' }); });
+
+  /* sizes */
+  $('#sizeGrid').innerHTML = Object.entries(SIZES).map(([k, s]) => `<div class="border border-line rounded-2xl p-6 flex flex-col ${k === '15' ? 'bg-ink2' : ''}">
+      ${s.img ? `<div class="relative -mx-6 -mt-6 mb-5 aspect-[4/5] overflow-hidden rounded-t-2xl bg-black"><img src="${s.img}" alt="${s.alt}" width="880" height="1168" loading="lazy" class="w-full h-full object-cover object-[50%_60%]"><span class="badge left-3 top-3">Concept render</span></div>` : ''}
+      <div class="flex items-center justify-between"><p class="font-mono text-xs text-muted tnum">${s.name.toUpperCase()} · ${s.h.toUpperCase()}</p>${k === '15' ? '<span class="text-[11px] font-mono text-moss">SIGNATURE</span>' : ''}</div>
+      <p class="font-display text-3xl mt-3">${s.label}</p>
+      <p class="text-sm text-muted mt-3 flex-1">${s.copy}</p>
+      <p class="text-xs text-muted mt-4">${s.fits}</p>
+      <div class="mt-4 pt-4 border-t border-line flex items-baseline justify-between"><span class="text-sm text-muted">From</span><span class="font-display text-3xl tnum">£${s.base}</span></div>
+      <button class="btn btn-ghost text-sm mt-4" data-size="${k}">Choose ${s.label}</button></div>`).join('');
+  $('#sizeGrid').addEventListener('click', e => { const b = e.target.closest('[data-size]'); if (!b) return; applyConfig({ size: b.dataset.size }); $('#design').scrollIntoView({ behavior: 'smooth' }); });
+
+  /* occasions */
+  const OCC = [
+    ['Anniversaries', 'Recreate where it began, with the two of you in the middle of it.', { occasion: 'Anniversary', size: '15', vessel: 'demijohn', plants: 'tropical', figures: ['couple'], light: 'warm' }],
+    ['Birthdays', 'A world built around their passion: a golfer on the 18th, a hiker on the summit.', { occasion: 'Birthday', size: '15', vessel: 'demijohn', plants: 'woodland', figures: ['golfer'], light: 'warm' }],
+    ['Christmas', 'The present that glows under the tree and is still growing in spring.', { occasion: 'Christmas', size: '15', vessel: 'demijohn', plants: 'woodland', figures: ['family'], light: 'fairy' }],
+    ['Valentine’s Day', 'Two figures, one mossy hillside and a warm light that comes on as the evening does.', { occasion: 'Valentine’s Day', size: '5', vessel: 'demijohn', plants: 'tropical', figures: ['couple'], light: 'fairy' }],
+    ['For yourself', 'Living art for the room you love most. Calm, green and quietly spectacular.', { occasion: 'For myself', size: '35', vessel: 'demijohn', plants: 'grotto', figures: [], light: 'cool' }],
+    ['Something else?', 'Retirements, new homes, remembrance. Tell us the story and we’ll compose it.', { occasion: 'Something else' }]
+  ];
+  $('#occasions').innerHTML = OCC.map((o, i) => `<button class="bg-ink2 text-left p-6 hover:bg-ink transition-colors group" data-o="${i}">
+      <span class="flex items-center justify-between"><span class="font-display text-2xl">${o[0]}</span><span class="text-moss transition-transform group-hover:translate-x-1" aria-hidden="true">→</span></span>
+      <span class="block text-sm text-muted mt-2">${o[1]}</span></button>`).join('');
+  $('#occasions').addEventListener('click', e => { const b = e.target.closest('[data-o]'); if (!b) return; applyConfig(OCC[+b.dataset.o][2]); $('#design').scrollIntoView({ behavior: 'smooth' }); });
+
+  /* plant library */
+  let picks = [];
+  let plantFilter = 'all', plantShowAll = false;
+  const leafIcon = (c, c2) => `<svg viewBox="0 0 64 64" width="56" height="56" aria-hidden="true"><path d="M32 58 C30 44 31 30 33 18" stroke="${c2}" stroke-width="1.6" fill="none" opacity=".7"/><path d="M33 8 C50 14 56 32 44 46 C38 53 30 54 26 50 C16 40 18 18 33 8Z" fill="${c}"/><path d="M33 10 C34 24 32 38 28 49 M33 22 L42 18 M32 30 L44 27 M31 38 L42 37 M33 24 L24 21 M32 33 L22 31" stroke="${c2}" stroke-width="1.2" fill="none" opacity=".75"/><path d="M14 40 C6 34 8 22 18 20 C22 28 22 36 14 40Z" fill="${c}" opacity=".7"/></svg>`;
+  const fitsSize = (p, size) => SIZES[size].tiers.includes(p.t);
+  const PF = [['all', 'All 60'], ['S', 'Small pots'], ['M', 'Medium pots'], ['L', 'Large pots'], ['pet', 'Pet-safe'], ['low', 'Happy in low light']];
+  $('#plantFilters').innerHTML = PF.map(([k, l], i) => `<button class="chip" data-pf="${k}" aria-pressed="${i === 0}">${l}</button>`).join('');
+  function renderPlants() {
+    const q = $('#plantSearch').value.trim().toLowerCase(), size = curSize();
+    let list = PLANT_LIB.map((p, i) => ({ ...p, i })).filter(p =>
+      (plantFilter === 'all' || p.t === plantFilter || (plantFilter === 'pet' && p.pet) || (plantFilter === 'low' && /low/i.test(p.l))) &&
+      (!q || (p.n + ' ' + p.b).toLowerCase().includes(q)));
+    const n = list.length;
+    if (!plantShowAll && !q) list = list.slice(0, 12);
+    $('#plantMore').hidden = plantShowAll || q || n <= 12;
+    $('#plantMore').textContent = `Show all ${n} plants`;
+    $('#plantHint').textContent = `Your ${SIZES[size].name} takes up to ${SIZES[size].picks} hand-picked plants${size === '35' ? '' : size === '15' ? ' in small or medium pots' : ' in small pots'}. ${picks.length} chosen.`;
+    $('#plantGrid').innerHTML = list.length ? list.map(p => {
+      const on = picks.includes(p.i), fit = fitsSize(p, size);
+      const full = !on && picks.length >= SIZES[size].picks;
+      const label = on ? 'Added ✓' : !fit ? `Needs ${p.t === 'L' ? 'the 35 L' : '15 L or larger'}` : full ? 'Limit reached' : 'Add to design';
+      return `<article class="rounded-2xl border ${on ? 'border-moss' : 'border-line'} bg-ink2 p-4 flex gap-4 min-w-0">
+        <div class="shrink-0 w-[72px] h-[72px] rounded-xl grid place-items-center" style="background: radial-gradient(circle at 50% 60%, #1c3127, #0f1a15)">${p.img ? `<img src="${p.img}" alt="" class="w-full h-full object-cover rounded-xl">` : leafIcon(p.c, p.c2)}</div>
+        <div class="min-w-0 flex-1">
+          <div class="flex items-start justify-between gap-2"><h3 class="font-medium leading-snug">${esc(p.n)}</h3><span class="font-mono text-[10px] text-muted border border-line rounded-full px-2 py-0.5 shrink-0">${TIER[p.t].toUpperCase()}</span></div>
+          ${p.b ? `<p class="text-xs text-muted italic">${esc(p.b)}</p>` : ''}
+          <p class="text-xs text-muted mt-1.5">${esc(p.d)}</p>
+          <p class="text-[11px] font-mono text-muted mt-2">${esc(p.l)} · ${esc(p.h)} humidity${p.pet ? ' · pet-safe' : ''}</p>
+          <button class="mt-3 text-sm font-medium ${on ? 'text-moss' : fit && !full ? 'text-amber hover:underline' : 'text-muted cursor-not-allowed'}" data-pick="${p.i}" ${!on && (!fit || full) ? 'aria-disabled="true"' : ''}>${label}</button>
+        </div></article>`;
+    }).join('') : '<p class="text-muted">No plants match that search.</p>';
+  }
+  $('#plantFilters').addEventListener('click', e => { const b = e.target.closest('.chip'); if (!b) return; $$('#plantFilters .chip').forEach(c => c.setAttribute('aria-pressed', c === b)); plantFilter = b.dataset.pf; renderPlants(); });
+  $('#plantSearch').addEventListener('input', renderPlants);
+  $('#plantMore').addEventListener('click', () => { plantShowAll = true; renderPlants(); });
+  $('#plantGrid').addEventListener('click', e => {
+    const b = e.target.closest('[data-pick]'); if (!b || b.getAttribute('aria-disabled')) return;
+    const i = +b.dataset.pick;
+    picks = picks.includes(i) ? picks.filter(x => x !== i) : [...picks, i];
+    update();
+  });
+
+  /* timeline */
+  const TL = [['Day 0', 'You design it', 'Send your design. No payment yet.'], ['Day 1', 'Sketch & confirm', 'We email a sketch of your scene and a payment link.'], ['Days 2–4', 'Figures painted', 'Your characters are hand-painted and your plants sourced.'], ['Days 5–7', 'We build it', 'Layer by layer, plant by plant, figure by figure.'], ['Days 8–11', 'It settles', 'Sealed and watched as the water cycle balances.'], ['Day 12', 'Photo approval', 'You see it, lit and finished, before it ships.'], ['Day 14', 'At your door', 'Free, tracked and insured, in a fitted box.']];
+  $('#timeline').innerHTML = TL.map(([d, t, x], i) => `<li class="pl-7 relative"><span class="absolute -left-[5px] top-2 w-[9px] h-[9px] rounded-full ${i === TL.length - 1 ? 'bg-amber' : 'bg-moss'}"></span><p class="font-mono text-xs text-muted tnum">${d}</p><p class="font-display text-2xl mt-0.5">${t}</p><p class="text-sm text-muted mt-1">${x}</p></li>`).join('');
+
+  /* faq */
+  const FAQ = [
+    ['Why does it take two weeks?', 'Every terrarium is built to order: figures painted, plants sourced, the scene composed by hand. Then it’s sealed and watched for four days while the water cycle settles. That rest keeps it healthy for years.'],
+    ['How big are the sizes?', 'Every piece is built in a hand-finished recycled-glass belly bottle with a natural cork. The 35 litre stands 55.5 cm tall and 39.3 cm wide; the 5 litre is about 30 cm and the 15 litre about 42 cm tall. Exact dimensions are confirmed in your sketch.'],
+    ['How do plants get through the neck?', 'We unpot each plant, tease the roots and lower it in with long-handled tools, then firm the soil and settle the moss. It\u2019s slow, careful work, and it\u2019s why larger plants are only offered in the 35 litre.'],
+    ['Can the figures look like us?', 'Yes. Choose likeness painting and send a couple of photos. We match hair, clothing and colours on figures about 2 cm tall. Expect charm rather than portrait detail at that scale.'],
+    ['How do the lights work?', 'An LED is set into the cork of every piece. A small rechargeable battery is hidden with it and charges by USB-C, and a built-in timer runs the light for 6 hours each evening.'],
+    ['How long will it live?', 'A sealed terrarium can thrive for many years. Keep it in bright, indirect light and trim anything that touches the glass. We include a care card and long scissors.'],
+    ['Can I order for a specific date?', 'Yes. Add the date in the designer and we’ll confirm it in your sketch email. For Christmas, orders close on 9 December.'],
+    ['Delivery and returns', 'Free tracked, insured UK delivery in a fitted box. Because each piece is personalised, we can’t accept change-of-mind returns. If anything arrives damaged, send a photo within 48 hours and we’ll rebuild it.']
+  ];
+  $('#faqList').innerHTML = FAQ.map(([q, a]) => `<details class="py-5 group"><summary class="flex items-center justify-between gap-4 text-lg font-medium">${q}<span class="plus text-moss text-2xl leading-none" aria-hidden="true">+</span></summary><p class="mt-3 text-muted max-w-[62ch]">${a}</p></details>`).join('');
+
+  /* designer */
+  const vIcon = k => {
+    const v = Terra.vessels[k];
+    let extra = '';
+    if (v.cork) extra = `<rect x="${150 - v.cork.wT / 2}" y="${v.cork.y}" width="${v.cork.wT}" height="${v.cork.h}" rx="5" fill="currentColor" opacity=".5"/>`;
+    if (k === 'jar') extra = '<path d="M56 112 Q150 54 244 112 Z" fill="none" stroke="currentColor" stroke-width="10"/>';
+    if (k === 'cloche') extra = '<rect x="34" y="358" width="232" height="24" rx="6" fill="currentColor" opacity=".5"/>';
+    return `<svg viewBox="20 -10 260 400" width="34" height="50" aria-hidden="true"><path d="${v.d}" fill="none" stroke="currentColor" stroke-width="12" stroke-linejoin="round"/>${extra}</svg>`;
+  };
+  const occs = ['Anniversary', 'Birthday', 'Christmas', 'Valentine’s Day', 'For myself', 'Something else'];
+  $('#fOccasion').innerHTML = occs.map((o, i) => `<label class="opt"><input type="radio" name="occasion" value="${o}" ${i === 0 ? 'checked' : ''}><span class="card !py-2 !px-4 !rounded-full text-sm">${o}</span></label>`).join('');
+  $('#fSize').innerHTML = Object.entries(SIZES).map(([k, s]) => `<label class="opt"><input type="radio" name="size" value="${k}" ${k === '15' ? 'checked' : ''}><span class="card"><span class="flex justify-between gap-2"><span class="font-medium">${s.label}</span><span class="text-xs text-muted tnum">£${s.base}</span></span><span class="text-xs text-muted">${s.name} · ${s.h}</span><span class="text-xs text-muted">${s.fits}</span></span></label>`).join('');
+  $('#fPlants').innerHTML = Object.entries(PLANTS).map(([k, p], i) => `<label class="opt"><input type="radio" name="plants" value="${k}" ${i === 0 ? 'checked' : ''}><span class="card"><span class="font-medium">${p.name}</span><span class="text-sm text-muted">${p.desc}</span></span></label>`).join('');
+  $('#fFigures').innerHTML = Object.entries(FIGURES).map(([k, p]) => `<label class="opt"><input type="checkbox" name="figures" value="${k}" ${k === 'couple' ? 'checked' : ''}><span class="card"><span class="font-medium">${p.name}</span><span class="text-sm text-muted">${p.desc}</span></span></label>`).join('');
+  $('#fLight').innerHTML = Object.entries(LIGHTS).map(([k, p]) => {
+    const sw = { warm: '#ffc56e', cool: '#9fd4ff', fairy: 'radial-gradient(circle,#fff3c4 0 30%,#ffb54d 31% 100%)', rainbow: 'conic-gradient(#ff7aa8,#ffd36b,#7dffb2,#79b8ff,#c79bff,#ff7aa8)' }[k];
+    return `<label class="opt"><input type="radio" name="light" value="${k}" ${k === 'warm' ? 'checked' : ''}><span class="card"><span class="w-3.5 h-3.5 rounded-full mb-1" style="background:${sw}"></span><span class="font-medium text-sm">${p.name}</span><span class="text-xs text-muted tnum">${p.add ? '+£' + p.add : 'Included'}</span></span></label>`;
+  }).join('');
+
+  const form = $('#designForm');
+  const curSize = () => (form.querySelector('input[name="size"]:checked') || {}).value || '15';
+  let figNote = '';
+  const readForm = () => {
+    const fd = new FormData(form);
+    return {
+      occasion: fd.get('occasion'), size: fd.get('size'), vessel: 'demijohn', plants: fd.get('plants'), picks: [...picks],
+      figures: fd.getAll('figures'), likeness: !!fd.get('likeness'), light: fd.get('light'), engrave: (fd.get('engrave') || '').trim(),
+      keepsake: !!fd.get('keepsake'), needed: fd.get('needed'), name: (fd.get('name') || '').trim(), email: (fd.get('email') || '').trim(), notes: fd.get('notes') || '', seed: 11
+    };
+  };
+  function applyConfig(c) {
+    const set = (name, val) => { const el = form.querySelector(`input[name="${name}"][value="${val}"]`); if (el) el.checked = true; };
+    ['occasion', 'vessel', 'size', 'plants', 'light'].forEach(k => { if (c[k]) set(k, c[k]); });
+    if (c.figures) $$('input[name="figures"]').forEach(el => { el.checked = c.figures.includes(el.value); });
+    if ('engrave' in c) $('#fEngrave').value = c.engrave || '';
+    if (c.picks) picks = c.picks.filter(i => PLANT_LIB[i]);
+    update();
+  }
+  // keep figure scenes within the size's limit
+  form.addEventListener('change', e => {
+    const el = e.target, lim = SIZES[curSize()].figs;
+    figNote = '';
+    if (el.name === 'figures' && el.checked) {
+      const on = $$('input[name="figures"]:checked');
+      if (on.length > lim) { el.checked = false; figNote = `The ${SIZES[curSize()].name} holds up to ${lim} figure scene${lim > 1 ? 's' : ''}. Choose a larger size for more.`; }
+    }
+    if (el.name === 'size') {
+      const on = $$('input[name="figures"]:checked');
+      if (on.length > lim) { on.slice(lim).forEach(x => { x.checked = false; }); figNote = `We kept your first ${lim} figure scene${lim > 1 ? 's' : ''}; the ${SIZES[curSize()].name} has room for ${lim}.`; }
+    }
+  }, true);
+  const ENGRAVE_HINT = { Anniversary: 'e.g. Ten years · 2016–2026', Birthday: 'e.g. Happy 60th, Dad', Christmas: 'e.g. Christmas 2026', 'Valentine’s Day': 'e.g. Sam & Alex', 'For myself': 'Leave blank for no tag', 'Something else': 'Leave blank for no tag' };
+
+  function update() {
+    const c = readForm(), s = SIZES[c.size];
+    $('#fEngrave').placeholder = ENGRAVE_HINT[c.occasion] || 'Leave blank for no tag';
+    $('#figHint').textContent = figNote || `Hand-painted miniature figures, included. Your ${s.name} holds up to ${s.figs} scene${s.figs > 1 ? 's' : ''}.`;
+    $('#figHint').className = 'text-sm mb-4 ' + (figNote ? 'text-[#ffb38a]' : 'text-muted');
+    // plant picks
+    const over = picks.filter(i => !fitsSize(PLANT_LIB[i], c.size));
+    $('#pickCount').textContent = `(${picks.length} of ${s.picks})`;
+    $('#pickList').innerHTML = picks.length ? picks.map(i => { const p = PLANT_LIB[i], bad = over.includes(i);
+      return `<li class="text-xs rounded-full border ${bad ? 'border-[#ffb38a] text-[#ffb38a]' : 'border-line'} pl-3 pr-1 py-1 flex items-center gap-1">${esc(p.n)}${bad ? ' (too big for this size)' : ''}<button type="button" class="px-1.5 text-muted hover:text-fg" data-unpick="${i}" aria-label="Remove ${esc(p.n)}">×</button></li>`; }).join('')
+      : '<li class="text-sm text-muted">None yet. We’ll compose your chosen planting style.</li>';
+    if (picks.length > s.picks) $('#pickCount').textContent += ' · remove some to fit this size';
+    const pv = $('#pvArt');
+    pv.innerHTML = Terra.render(artCfg(c), { label: 'Preview of your terrarium' });
+    pv.style.width = s.w;
+    $('#pvSize').textContent = `${s.name} · ${s.h}`;
+    $('#pvTitle').textContent = `${s.label}, ${s.name}`;
+    const p = price(c);
+    $('#pvLines').innerHTML = p.lines.map(([l, a]) => `<li class="flex justify-between gap-4"><span class="text-muted min-w-0 break-words">${esc(l)}</span><span class="shrink-0">${a ? gbp(a) : 'Included'}</span></li>`).join('')
+      + `<li class="flex justify-between gap-4"><span class="text-muted">Insured UK delivery</span><span>Free</span></li>`;
+    $('#pvTotal').textContent = gbp(p.total);
+    $('#pvReady').innerHTML = `Ready by <span class="text-fg">${fmtDate(ready)}</span> if you order today${c.keepsake ? ', or 14 days after your keepsake reaches us' : ''}.`;
+    const msg = $('#neededMsg');
+    if (c.needed) {
+      const need = new Date(c.needed + 'T00:00:00');
+      msg.hidden = false;
+      if (need < ready) { msg.className = 'text-sm mt-2 text-[#ffb38a]'; msg.textContent = `That's sooner than our ${LEAD}-day build time. The earliest we can promise is ${fmtDate(ready)}. Mention your date in the notes and we'll tell you honestly if we can make it.`; }
+      else { msg.className = 'text-sm mt-2 text-moss'; msg.textContent = `${fmtDate(need)} works. We'll confirm it in your sketch email.`; }
+    } else msg.hidden = true;
+    renderPlants();
+    try { localStorage.setItem('mm-draft-v2', JSON.stringify(c)); } catch (e) { }
+  }
+  $('#pickList').addEventListener('click', e => { const b = e.target.closest('[data-unpick]'); if (!b) return; picks = picks.filter(x => x !== +b.dataset.unpick); update(); });
+  form.addEventListener('input', update);
+  form.addEventListener('change', update);
+  $('#fNeeded').min = today.toISOString().slice(0, 10);
+  try { const d = JSON.parse(localStorage.getItem('mm-draft-v2') || 'null'); if (d) { applyConfig(d); if (d.likeness) $('#fLikeness').checked = true; if (d.keepsake) $('#fKeep').checked = true; ['name', 'email', 'notes'].forEach(k => { if (d[k]) form.elements[k].value = d[k]; }); } } catch (e) { }
+  update();
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const c = readForm(), err = $('#formErr');
+    const problems = [];
+    if (!c.name) problems.push('add your name');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c.email)) problems.push('add an email address we can reply to');
+    if (picks.length > SIZES[c.size].picks || picks.some(i => !fitsSize(PLANT_LIB[i], c.size))) problems.push('adjust your plant picks to fit the size you chose');
+    if (problems.length) { err.hidden = false; err.textContent = 'To send your design, please ' + problems.join(' and ') + '.'; (c.name ? $('#fEmail') : $('#fName')).focus(); return; }
+    err.hidden = true;
+    const ref = 'MM-' + today.toISOString().slice(2, 10).replace(/-/g, '') + '-' + String(Math.floor(Math.random() * 900) + 100);
+    // TODO: connect to a form backend or checkout (e.g. Formspree, Shopify, Stripe Payment Links)
+    $('#cName').textContent = c.name.split(' ')[0];
+    $('#cRef').textContent = ref;
+    $('#cEmail').textContent = c.email;
+    const box = $('#confirm'); box.hidden = false; box.focus(); box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    try { localStorage.removeItem('mm-draft-v2'); } catch (e2) { }
+  });
+  $('#cAgain').addEventListener('click', () => { $('#confirm').hidden = true; $('#design').scrollIntoView({ behavior: 'smooth' }); });
+})();
+</script>
+
+</body></html>

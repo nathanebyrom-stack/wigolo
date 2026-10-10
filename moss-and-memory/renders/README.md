@@ -1,0 +1,98 @@
+# Concept renders (in progress)
+
+`step1-base-5l-empty.webp` is FLUX.1 Kontext-dev's edit of `reference-vessels/rhs-5l-planted.webp`
+(cropped to the bottle, not padded). It has the empty RHS belly bottle on slate against charcoal, and it's the approved base for the scroll build.
+
+## What we learned on the first run
+- **FLUX.1 Krea-dev text-to-image doesn't hold the bottle shape.** It drew square-shouldered,
+  teardrop and (with the word "demijohn") handled jugs. Don't use Krea for any frame with a bottle in it.
+- **Kontext from the real product photo does.** Build the scroll sequence forwards from this base
+  (add soil → plants → figures → LED on), one edit per step, feeding each output into the next.
+- **Don't pad the reference with white bars to reach 4:5.** Kontext then invents a wine bottle.
+  Crop to the bottle and accept the aspect ratio, or crop the output afterwards.
+- The free ZeroGPU quota runs out after about 6 renders (roughly 90 s of GPU time each) and resets after 24 h.
+
+## Tools
+`tools/gen.py krea|kontext ...` calls the `mcp-tools` Gradio spaces. `tools/sheet.py` makes a contact sheet for review.
+
+## Decision 6 Oct 2026: no figures inside the terrarium
+Figures personalise a piece too much. No terrarium image may show figures inside the glass.
+Figures are a separate selection: each set is photographed on its own, and on the site the sets sit
+beside the terrarium or down the side of the screen. No more than 10 categories. Current range (7; Family merged into The Gathering on 7 Oct):
+
+1. The Gathering: mixed-race group of six (one set)
+2. Christmas: Santa, snowman, reindeer, small wrapped present
+3. Valentine's: couple on a bench with a small red heart
+4. Wedding: bride and groom
+5. Pets: a dog and a cat
+6. The Golfer: golfer with putter and pin flag
+7. The Adventurer: hiker with backpack and walking pole
+
+Scroll build Step 4 ("Choose Your Figures") shows the planted bottle unchanged, with a small figure set
+standing on the slate beside it, never inside. Gallery and flagship renders drop the figures from their prompts.
+Figure-set renders use Krea (no bottle in frame, so shape drift doesn't matter): studio macro shot of
+hand-painted 1:87-scale figures on slate against charcoal, matching the scroll set-up.
+
+## Run of 7 Oct 2026 (6 renders, then quota)
+- **Approved master: `scroll-step3-planted-master.webp`.** The real RHS 15 L planted photo
+  (`reference-vessels/rhs-15l-planted-full.webp`, cropped 150,20,850,950), restaged by Kontext onto slate
+  against charcoal. It has real plants, real glass and real condensation. Steps 2, 1, 4 and 5 are edited
+  from this frame so all five share one camera:
+  - Step 2: remove all plants, leaving the flat soil, with pebbles visible at the bottom against the glass.
+  - Step 1: from Step 2, remove all soil and pebbles, leaving clean empty glass.
+  - Step 4: from Step 3, add a small set of hand-painted miniature figures standing on the slate BESIDE the bottle.
+  - Step 5: from Step 4, turn on a warm LED glow from the cork.
+- `empty-15l-from-tagged-photo.webp`: a good empty 15 L (tag removed) from a *different* photo, so its
+  camera doesn't match the master. Keep it for flagships and size cards, not the scroll.
+- Rejected: Kontext *adding* substrate or plants to an empty bottle. It gave a cocoa-powder mound,
+  soil and pebble layers in the wrong order, and a cut-out fern with moss balls. Kontext removes things well
+  and invents planting badly, so start from real planted photos.
+
+## Decision 7 Oct 2026: colour, not just green; likeness option kept
+Every terrarium image carries at least two colour accents against the moss and ferns, using plants we can
+source: Purple Velvet Plant (Gynura aurantiaca), Begonia 'Black Bat' (near-black, red undersides), the
+red-and-silver spotted Begonia amphioxus x malachosticta, Aluminium Plant (silver), pink or red fittonia.
+For the scroll build, make one extra Kontext edit on the Step 3 master before deriving the other steps:
+"Add a purple velvet plant and a red-spotted begonia among the existing plants. Keep everything else exactly the same."
+The +£40 likeness painting option stays on the order form. The brand pack doc was updated to match on 7 Oct.
+
+## Run of 8 Oct 2026 (5 renders, then quota)
+Approved and saved in `scroll/` (880 × 1168 px, all one camera):
+- `step3-plants.webp`: the master plus a colour pass (purple velvet plant, red fittonia). This is now the Step 3 master.
+- `step2-foundation.webp`: plants removed, giving pebbles under compost in the right order. (The first try left a patched rectangle in the soil and was rejected.)
+- `step1-base.webp`: soil removed, leaving a clean empty bottle.
+
+Known seam: Step 3 doesn't show the white pebbles, so they fade out between Steps 2 and 3.
+
+Rejected: `step4-REJECTED-camera-moved.webp`. Kontext zoomed out, made the slate glittery and drew the figures at a quarter of the
+bottle's height. The figurine itself is clean, so `figure-valentines-candidate.webp` is a cropped stand-in for the Valentine's set.
+
+**Plan change for Step 4:** don't composite figures into the photo. Step 4 shows the Step 3 photo with a figure-set card
+fading in beside it on the site (the user asked for figures beside the terrarium or down the side of the screen).
+**Step 5** is then one Kontext edit from `step3-plants`: "Turn on a warm amber LED glow coming from the cork, lighting
+the plants inside. Keep everything else exactly the same." So only one render stands between now and a live scroll sequence.
+
+## Run of 9 Oct 2026: scroll and hero live
+- `scroll/step5-light.webp` approved: a Kontext glow edit of step3-plants. Live site version 5 now has:
+  - the photo scroll (Steps 1, 2, 3, 5, with Step 4 fading in a Valentine's figure card beside the glass);
+  - a hero photo that switches lit/unlit on tap (step5 / step3);
+  - "Concept render" badges;
+  - drawn illustrations with figure sets beside the bottle, never inside.
+- `flagship-5l-base.webp` approved: the RHS 5 L planted photo restaged on slate (its pink fittonia already adds colour).
+  Next edit: the cork LED glow only, using the Step 5 wording.
+- Rejected twice: Kontext *adding* a purple velvet plant to the 5 L. It drew a fuzzy cartoon star. Asking for glow and
+  plant in one edit also gave a floating lamp mid-bottle. Use one change per edit, and prefer recolouring an existing
+  plant over adding a new one.
+- Still to do: 5 L glow, then 15 L flagship (can reuse step5-light), 35 L (Whipe empty photo; planting needs a real
+  photo or careful edits), the 9 gallery pieces, the 7 figure-set photos and the 60 plant thumbnails.
+
+## Run of 10 Oct 2026: size cards live
+- `flagship-5l-lit.webp`: cork glow by Kontext. A stray glowing reflection of the neck mid-bottle was removed locally
+  with OpenCV inpainting (same frame, no new render).
+- `flagship-35l-base.webp`: the real Whipe planted photo (from the Wayfair spec screenshot) restaged on slate.
+- `flagship-35l-colour.webp`: Kontext recoloured *every* plant red. Only the front fittonia was kept, blended into the
+  green frame with a soft, saturation-aware mask, so the ferns stay green.
+- Live site: all three size cards now carry photos with "Concept render" badges (5 L lit, 15 L = scroll step 5, 35 L colour).
+- Useful technique: when Kontext over-applies an edit, both frames share a camera, so mask-blend just the wanted region.
+- Quota note: the free ZeroGPU limit refills on a rolling basis. When it says "try again in 0:02:00", a short wait buys
+  another render, so a background retry loop gets more done per day.
