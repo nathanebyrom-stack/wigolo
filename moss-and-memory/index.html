@@ -916,13 +916,13 @@ const Terra = (() => {
 
   /* catalogue */
   const SIZES = {
-    '5': { name: '5 litre', label: 'The Keepsake', base: 220, w: '50%', h: 'approx. 30 cm tall', figs: 1, picks: 3, tiers: 'S',
+    '5': { name: '5 litre', label: 'The Keepsake', img: 'img/size-5l.webp', alt: 'A 5 litre belly-bottle terrarium with pink fittonia, lit from the cork', base: 220, w: '50%', h: 'approx. 30 cm tall', figs: 1, picks: 3, tiers: 'S',
       fits: 'Small plants · 1 figure scene',
       copy: 'Small enough for a bedside table, deep enough to hold a whole story. A single scene composed by hand around one moment, with jewel-like plants growing in their own rain cycle and a warm glow set into the cork.' },
-    '15': { name: '15 litre', label: 'The Signature', base: 295, w: '66%', h: 'approx. 42 cm tall', figs: 2, picks: 5, tiers: 'SM',
+    '15': { name: '15 litre', label: 'The Signature', img: 'img/step5-light.webp', alt: 'A 15 litre belly-bottle terrarium with purple velvet plant and red fittonia, lit from the cork', base: 295, w: '66%', h: 'approx. 42 cm tall', figs: 2, picks: 5, tiers: 'SM',
       fits: 'Small & medium plants · up to 2 figure scenes',
       copy: 'Room for a landscape to breathe: layered planting, a winding stone path and pops of colour from purple velvet plant and fittonia, with a figure set standing beside the glass.' },
-    '35': { name: '35 litre', label: 'The Heirloom', base: 395, w: '82%', h: '55.5 cm tall, 39.3 cm wide', figs: 4, picks: 8, tiers: 'SML',
+    '35': { name: '35 litre', label: 'The Heirloom', img: 'img/size-35l.webp', alt: 'A 35 litre belly-bottle terrarium with ferns and red fittonia', base: 395, w: '82%', h: '55.5 cm tall, 39.3 cm wide', figs: 4, picks: 8, tiers: 'SML',
       fits: 'All plants · up to 4 figure scenes',
       copy: 'Living sculpture. A full miniature world of rising terrain, rock outcrops, trailing vines and a tropical canopy, lit with a gallery glow and built to mature over years.' }
   };
@@ -1080,6 +1080,7 @@ const Terra = (() => {
 
   /* sizes */
   $('#sizeGrid').innerHTML = Object.entries(SIZES).map(([k, s]) => `<div class="border border-line rounded-2xl p-6 flex flex-col ${k === '15' ? 'bg-ink2' : ''}">
+      ${s.img ? `<div class="relative -mx-6 -mt-6 mb-5 aspect-[4/5] overflow-hidden rounded-t-2xl bg-black"><img src="${s.img}" alt="${s.alt}" width="880" height="1168" loading="lazy" class="w-full h-full object-cover object-[50%_60%]"><span class="badge left-3 top-3">Concept render</span></div>` : ''}
       <div class="flex items-center justify-between"><p class="font-mono text-xs text-muted tnum">${s.name.toUpperCase()} · ${s.h.toUpperCase()}</p>${k === '15' ? '<span class="text-[11px] font-mono text-moss">SIGNATURE</span>' : ''}</div>
       <p class="font-display text-3xl mt-3">${s.label}</p>
       <p class="text-sm text-muted mt-3 flex-1">${s.copy}</p>

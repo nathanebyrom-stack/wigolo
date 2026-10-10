@@ -85,3 +85,14 @@ the plants inside. Keep everything else exactly the same." So only one render st
   plant over adding a new one.
 - Still to do: 5 L glow, then 15 L flagship (can reuse step5-light), 35 L (Whipe empty photo; planting needs a real
   photo or careful edits), the 9 gallery pieces, the 7 figure-set photos and the 60 plant thumbnails.
+
+## Run of 10 Oct 2026: size cards live
+- `flagship-5l-lit.webp`: cork glow by Kontext. A stray glowing reflection of the neck mid-bottle was removed locally
+  with OpenCV inpainting (same frame, no new render).
+- `flagship-35l-base.webp`: the real Whipe planted photo (from the Wayfair spec screenshot) restaged on slate.
+- `flagship-35l-colour.webp`: Kontext recoloured *every* plant red. Only the front fittonia was kept, blended into the
+  green frame with a soft, saturation-aware mask, so the ferns stay green.
+- Live site: all three size cards now carry photos with "Concept render" badges (5 L lit, 15 L = scroll step 5, 35 L colour).
+- Useful technique: when Kontext over-applies an edit, both frames share a camera, so mask-blend just the wanted region.
+- Quota note: the free ZeroGPU limit refills on a rolling basis. When it says "try again in 0:02:00", a short wait buys
+  another render, so a background retry loop gets more done per day.
