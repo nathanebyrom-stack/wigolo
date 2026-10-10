@@ -126,6 +126,16 @@ destructive changes without approval.
   reveal-on-scroll animation still fires correctly under real scroll input
   after the `<main>` wrapper was added (12/12 elements, as before).
 
+**P5 — final copy QA**
+- Extracted and read the full rendered text of all 7 pages (not just the
+  source HTML) to proofread as a visitor would see it. Found and fixed one
+  factual drift: copy said "Fifteen years" / stat counters showed "15+"
+  years in UK industry, calculated from the 2009 founding date — but the
+  current date means that's now 17 years. Updated both the About page H1
+  and both homepage stat counters (hero + stats bar) to 17. Everything else
+  read clean: consistent British English, no typos found, no unsupported
+  claims, numbers consistent with each other across pages.
+
 ### Still outstanding (not blocking, queued for next pass)
 - Extend the hero animation/badge-row treatment from the homepage to the
   inner pages' `page-hero` banners, for visual consistency (cosmetic, not
