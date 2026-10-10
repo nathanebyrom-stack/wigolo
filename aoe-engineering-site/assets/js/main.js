@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `Sector: ${sector}\n\n` +
         `${message}`;
 
-      const mailto = `mailto:enquiries@aoeengineering.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      const mailto = `mailto:davidogden@aoeengineering.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       window.location.href = mailto;
 
       const success = document.querySelector('.form-success');

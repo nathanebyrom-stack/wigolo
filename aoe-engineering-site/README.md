@@ -19,12 +19,9 @@ python3 -m http.server 8080   # then visit http://localhost:8080
 - **Imagery**: all visuals are custom-built inline SVG (hero illustration, card
   icons, diagrams) rather than stock photography, so nothing depends on an
   external image host or can render as a broken/placeholder image.
-- **Email address**: `enquiries@aoeengineering.com` is a plausible address
-  built from the real domain, not a verified inbox — confirm it exists (or
-  swap it in `contact.html` and the footer of every page) before going live.
-- **Phone number**: intentionally left out. No verified number was available
-  during this build, and publishing an unverified one seemed worse than
-  omitting it — add the real number to `contact.html` and the footer.
+- **Contact details**: verified by the client — `davidogden@aoeengineering.com`,
+  07771 873 177, and the Dorney House / Burnham registered office address are
+  all confirmed real and live across the footer and contact page.
 - **ATIS partnership**: kept to the same modest, supplier-credit level of
   prominence as the current AOE site (a labelled section and a footer line),
   not a co-branded hero. Only the ATIS product lines relevant to UK
