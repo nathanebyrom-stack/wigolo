@@ -27,7 +27,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const here = (location.pathname.split('/').pop() || 'index.html');
   document.querySelectorAll('.nav-primary a[href]').forEach(a => {
     const target = a.getAttribute('href').split('/').pop();
-    if (target === here || (here === '' && target === 'index.html')) a.classList.add('active');
+    if (target === here || (here === '' && target === 'index.html')) {
+      a.classList.add('active');
+      a.setAttribute('aria-current', 'page');
+    }
   });
 
   /* Reveal-on-scroll */
