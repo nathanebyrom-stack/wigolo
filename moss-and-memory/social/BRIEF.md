@@ -2,6 +2,10 @@
 
 Goal: inspiration images for Instagram and Pinterest, and for customers. Terrariums shown in real room
 settings with varied planting. One batch a week, delivered to the **Social Library** page and this folder.
+
+**Timing (user's rule, 10 Oct):** all image work runs at the end of the week, on spare Claude allowance.
+The social batch runs Sunday evening, and leftover website image work (gallery, figure sets, plant thumbnails) on
+Saturdays. Commit after every approved image, so a run stopped by the usage limit keeps its work.
 The user posts them by hand; nothing is ever published to a social account automatically.
 
 ## Hard rules (same as the website)
