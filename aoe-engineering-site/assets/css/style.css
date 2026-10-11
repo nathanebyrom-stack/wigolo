@@ -3,7 +3,43 @@
    Palette: graphite / white / engineering blue. Poppins for display type.
 =================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+/* Self-hosted — no external request, nothing to disclose in the privacy policy.
+   Files in ../fonts/, Latin subset only (this is an English-language UK site). */
+@font-face{
+  font-family:'Inter';
+  font-style:normal;
+  font-weight:400 600;
+  font-display:swap;
+  src:url('../fonts/inter-variable.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Poppins';
+  font-style:normal;
+  font-weight:500;
+  font-display:swap;
+  src:url('../fonts/poppins-500.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Poppins';
+  font-style:normal;
+  font-weight:600;
+  font-display:swap;
+  src:url('../fonts/poppins-600.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Poppins';
+  font-style:normal;
+  font-weight:700;
+  font-display:swap;
+  src:url('../fonts/poppins-700.woff2') format('woff2');
+}
+@font-face{
+  font-family:'Poppins';
+  font-style:normal;
+  font-weight:800;
+  font-display:swap;
+  src:url('../fonts/poppins-800.woff2') format('woff2');
+}
 
 :root{
   --graphite-950:#0d1013;

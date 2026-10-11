@@ -145,16 +145,52 @@ destructive changes without approval.
   0 errors, 0 broken links.
 
 ### Still outstanding (not blocking, queued for next pass)
-- Extend the hero animation/badge-row treatment from the homepage to the
-  inner pages' `page-hero` banners, for visual consistency (cosmetic, not
-  a gap).
 - No dedicated service-worker/offline support, no build-time minification —
   reasonable for a static brochure site of this size; flagging only because
   the brief mentioned "page speed" explicitly. Current pages have zero
-  render-blocking resources besides the Google Fonts stylesheet and are
-  already very light (no raster images on-page).
-- Self-hosting Poppins/Inter instead of the Google Fonts CDN would remove
-  the one third-party request entirely — not done this session because
-  this sandbox cannot fetch the font binaries to vendor them in; flagging
-  as a worthwhile follow-up.
+  external/render-blocking resources at all now (see below) and are already
+  very light (no raster images on-page). Deliberately kept the source
+  HTML/CSS/JS unminified rather than add a build step — this is a 5-page
+  brochure site with no images; the bytes saved by minification are
+  marginal next to the maintainability cost of needing a build step to read
+  your own source.
+
+---
+
+## Session: Font self-hosting + final polish (this session)
+
+### Context
+Sandbox network policy had changed since the last session — `fonts.googleapis.com`
+and `fonts.gstatic.com`, previously blocked, are now reachable. Re-tested
+before assuming otherwise, per the "temporary placeholder, revisit when
+unblocked" note from the previous log entry.
+
+### Completed
+- **Self-hosted Poppins + Inter** (closes the one remaining outstanding item
+  from last session). Fetched Google's own generated CSS for the exact
+  families/weights/subset already in use, downloaded the 5 Latin-subset
+  woff2 files it referenced (Inter is served as a single ~48KB variable font
+  covering weights 400–600; Poppins as 4 static files for 500/600/700/800 —
+  confirmed by file size, consistent with Inter's well-known variable-font
+  distribution), and vendored them into `assets/fonts/` (84KB total).
+  Replaced the `@import url(fonts.googleapis.com/...)` in `style.css` with
+  local `@font-face` rules. Removed the now-pointless `rel=preconnect`
+  hints for the Google Fonts domains from all 7 pages.
+  - **Result: zero external requests of any kind, from any page, full stop.**
+  - Updated `privacy.html`'s Cookies section, which previously disclosed
+    Google Fonts as "the one third-party request this site makes" — that's
+    no longer true, so the policy now states plainly that there are no
+    third-party requests at all. Leaving stale disclosure in a privacy
+    policy is worse than no disclosure, so this was a priority fix, not a
+    nice-to-have.
+  - Updated `README.md` to document the zero-dependency state and the new
+    `assets/fonts/` directory.
+  - Verified with Playwright: `document.fonts` reports all weights loaded
+    (bar one unused weight, which loads lazily on demand — expected
+    browser behaviour, not a bug), zero failed requests, zero console
+    errors, and a visual diff against the previous CDN-loaded render shows
+    no change — the self-hosted files are pixel-identical to the CDN ones
+    (same Google-generated files, just served locally).
+  - Re-ran the full audit suite afterwards: still 0 axe violations, 0
+    console/page/network errors, 0 broken links across all 7 pages.
 
