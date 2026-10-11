@@ -194,3 +194,46 @@ unblocked" note from the previous log entry.
   - Re-ran the full audit suite afterwards: still 0 axe violations, 0
     console/page/network errors, 0 broken links across all 7 pages.
 
+### Added a dedicated HTML validator (html-validate) — a check the previous
+sessions hadn't run. Axe checks accessibility and a real browser checks
+render/console errors, but neither catches HTML conformance issues outright.
+First run found 27 real, fixable errors across all 7 pages:
+
+- **`no-implicit-button-type`**: the mobile nav hamburger `<button>` had no
+  `type` attribute on any page. Harmless in practice (it's not inside a
+  `<form>`), but added `type="button"` everywhere for correctness — it's
+  free insurance against someone later wrapping it in a form.
+- **`tel-non-breaking`**: the visible phone number "07771 873 177" used
+  plain spaces, so it could wrap mid-number across a line break on narrow
+  viewports. Replaced with `&nbsp;` between the groups everywhere the
+  number appears as link text (not in the `tel:` href itself, which stays
+  digits-only). Purely cosmetic/robustness, but a genuine fix.
+- **`long-title`**: `index.html` and `capabilities.html` `<title>` tags
+  exceeded 70 characters, which Google truncates awkwardly in search
+  results. Shortened both (and their matching `og:title`/`twitter:title`)
+  while keeping the key terms:
+  - Home: "AOE Engineering | Industrial Lifting, Handling & Manipulator
+    Solutions — UK" → "AOE Engineering | UK Industrial Lifting & Handling
+    Solutions"
+  - Capabilities: "Capabilities | Hoists, Cranes, Manipulators & Aftercare
+    — AOE Engineering" → "Capabilities | Hoists, Cranes & Manipulators —
+    AOE Engineering"
+
+Re-ran html-validate after fixes: 0 errors, exit code 0, across all 7 pages.
+
+### Other launch polish
+- Added `<meta name="theme-color" content="#14181d">` (the graphite brand
+  colour) to all 7 pages — styles the browser chrome/address bar to match
+  the brand on supporting mobile browsers.
+- Added `BreadcrumbList` JSON-LD to the 5 pages that already show a visible
+  "Home / X" breadcrumb (About, Capabilities, Sectors, Contact, Privacy),
+  matching that visible UI exactly rather than inventing new structure —
+  gives search engines the breadcrumb trail for rich results. Validated as
+  well-formed JSON on all 5. `index.html` and `404.html` correctly excluded
+  (neither shows a breadcrumb).
+
+### Final verification (this session)
+Ran everything together after all changes: axe (0 violations), html-validate
+(0 errors), the internal link/anchor auditor (0 broken links), and a visual
+render check. All clean across all 7 pages.
+
