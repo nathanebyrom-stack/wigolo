@@ -1,0 +1,56 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:M;font-weight:600;src:url(node_modules/@fontsource/montserrat/files/montserrat-latin-600-normal.woff2)}
+@font-face{font-family:M;font-weight:800;src:url(node_modules/@fontsource/montserrat/files/montserrat-latin-800-normal.woff2)}
+@font-face{font-family:M;font-weight:900;src:url(node_modules/@fontsource/montserrat/files/montserrat-latin-900-normal.woff2)}
+@font-face{font-family:P;font-weight:400;src:url(node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2)}
+@font-face{font-family:P;font-weight:500;src:url(node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2)}
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#07111d;--panel:#0d1a2a;--line:#1f3550;--blue:#3d8be0;--txt:#eef3f9;--mut:#9fb0c4}
+body{width:1080px;height:1350px;background:var(--bg);color:var(--txt);font-family:Inter,sans-serif;position:relative;overflow:hidden}
+body:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0a1726 0%,#07111d 55%,#060e18 100%)}
+.c{position:absolute;width:26px;height:26px;border-color:#5a6b80;border-style:solid}
+.tl{top:24px;left:24px;border-width:2px 0 0 2px}.tr{top:24px;right:24px;border-width:2px 2px 0 0}
+.bl{bottom:24px;left:24px;border-width:0 0 2px 2px}.br{bottom:24px;right:24px;border-width:0 2px 2px 0}
+.hdr{position:absolute;top:56px;left:64px;right:64px;display:flex;justify-content:space-between;align-items:center}
+.logo{display:flex;align-items:center;gap:14px}
+.logo img{width:48px;height:62px}
+.wm{font-family:M;font-weight:600;font-size:25px;line-height:25px;letter-spacing:1.5px}
+.wm b{font-weight:600;color:var(--blue)}
+.wm small{display:block;font-size:10.5px;letter-spacing:3.2px;line-height:12px;margin-top:8px;color:#aab8c8;font-weight:600}
+.tag{font-family:P;font-weight:500;font-size:17px;letter-spacing:3px;border:1.5px solid #8fa1b6;padding:11px 16px}
+.photo{position:absolute;top:160px;left:64px;right:64px;height:440px;border:1px solid var(--line);overflow:hidden}
+.photo img{width:100%;height:100%;object-fit:cover;object-position:__POS__;display:block}
+.photo:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,17,29,0) 55%,rgba(7,17,29,.55) 100%)}
+.chip{position:absolute;left:20px;bottom:20px;z-index:2;background:rgba(7,17,29,.88);border-left:4px solid var(--blue);font-family:P;font-size:16px;letter-spacing:3px;padding:10px 14px}
+.kick{position:absolute;top:640px;left:64px;font-family:P;font-weight:500;font-size:19px;letter-spacing:5px;color:var(--blue);display:flex;align-items:center;gap:18px}
+.kick:before{content:"";width:44px;height:2px;background:var(--blue)}
+h1{position:absolute;top:680px;left:64px;font-family:M;font-weight:900;font-size:70px;line-height:72px;letter-spacing:-.5px}
+h1 span{color:var(--blue);display:block}
+.grid{position:absolute;top:850px;left:64px;right:64px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.box{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--blue);padding:20px 20px 22px;height:172px}
+.n{font-family:P;font-weight:500;font-size:15px;letter-spacing:3px;color:var(--blue)}
+.t{font-family:M;font-weight:800;font-size:22px;line-height:25px;margin-top:10px;text-transform:uppercase}
+.d{font-size:17px;line-height:24px;color:var(--mut);margin-top:9px}
+.ft{position:absolute;left:64px;right:64px;top:1250px;border-top:1px solid var(--line);padding-top:24px;display:flex;justify-content:space-between;font-family:P;font-size:17px;letter-spacing:3px}
+.ft .r{color:var(--mut)}
+</style></head><body>
+<div class="c tl"></div><div class="c tr"></div><div class="c bl"></div><div class="c br"></div>
+<div class="hdr">
+  <div class="logo"><img src="icon.png"><div class="wm">FLUID<br>PROCESS <b>UK</b><small>AUTOMATED CLEANING SYSTEMS</small></div></div>
+  <div class="tag">WHAT WE DO</div>
+</div>
+<div class="photo"><img src="__PHOTO__"><div class="chip">BASCA BUILD THE MACHINE</div></div>
+<div class="kick">EVERYTHING ELSE IS ON US</div>
+<h1>MORE THAN A SUPPLIER.<span>END TO END.</span></h1>
+<div class="grid">
+  <div class="box"><div class="n">01</div><div class="t">Consult &amp; design</div><div class="d">We see your process first-hand and design around it.</div></div>
+  <div class="box"><div class="n">02</div><div class="t">Supply</div><div class="d">The right BASCA system for your containers.</div></div>
+  <div class="box"><div class="n">03</div><div class="t">Fit</div><div class="d">Installed on your site by our engineers.</div></div>
+  <div class="box"><div class="n">04</div><div class="t">Workshop adaptations</div><div class="d">Your space adapted to take it.</div></div>
+  <div class="box"><div class="n">05</div><div class="t">Training</div><div class="d">Your team shown how to run it.</div></div>
+  <div class="box"><div class="n">06</div><div class="t">Aftercare</div><div class="d">When it needs looking at, you call us.</div></div>
+</div>
+<div class="ft"><div>T 03330 540735 · FLUIDPROCESS.CO.UK</div><div class="r">BASCA · AUTOMATED VESSEL CLEANING</div></div>
+</body></html>
