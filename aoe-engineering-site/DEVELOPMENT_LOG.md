@@ -1,0 +1,309 @@
+# AOE Engineering Website — Development Log
+
+Working log for the autonomous development pass. Newest entries at the top of
+each session block. This file travels with the repo so future sessions have
+full context.
+
+---
+
+## Session: Autonomous completion pass (this session)
+
+### Scope
+Full audit + launch-readiness pass per the standing brief: fix errors, finish
+essential pages/content, tighten design consistency and mobile, complete SEO/
+accessibility/performance, final QA. No publishing, no paid services, no
+destructive changes without approval.
+
+### Starting state (verified before work began)
+- 5 pages: index, about, capabilities, sectors, contact — all previously
+  built, reviewed in-browser, and pushed (`7c2ed83`).
+- Branding: brushed-metal AOE logo (inline SVG), graphite/white/blue palette,
+  Poppins display type — approved, not touched in this pass except where
+  explicitly noted.
+- Contact details verified by client: davidogden@aoeengineering.com,
+  07771 873 177, Dorney House address — already live everywhere.
+- No analytics, no third-party trackers, no cookies currently set by the
+  site itself (Google Fonts stylesheet is the only third-party request).
+
+### Plan (priority order, per brief section 8)
+1. **P1 — critical errors**: re-verify no broken links/consoles errors after
+   recent edits; confirm all 5 pages still render clean.
+2. **P2 — essential completeness**: Privacy & Cookies page, custom 404 page,
+   robots.txt/sitemap.xml (currently entirely missing — real gaps).
+3. **P3 — design consistency/mobile/commercial**: skip-to-content link,
+   visible focus states, `aria-current` on active nav — accessibility/UX
+   polish that also helps conversion (keyboard/screen-reader users can
+   actually reach the CTAs).
+4. **P4 — SEO/accessibility/performance**: canonical URLs, Open Graph/Twitter
+   card meta + a real rendered OG image, Organization JSON-LD structured
+   data, automated accessibility audit (axe-core via Playwright).
+5. **P5 — final QA**: cross-page link audit, console-error sweep, responsive
+   screenshot pass, commit + push.
+
+### Decisions made without asking (recorded per brief section 3)
+- **Canonical domain**: used `https://www.aoeengineering.com/` for
+  canonical/OG URLs, since that's the live domain this redesign targets.
+  **Flag for client**: if this redesign deploys somewhere else first (staging
+  subdomain, different domain), these need updating — documented below.
+- **OG image**: no hosted photography exists, so I rendered a branded 1200×630
+  share-preview image from the site's own logo/palette (dark graphite, logo
+  mark, tagline) rather than leaving `og:image` empty or using a placeholder
+  box. Same treatment for a 180×180 apple-touch-icon.
+- **Privacy & Cookies page**: wrote it to honestly reflect current reality —
+  no analytics, no tracking cookies, the enquiry form sends mail via the
+  visitor's own email client (nothing is stored on a server). This needs
+  re-review the moment analytics/CRM integration is added.
+- **No individual product sub-pages**: kept product/capability detail as
+  anchor sections within `capabilities.html` rather than splitting into
+  separate URLs per product line — matches the original approved IA, avoids
+  an unrequested structural rebuild, and anchors already give each capability
+  a linkable, SEO-indexable fragment.
+
+### Outstanding questions for the client (none block further progress)
+- Confirm final deployment domain (affects canonical/OG/sitemap URLs).
+- Confirm whether analytics (GA4, etc.) should be added — none included yet,
+  deliberately, since adding tracking without instruction would be an
+  overreach.
+- Confirm company's actual trading address for cookie/privacy policy
+  jurisdiction wording if different from the registered office.
+
+### Completed this session
+
+**P1 — audit (no bugs found, but set up permanent QA tooling)**
+- Installed `axe-core` + Playwright locally (scratchpad only, not a repo
+  dependency) and wrote a reusable audit script that checks every page for:
+  console errors, page errors, failed network requests, and automated
+  accessibility violations.
+- Baseline result: 0 console/page/network errors on all 5 existing pages.
+  ~20 real accessibility violations found by axe (see below) — all fixed.
+
+**P2/P4 — accessibility fixes (0 axe violations across all 7 pages now)**
+- Added a `<main id="main-content">` landmark to every page (was entirely
+  missing — caused the bulk of axe's "region"/"landmark-one-main" findings).
+- Added a "Skip to main content" link (visually hidden until focused) —
+  keyboard users could not previously bypass the nav to reach content.
+- Added visible `:focus-visible` outlines site-wide — interactive elements
+  had no visible keyboard focus state before this.
+- Fixed heading hierarchy: `process-step`, `sector-tile`, `timeline-item`
+  (was `<h4>`), and `info-row`/`footer-col` (was `<h5>`) all skipped levels
+  under their section's `<h2>`. Normalised all to `<h3>` and updated the
+  matching CSS selectors. Added two visually-hidden `<h2>`s (sectors.html's
+  card grid, contact.html's info/form section) where no heading existed at
+  all before the first `<h3>`.
+- Fixed a real color-contrast failure: the footer's "UK Handling & Lifting"
+  tagline (blue-600 on near-black) measured ~3.5:1 — added a
+  `.site-footer`-scoped override to blue-500, now ~4.9:1 (passes WCAG AA).
+- Added `aria-current="page"` to the active nav link (was visual-only via a
+  CSS class, invisible to screen readers).
+
+**P2 — new pages**
+- `privacy.html` — Privacy & Cookies policy. Honest, specific content: no
+  analytics/tracking cookies exist on this site; the only third party is
+  the Google Fonts request; the enquiry form is a client-side `mailto:`
+  builder, so nothing is received or stored unless the visitor actually
+  sends the resulting email. Covers UK GDPR rights + ICO complaint route.
+  Linked from the footer on every page.
+- `404.html` — on-brand error page (same header/footer/palette), clear
+  routes back to the homepage or Contact. Standard filename for automatic
+  recognition on most static hosts (GitHub Pages, Netlify, etc.).
+
+**P4 — SEO & technical**
+- `robots.txt` and `sitemap.xml` (neither existed before).
+- Canonical URL, Open Graph, and Twitter Card meta on every indexable page.
+- Organization JSON-LD structured data (name, address, phone, email,
+  LinkedIn) on every page — validated as well-formed JSON.
+- Rendered two real image assets from the site's own design (no stock
+  imagery, nothing hosted externally): a 1200×630 Open Graph share image
+  and a 180×180 `apple-touch-icon.png`, both in `assets/img/`.
+
+**P5 — QA**
+- Full internal link + in-page-anchor audit (custom script): every `href`
+  across all 7 pages resolves to an existing file or a real `id` — zero
+  broken links/anchors.
+- Re-ran the full axe + console-error audit after every fix batch.
+- Visual regression pass (desktop + mobile, all 7 pages) to confirm the
+  structural changes above caused no layout shift; spot-checked the
+  reveal-on-scroll animation still fires correctly under real scroll input
+  after the `<main>` wrapper was added (12/12 elements, as before).
+
+**P5 — final copy QA**
+- Extracted and read the full rendered text of all 7 pages (not just the
+  source HTML) to proofread as a visitor would see it. Found and fixed one
+  factual drift: copy said "Fifteen years" / stat counters showed "15+"
+  years in UK industry, calculated from the 2009 founding date — but the
+  current date means that's now 17 years. Updated both the About page H1
+  and both homepage stat counters (hero + stats bar) to 17. Everything else
+  read clean: consistent British English, no typos found, no unsupported
+  claims, numbers consistent with each other across pages.
+
+**P5 — external link security/UX**
+- The footer's LinkedIn icon link opened in the same tab with no
+  `rel="noopener"` on all 7 pages (inconsistent with the Privacy page's
+  external links, which already had both). Added `target="_blank"
+  rel="noopener"` everywhere for consistency and to avoid the
+  `window.opener` reverse-tabnabbing risk. Re-verified: still 0 violations,
+  0 errors, 0 broken links.
+
+### Still outstanding (not blocking, queued for next pass)
+- No dedicated service-worker/offline support, no build-time minification —
+  reasonable for a static brochure site of this size; flagging only because
+  the brief mentioned "page speed" explicitly. Current pages have zero
+  external/render-blocking resources at all now (see below) and are already
+  very light (no raster images on-page). Deliberately kept the source
+  HTML/CSS/JS unminified rather than add a build step — this is a 5-page
+  brochure site with no images; the bytes saved by minification are
+  marginal next to the maintainability cost of needing a build step to read
+  your own source.
+
+---
+
+## Session: Font self-hosting + final polish (this session)
+
+### Context
+Sandbox network policy had changed since the last session — `fonts.googleapis.com`
+and `fonts.gstatic.com`, previously blocked, are now reachable. Re-tested
+before assuming otherwise, per the "temporary placeholder, revisit when
+unblocked" note from the previous log entry.
+
+### Completed
+- **Self-hosted Poppins + Inter** (closes the one remaining outstanding item
+  from last session). Fetched Google's own generated CSS for the exact
+  families/weights/subset already in use, downloaded the 5 Latin-subset
+  woff2 files it referenced (Inter is served as a single ~48KB variable font
+  covering weights 400–600; Poppins as 4 static files for 500/600/700/800 —
+  confirmed by file size, consistent with Inter's well-known variable-font
+  distribution), and vendored them into `assets/fonts/` (84KB total).
+  Replaced the `@import url(fonts.googleapis.com/...)` in `style.css` with
+  local `@font-face` rules. Removed the now-pointless `rel=preconnect`
+  hints for the Google Fonts domains from all 7 pages.
+  - **Result: zero external requests of any kind, from any page, full stop.**
+  - Updated `privacy.html`'s Cookies section, which previously disclosed
+    Google Fonts as "the one third-party request this site makes" — that's
+    no longer true, so the policy now states plainly that there are no
+    third-party requests at all. Leaving stale disclosure in a privacy
+    policy is worse than no disclosure, so this was a priority fix, not a
+    nice-to-have.
+  - Updated `README.md` to document the zero-dependency state and the new
+    `assets/fonts/` directory.
+  - Verified with Playwright: `document.fonts` reports all weights loaded
+    (bar one unused weight, which loads lazily on demand — expected
+    browser behaviour, not a bug), zero failed requests, zero console
+    errors, and a visual diff against the previous CDN-loaded render shows
+    no change — the self-hosted files are pixel-identical to the CDN ones
+    (same Google-generated files, just served locally).
+  - Re-ran the full audit suite afterwards: still 0 axe violations, 0
+    console/page/network errors, 0 broken links across all 7 pages.
+
+### Added a dedicated HTML validator (html-validate) — a check the previous
+sessions hadn't run. Axe checks accessibility and a real browser checks
+render/console errors, but neither catches HTML conformance issues outright.
+First run found 27 real, fixable errors across all 7 pages:
+
+- **`no-implicit-button-type`**: the mobile nav hamburger `<button>` had no
+  `type` attribute on any page. Harmless in practice (it's not inside a
+  `<form>`), but added `type="button"` everywhere for correctness — it's
+  free insurance against someone later wrapping it in a form.
+- **`tel-non-breaking`**: the visible phone number "07771 873 177" used
+  plain spaces, so it could wrap mid-number across a line break on narrow
+  viewports. Replaced with `&nbsp;` between the groups everywhere the
+  number appears as link text (not in the `tel:` href itself, which stays
+  digits-only). Purely cosmetic/robustness, but a genuine fix.
+- **`long-title`**: `index.html` and `capabilities.html` `<title>` tags
+  exceeded 70 characters, which Google truncates awkwardly in search
+  results. Shortened both (and their matching `og:title`/`twitter:title`)
+  while keeping the key terms:
+  - Home: "AOE Engineering | Industrial Lifting, Handling & Manipulator
+    Solutions — UK" → "AOE Engineering | UK Industrial Lifting & Handling
+    Solutions"
+  - Capabilities: "Capabilities | Hoists, Cranes, Manipulators & Aftercare
+    — AOE Engineering" → "Capabilities | Hoists, Cranes & Manipulators —
+    AOE Engineering"
+
+Re-ran html-validate after fixes: 0 errors, exit code 0, across all 7 pages.
+
+### Other launch polish
+- Added `<meta name="theme-color" content="#14181d">` (the graphite brand
+  colour) to all 7 pages — styles the browser chrome/address bar to match
+  the brand on supporting mobile browsers.
+- Added `BreadcrumbList` JSON-LD to the 5 pages that already show a visible
+  "Home / X" breadcrumb (About, Capabilities, Sectors, Contact, Privacy),
+  matching that visible UI exactly rather than inventing new structure —
+  gives search engines the breadcrumb trail for rich results. Validated as
+  well-formed JSON on all 5. `index.html` and `404.html` correctly excluded
+  (neither shows a breadcrumb).
+
+### Real Lighthouse audit (first time this build) — scores + 2 real fixes
+Installed Lighthouse and ran it against all 7 pages for an objective,
+industry-standard scorecard (previous sessions relied only on axe/manual
+checks). Results before this round's fixes:
+
+| Page | Performance | Accessibility | Best Practices | SEO |
+|---|---|---|---|---|
+| index | 98 | 100 | 100 | 92 |
+| about/capabilities/sectors/contact/privacy | 98-99 | 100 | 100 | 100 |
+| 404 | 99 | 100 | 100 | 63 |
+
+Two real, fixable findings, both fixed:
+
+1. **index.html SEO 92 — "Links do not have descriptive text"**: the 6
+   "What We Do" cards all linked to `capabilities.html` with identical
+   generic "Learn more" link text — ambiguous out of context for screen
+   reader users navigating by links list, and penalised by SEO tooling.
+   First tried `aria-label`, but Lighthouse's `link-text` audit reads the
+   link's literal text content rather than the computed accessible name, so
+   that didn't register. Fixed properly instead: changed the *visible* text
+   itself to be specific per card ("Explore hoists & lifting", "Explore
+   manipulators", "Explore gantry cranes", etc.) — fixes it for screen
+   readers, SEO tooling, and sighted users scanning the page alike, and
+   reads better than "Learn more" regardless. Confirmed no layout
+   overflow/wrapping at any card width.
+
+2. **404.html SEO 63 — "Page is blocked from indexing"**: triggered by the
+   page's `<meta name="robots" content="noindex, follow">` — which is
+   correct and intentional (a 404 page should never be indexed). This is a
+   known false-positive pattern for Lighthouse's SEO category on
+   deliberately-noindexed utility pages. **Not changed** — removing noindex
+   to chase the score would be the wrong call.
+
+Also caught, while debugging: a genuine **color-contrast violation** that
+hadn't shown up in earlier sessions' axe runs. `.form-note` and `.form-card
+> p` on contact.html use `--graphite-400` (`#6b7684`) on white — axe
+measured the actual rendered pixel colour (accounting for font
+anti-aliasing) at a contrast ratio of 4.48:1, just under the 4.5:1
+requirement; an isolated test of the same hex value in system-font text
+passed at ~4.62:1, confirming this was a genuine render-dependent
+boundary case, not a flaky tool result. Rather than nudge it by a hair (which
+would stay fragile to the same anti-aliasing variance), darkened the shared
+`--graphite-400` token to `#596672` for real margin. This token is used
+site-wide for secondary/muted text, so the fix benefits every page that
+uses it, not just the two flagged elements. Visually confirmed the darker
+shade still reads as the same muted secondary-text tone, no jarring change.
+
+### Performance 98-99, not 100 — explained, not chased
+The performance gaps are artifacts of testing against Python's
+`http.server` (no compression, no cache headers, single-threaded, no
+HTTP/2) — not real site defects:
+- `cache-insight` / `document-latency-insight`: Python's dev server sends
+  no `Cache-Control` headers at all. This is a hosting-layer setting, not
+  something embeddable in the HTML; nearly every real static host (GitHub
+  Pages, Netlify, Vercel, Cloudflare Pages) sets sane cache headers by
+  default. **Action for whoever deploys this**: confirm the chosen host
+  sends reasonable `Cache-Control` headers for `/assets/*` — don't take it
+  on faith, check it after deploying.
+- `unused-css-rules` (~10KiB "savings"): expected and *correct* for a
+  5-page site sharing one `style.css` — the alternative (per-page split
+  CSS) would mean re-downloading styles on every page instead of hitting
+  cache after the first visit. One shared stylesheet is the right call for
+  a small multi-page site, not a mistake to fix.
+- `unminified-css` (~4KiB "savings"): deliberately not minifying source,
+  as decided and documented earlier in this log — the saving is marginal
+  (a few ms even on a slow connection) against the real cost of needing a
+  build step to read your own source on a site this size.
+
+### Final verification (this session)
+Ran everything together after all changes: axe (0 violations across all 7
+pages), html-validate (0 errors), Lighthouse (SEO 100 on every page now;
+Accessibility 100, Best Practices 100 everywhere), the internal
+link/anchor auditor (0 broken links), and a visual render check. Genuinely
+clean, not just "no errors thrown."
+
