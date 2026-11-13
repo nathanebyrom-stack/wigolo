@@ -44,7 +44,8 @@ CLAUDE.md
 internal-docs/
 
 # IDE / tool configs
-.claude/
+.claude/*
+!.claude/agents/
 .cursor/
 .github/copilot-instructions.md
 
