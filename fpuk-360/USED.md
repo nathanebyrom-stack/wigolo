@@ -4,3 +4,4 @@
 - w02 (2 + 5 Nov 2026): images/00-basca-workshop.jpg (FALLBACK, Drive folder empty on 1 Nov)
 - w03 (9 + 12 Nov 2026): images/00-basca-workshop.jpg (FALLBACK, Drive folder empty on 8 Nov)
 - w04 (16 + 19 Nov 2026): images/00-basca-workshop.jpg (FALLBACK, Drive folder empty on 15 Nov)
+- w05 (23 + 26 Nov 2026): images/00-basca-workshop.jpg (FALLBACK, Drive folder empty on 22 Nov)
